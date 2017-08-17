@@ -1,14 +1,18 @@
 package com.android.metal_archives;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 /**
@@ -20,7 +24,7 @@ import android.view.MenuItem;
 public class Home extends AppCompatActivity {
 
     private DrawerLayout drawer_layout;
-    private Toolbar toolbar;
+    public Toolbar toolbar;
     private NavigationView nav_drawer;
     private ActionBarDrawerToggle drawerToggle;
 
@@ -32,20 +36,37 @@ public class Home extends AppCompatActivity {
         // toolbar to replace default toolbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        // add back arrow to toolbar
+        if (getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
 
+        // drawer set up
         drawer_layout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerToggle = setupDrawerToggle();
-
-        // Tie DrawerLayout events to the ActionBarToggle
         drawer_layout.addDrawerListener(drawerToggle);
-
-        // find drawer view
-        nav_drawer = (NavigationView) findViewById(R.id.nvView);
-
+        nav_drawer = (NavigationView) findViewById(R.id.nav_view);
         setupDrawerContent(nav_drawer);
+
+        // main view and tab set up
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager.setAdapter(new PageManager(getSupportFragmentManager(), Home.this));
+        viewPager.setOffscreenPageLimit(3);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.getTabAt(0).setIcon(R.mipmap.ic_home_black_48dp);
+        tabLayout.getTabAt(1).setIcon(R.mipmap.ic_search_black_48dp);
+        tabLayout.getTabAt(2).setIcon(R.mipmap.ic_notifications_none_black_48dp);
+        tabLayout.getTabAt(3).setIcon(R.mipmap.ic_group_black_48dp);
 
     }
 
+
+    public void setTitle(String title) {
+        toolbar.setTitle(title);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -56,8 +77,6 @@ public class Home extends AppCompatActivity {
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {
-        // NOTE: Make sure you pass in a valid toolbar reference.  ActionBarDrawToggle() does not require it
-        // and will not render the hamburger icon without it.
         return new ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.drawer_open,  R.string.drawer_close);
     }
 
@@ -73,42 +92,30 @@ public class Home extends AppCompatActivity {
     }
 
     public void selectDrawerItem(MenuItem menuItem) {
-        // Create a new fragment and specify the fragment to show based on nav item clicked
-        Fragment fragment = null;
-        Class fragmentClass;
-        switch(menuItem.getItemId()) {
-            case R.id.profile_fragment:
-                fragmentClass = ProfileFragment.class;
+        // Create a new activity for each selectable item
+        Intent intent;
+        Log.i("menuItem",""+menuItem.getTitle().toString());
+        switch(menuItem.getTitle().toString()){
+            case "Profile":
+                intent = new Intent(this, ProfileActivity.class);
                 break;
-            case R.id.info_fragment:
-                fragmentClass = InfoFragment.class;
+            case "Settings":
+                intent = new Intent(this, SettingsActivity.class);
                 break;
-            case R.id.settings_fragment:
-                fragmentClass = SettingsFragment.class;
+            case "Info":
+                intent = new Intent(this, InfoActivity.class);
                 break;
-            case R.id.log_fragment:
-                fragmentClass = LogFragment.class;
+            case "Log In" :
+                intent = new Intent(this, UserLogActivity.class);
                 break;
             default:
-                fragmentClass = ProfileFragment.class;
+                intent = new Intent(this, Home.class);
+                break;
         }
 
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // Insert the fragment by replacing any existing fragment
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.flContent, fragment).commit();
-
-        // Highlight the selected item has been done by NavigationView
         menuItem.setChecked(true);
-        // Set action bar title
-        setTitle(menuItem.getTitle());
-        // Close the navigation drawer
         drawer_layout.closeDrawers();
+        startActivity(intent);
     }
 
     // `onPostCreate` called when activity start-up is complete after `onStart()`
@@ -120,6 +127,7 @@ public class Home extends AppCompatActivity {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
         drawerToggle.syncState();
+        setTitle("Home");
     }
 
     @Override

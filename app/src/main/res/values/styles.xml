@@ -19,4 +19,14 @@
         <item name="actionMenuTextColor">@color/colorPrimary</item>
     </style>
 
+    <style name="ToolBarTitleStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- Tabs -->
+    <style name="TabStyle" parent="Theme.AppCompat">
+        <item name="android:background">@color/white</item>
+    </style>
+
 </resources>

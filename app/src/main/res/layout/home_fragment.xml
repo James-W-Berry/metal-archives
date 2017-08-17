@@ -6,6 +6,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="color settings"/>
+        android:gravity="center"
+        android:text="Home screen here: will include \n
+        announcements, welcome message, recent updates, upcoming albums, etc.."/>
 
 </LinearLayout>
