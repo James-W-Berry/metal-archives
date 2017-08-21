@@ -3,10 +3,21 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/toolbar"
-    android:layout_height="wrap_content"
+    android:layout_height="48dp"
     android:layout_width="match_parent"
     android:fitsSystemWindows="true"
     app:theme="@style/ToolBarStyle"
     app:titleTextAppearance="@style/ToolBarTitleStyle"
     android:background="@color/white">
+
+    <EditText
+        android:id="@+id/search_text"
+        android:background="@color/suggest"
+        android:textColor="@color/colorPrimaryDark"
+        android:hint="@string/search_hint"
+        android:textColorHint="@color/colorPrimaryDark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
 </android.support.v7.widget.Toolbar>

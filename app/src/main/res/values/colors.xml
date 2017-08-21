@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#c3c3c3</color>
     <color name="white">#FFFFFF</color>
+    <color name="ripple">#40c3c3c3</color>
+    <color name="suggest">#e4e4e4</color>
 </resources>

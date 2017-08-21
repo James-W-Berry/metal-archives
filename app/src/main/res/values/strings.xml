@@ -9,6 +9,13 @@
         <item>Log Out</item>
     </string-array>
 
+    <!-- navigation drawer - info page -->
+    <string name="info_page">Metal Archives is a database of bands and musicians that are members of the extended metal genre. Information such as band members, albums, and summaries are associated with each entry. Members of the Metal Archives community can write reviews, discuss a variety of topics in the forums, and remain up to date on tracked artists.</string>
+    <string name="info_app_details">Version 0.0.1</string>
+
+    <!-- search page fragment -->
+    <string name="search_hint">Search Metal Archives</string>
+
     <!-- Strings related to app navigation -->
     <string name="drawer_open">Open Navigation Drawer</string>
     <string name="drawer_close">Close Navigation Drawer</string>

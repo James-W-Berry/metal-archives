@@ -21,7 +21,6 @@ public class UserLogActivity extends AppCompatActivity{
         toolbar.setTitle("Log In");
         setSupportActionBar(toolbar);
 
-        // add back arrow to toolbar
         if (getSupportActionBar() != null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);

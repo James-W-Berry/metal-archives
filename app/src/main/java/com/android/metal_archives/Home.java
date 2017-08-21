@@ -1,5 +1,6 @@
 package com.android.metal_archives;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -11,9 +12,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 
 /**
  * Author: James Berry
@@ -25,19 +29,37 @@ public class Home extends AppCompatActivity {
 
     private DrawerLayout drawer_layout;
     public Toolbar toolbar;
+    public Toolbar search_toolbar;
+    public EditText search_text;
     private NavigationView nav_drawer;
     private ActionBarDrawerToggle drawerToggle;
+    private Context context;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        context = this;
 
         // toolbar to replace default toolbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // TODO: instead of a searchview, create an editText that looks like a searchview to launch the searchable activity
+        //search_toolbar = (Toolbar) findViewById(R.id.searchable_toolbar);
+        search_text = (EditText) findViewById(R.id.search_text);
+        search_text.setOnClickListener(new View.OnClickListener() {
+            Intent intent;
+            @Override
+            public void onClick(View v) {
+                //launch search activity
+                intent = new Intent(context, SearchableActivity.class);
+                startActivity(intent);
+            }
+        });
+
         // add back arrow to toolbar
-        if (getSupportActionBar() != null){
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
@@ -63,6 +85,11 @@ public class Home extends AppCompatActivity {
 
     }
 
+    // search toolbar on click listener
+//    @Override
+//    public void setOnSearchClickListener(View.OnClickListener listener){
+//
+//    }
 
     public void setTitle(String title) {
         toolbar.setTitle(title);
@@ -76,7 +103,7 @@ public class Home extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private ActionBarDrawerToggle setupDrawerToggle() {
+    public ActionBarDrawerToggle setupDrawerToggle() {
         return new ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.drawer_open,  R.string.drawer_close);
     }
 
@@ -94,7 +121,7 @@ public class Home extends AppCompatActivity {
     public void selectDrawerItem(MenuItem menuItem) {
         // Create a new activity for each selectable item
         Intent intent;
-        Log.i("menuItem",""+menuItem.getTitle().toString());
+
         switch(menuItem.getTitle().toString()){
             case "Profile":
                 intent = new Intent(this, ProfileActivity.class);
