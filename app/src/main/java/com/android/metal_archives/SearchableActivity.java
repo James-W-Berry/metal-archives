@@ -5,13 +5,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.TextView;
 
 /**
  * Created by bej2ply on 8/18/2017.
  */
 
 public class SearchableActivity extends AppCompatActivity {
+    private EditText search;
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -29,9 +33,12 @@ public class SearchableActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-        EditText search;
-        search = (EditText) findViewById(R.id.search_text);
+        search = (EditText) findViewById(R.id.search_edit);
         search.setVisibility(View.VISIBLE);
+        search.requestFocus();
+        if(search.requestFocus()) {
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }
 
         // add back arrow to toolbar
         if (getSupportActionBar() != null){
@@ -41,7 +48,14 @@ public class SearchableActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        overridePendingTransition(0, 0);
+    }
+
+    @Override
     public boolean onSupportNavigateUp() {
+        search.setVisibility(View.GONE);
         onBackPressed();
         finish();
         return true;

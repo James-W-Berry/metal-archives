@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 /**
  * Author: James Berry
@@ -30,7 +31,7 @@ public class Home extends AppCompatActivity {
     private DrawerLayout drawer_layout;
     public Toolbar toolbar;
     public Toolbar search_toolbar;
-    public EditText search_text;
+    public TextView search_text;
     private NavigationView nav_drawer;
     private ActionBarDrawerToggle drawerToggle;
     private Context context;
@@ -45,9 +46,7 @@ public class Home extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // TODO: instead of a searchview, create an editText that looks like a searchview to launch the searchable activity
-        //search_toolbar = (Toolbar) findViewById(R.id.searchable_toolbar);
-        search_text = (EditText) findViewById(R.id.search_text);
+        search_text = (TextView) findViewById(R.id.search_text);
         search_text.setOnClickListener(new View.OnClickListener() {
             Intent intent;
             @Override

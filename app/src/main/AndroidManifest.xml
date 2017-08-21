@@ -81,7 +81,8 @@
         </activity>
 
         <activity android:name=".SearchableActivity"
-            android:parentActivityName=".Home">
+            android:parentActivityName=".Home"
+            android:theme="@style/noAnimTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Home" />
