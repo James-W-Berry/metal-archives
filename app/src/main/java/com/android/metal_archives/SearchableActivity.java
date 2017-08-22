@@ -8,8 +8,10 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -61,6 +63,7 @@ public class SearchableActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
+        // open keyboard for search
         search = (EditText) findViewById(R.id.search_edit);
         search.setVisibility(View.VISIBLE);
         search.requestFocus();
@@ -68,17 +71,29 @@ public class SearchableActivity extends AppCompatActivity {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
 
+        // listen for search command from keyboard
+        search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    getWebsite(search.getText().toString());
+                    return true;
+                }
+                return false;
+            }
+        });
+
         // add back arrow to toolbar
         if (getSupportActionBar() != null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-        //displayBandData("Gojira");
-        getWebsite("Gojira");
+        //getWebsite("Gojira");
     }
 
     private void getWebsite(String band) {
+        Log.i("SeachableActivity", "searching for " + band);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -109,72 +124,6 @@ public class SearchableActivity extends AppCompatActivity {
         }).start();
     }
 
-//
-//    private class RetrieveWebPageActivity extends AsyncTask<String, Void, String> {
-//
-//        @Override
-//        protected String doInBackground(String... urls) {
-//            try {
-//                URL url_page = new URL(urls[0]);
-//                try {
-//                    HttpURLConnection urlConnection = (HttpURLConnection) url_page.openConnection();
-//                    try {
-//                        InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-//
-//
-//
-//                        try {
-//                            Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder()
-//                                    .parse(new InputSource(new StringReader(readStream(in))));
-//
-//                            try {
-//                                XPathExpression xpath = XPathFactory.newInstance()
-//                                        .newXPath().compile("//td[text()=\"band_name\"]/following-sibling::td[2]");
-//                                return ((String) xpath.evaluate(doc, XPathConstants.STRING));
-//
-//
-//                            } catch ( XPathException e){
-//                                Log.e("SearchableActivity", ""+e);
-//                            }
-//                        } catch (ParserConfigurationException | SAXException | IOException e){
-//                            Log.e("SearchableActivity", ""+e);
-//                        }
-//
-//
-//
-//
-//                    } finally {
-//                        urlConnection.disconnect();
-//                    }
-//                } catch (IOException e){
-//                    Log.e("SearchableActivity", ""+e);
-//                }
-//            } catch (MalformedURLException e){
-//                Log.e("SearchableActivity", ""+e);
-//            }
-//            return "error";
-//        }
-//
-//        @Override
-//        protected void onPostExecute(String result) {
-//            setContent(result);
-//        }
-//
-//        private String readStream(InputStream in_stream) {
-//            BufferedReader reader = new BufferedReader(new InputStreamReader(in_stream));
-//            StringBuilder result = new StringBuilder();
-//            String line;
-//            try {
-//                while ((line = reader.readLine()) != null) {
-//                    result.append(line);
-//                }
-//            } catch (IOException e) {
-//                Log.e("SearchableActivity", "" + e);
-//            }
-//            System.out.println(result.toString());
-//            return result.toString();
-//        }
-//    }
 
 
     @Override
@@ -189,22 +138,6 @@ public class SearchableActivity extends AppCompatActivity {
         onBackPressed();
         finish();
         return true;
-    }
-
-    public void displayBandData(String band_name){
-        String url = "https://www.metal-archives.com/bands/";
-        url += band_name;
-        Log.i("SearchableActivity", ""+url);
-
-        RetrieveWebPageActivity retrieveWebPageActivity = new RetrieveWebPageActivity();
-        retrieveWebPageActivity.execute(url);
-
-
-
-    }
-
-    public void setContent(String content){
-        content_view.setText(content);
     }
 
 

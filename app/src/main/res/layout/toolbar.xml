@@ -26,6 +26,8 @@
 
     <EditText
         android:id="@+id/search_edit"
+        android:imeOptions="actionSearch"
+        android:inputType="text"
         android:background="@drawable/edit_text"
         android:textSize="16sp"
         android:textColor="@color/colorPrimary"
