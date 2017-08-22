@@ -13,7 +13,10 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.w3c.dom.Document;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -71,74 +74,107 @@ public class SearchableActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-        displayBandData("Gojira");
+        //displayBandData("Gojira");
+        getWebsite("Gojira");
     }
 
-    private class RetrieveWebPageActivity extends AsyncTask<String, Void, String> {
+    private void getWebsite(String band) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final StringBuilder builder = new StringBuilder();
 
-        @Override
-        protected String doInBackground(String... urls) {
-            try {
-                URL url_page = new URL(urls[0]);
                 try {
-                    HttpURLConnection urlConnection = (HttpURLConnection) url_page.openConnection();
-                    try {
-                        InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+                    Document doc = Jsoup.connect("https://www.metal-archives.com/bands/Gojira").get();
+                    String title = doc.title();
+                    Elements links = doc.select("a[href]");
 
+                    builder.append(title).append("\n");
 
-
-                        try {
-                            Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder()
-                                    .parse(new InputSource(new StringReader(readStream(in))));
-
-                            try {
-                                XPathExpression xpath = XPathFactory.newInstance()
-                                        .newXPath().compile("//td[text()=\"band_name\"]/following-sibling::td[2]");
-                                return ((String) xpath.evaluate(doc, XPathConstants.STRING));
-
-
-                            } catch ( XPathException e){
-                                Log.e("SearchableActivity", ""+e);
-                            }
-                        } catch (ParserConfigurationException | SAXException | IOException e){
-                            Log.e("SearchableActivity", ""+e);
-                        }
-
-
-
-
-                    } finally {
-                        urlConnection.disconnect();
+                    for (Element link : links) {
+                        builder.append("\n").append("Link : ").append(link.attr("href"))
+                                .append("\n").append("Text : ").append(link.text());
                     }
-                } catch (IOException e){
-                    Log.e("SearchableActivity", ""+e);
+                } catch (IOException e) {
+                    builder.append("Error : ").append(e.getMessage()).append("\n");
                 }
-            } catch (MalformedURLException e){
-                Log.e("SearchableActivity", ""+e);
-            }
-            return "error";
-        }
 
-        @Override
-        protected void onPostExecute(String result) {
-            setContent(result);
-        }
-
-        private String readStream(InputStream in_stream) {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in_stream));
-            StringBuilder result = new StringBuilder();
-            String line;
-            try {
-                while ((line = reader.readLine()) != null) {
-                    result.append(line);
-                }
-            } catch (IOException e) {
-                Log.e("SearchableActivity", "" + e);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        content_view.setText(builder.toString());
+                    }
+                });
             }
-            System.out.println(result.toString());
-            return result.toString();
-        }
+        }).start();
     }
+
+//
+//    private class RetrieveWebPageActivity extends AsyncTask<String, Void, String> {
+//
+//        @Override
+//        protected String doInBackground(String... urls) {
+//            try {
+//                URL url_page = new URL(urls[0]);
+//                try {
+//                    HttpURLConnection urlConnection = (HttpURLConnection) url_page.openConnection();
+//                    try {
+//                        InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+//
+//
+//
+//                        try {
+//                            Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder()
+//                                    .parse(new InputSource(new StringReader(readStream(in))));
+//
+//                            try {
+//                                XPathExpression xpath = XPathFactory.newInstance()
+//                                        .newXPath().compile("//td[text()=\"band_name\"]/following-sibling::td[2]");
+//                                return ((String) xpath.evaluate(doc, XPathConstants.STRING));
+//
+//
+//                            } catch ( XPathException e){
+//                                Log.e("SearchableActivity", ""+e);
+//                            }
+//                        } catch (ParserConfigurationException | SAXException | IOException e){
+//                            Log.e("SearchableActivity", ""+e);
+//                        }
+//
+//
+//
+//
+//                    } finally {
+//                        urlConnection.disconnect();
+//                    }
+//                } catch (IOException e){
+//                    Log.e("SearchableActivity", ""+e);
+//                }
+//            } catch (MalformedURLException e){
+//                Log.e("SearchableActivity", ""+e);
+//            }
+//            return "error";
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            setContent(result);
+//        }
+//
+//        private String readStream(InputStream in_stream) {
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(in_stream));
+//            StringBuilder result = new StringBuilder();
+//            String line;
+//            try {
+//                while ((line = reader.readLine()) != null) {
+//                    result.append(line);
+//                }
+//            } catch (IOException e) {
+//                Log.e("SearchableActivity", "" + e);
+//            }
+//            System.out.println(result.toString());
+//            return result.toString();
+//        }
+//    }
 
 
     @Override
