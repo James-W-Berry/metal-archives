@@ -89,7 +89,6 @@ public class SearchableActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-        //getWebsite("Gojira");
     }
 
     private void getWebsite(String band) {
