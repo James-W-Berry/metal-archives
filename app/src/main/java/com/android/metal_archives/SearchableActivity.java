@@ -1,6 +1,9 @@
 package com.android.metal_archives;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.renderscript.ScriptGroup;
@@ -15,6 +18,8 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -51,10 +56,14 @@ public class SearchableActivity extends AppCompatActivity {
     private EditText search;
     private TextView search_prep;
     private TableLayout band_tile;
+    private TextView band_comment;
+    private String comment_in;
     private String country_in;
     private String location_in;
     private String status_in;
     private String formed_in;
+    private Bitmap logo_bmp;
+    private Bitmap band_pic_bmp;
 
 
     @Override
@@ -118,6 +127,35 @@ public class SearchableActivity extends AppCompatActivity {
                     builder.append(band_name).append("\n\n");
 
                     Elements band_stats = doc.select("div#band_stats");
+                    Elements band_info = doc.select("div#band_info");
+                    Elements band_images = doc.select("div#band_sidebar");
+
+                    System.out.println("getting logo");
+
+                    for (Element spec : band_images){
+                        System.out.println("getting logo link");
+                        Elements logo = spec.select("div.band_name_img");
+                        Elements img = logo.select("a");
+                        String imgSrc = img.attr("href");
+                        System.out.println(imgSrc);
+                        InputStream input = new java.net.URL(imgSrc).openStream();
+                        logo_bmp = BitmapFactory.decodeStream(input);
+
+                        System.out.println("getting band pic link");
+                        Elements band_pic = spec.select("div.band_img");
+                        Elements band_img = band_pic.select("a");
+                        String bandImgSrc = band_img.attr("href");
+                        System.out.println(bandImgSrc);
+                        InputStream bandimgInput = new java.net.URL(bandImgSrc).openStream();
+                        band_pic_bmp = BitmapFactory.decodeStream(bandimgInput);
+                    }
+
+                    for (Element spec : band_info){
+                        Elements comment = spec.select("div.band_comment");
+                        comment_in = comment.text();
+                        System.out.println(comment_in);
+                    }
+
                     for (Element spec : band_stats) {
                         Elements dl = spec.select("dl.float_left");
                         Elements dts = dl.select("dt");
@@ -169,6 +207,9 @@ public class SearchableActivity extends AppCompatActivity {
                         search_prep.setVisibility(View.GONE);
                         band_tile = (TableLayout) findViewById(R.id.band_tile);
                         band_tile.setVisibility(View.VISIBLE);
+                        band_comment = (TextView) findViewById(R.id.band_comment);
+                        band_comment.setText(comment_in);
+                        band_comment.setVisibility(View.VISIBLE);
                         TextView name = (TextView) findViewById(R.id.band_name);
                         name.setText(band_name);
                         TextView country = (TextView) findViewById(R.id.band_country);
@@ -179,6 +220,12 @@ public class SearchableActivity extends AppCompatActivity {
                         status.setText(status_in);
                         TextView formed = (TextView) findViewById(R.id.band_formed);
                         formed.setText(formed_in);
+                        ImageView logo = (ImageView) findViewById(R.id.logo);
+                        logo.setImageBitmap(logo_bmp);
+                        ImageView band_pic = (ImageView) findViewById(R.id.band_pic);
+                        band_pic.setImageBitmap(band_pic_bmp);
+                        LinearLayout pics_view = (LinearLayout) findViewById(R.id.pic_layout);
+                        pics_view.setVisibility(View.VISIBLE);
                     }
                 });
             }
