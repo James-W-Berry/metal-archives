@@ -18,6 +18,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -54,6 +55,8 @@ import javax.xml.xpath.XPathFactory;
 
 public class SearchableActivity extends AppCompatActivity {
     private EditText search;
+    private FrameLayout search_frame;
+    private ImageView search_clear;
     private TextView search_prep;
     private TableLayout band_tile;
     private TextView band_comment;
@@ -62,6 +65,9 @@ public class SearchableActivity extends AppCompatActivity {
     private String location_in;
     private String status_in;
     private String formed_in;
+    private String genre_in;
+    private String lyrical_in;
+    private String label_in;
     private Bitmap logo_bmp;
     private Bitmap band_pic_bmp;
 
@@ -84,6 +90,12 @@ public class SearchableActivity extends AppCompatActivity {
 
         search = (EditText) findViewById(R.id.search_edit);
         search.setVisibility(View.VISIBLE);
+        search_clear = (ImageView) findViewById(R.id.clear_search);
+        search_clear.setVisibility(View.VISIBLE);
+        search_clear.setOnClickListener(clearSearchListener);
+        search_frame = (FrameLayout) findViewById(R.id.search_layout);
+        search_frame.setVisibility(View.VISIBLE);
+
         search.requestFocus(); // open keyboard for search
         if(search.requestFocus()) {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
@@ -111,6 +123,12 @@ public class SearchableActivity extends AppCompatActivity {
         }
 
     }
+
+    private View.OnClickListener clearSearchListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            search.setText("");
+        }
+    };
 
     private void getWebsite(String band) {
         Log.i("SeachableActivity", "searching for " + band);
@@ -158,11 +176,16 @@ public class SearchableActivity extends AppCompatActivity {
 
                     for (Element spec : band_stats) {
                         Elements dl = spec.select("dl.float_left");
+                        Elements dr = spec.select("dl.float_right");
                         Elements dts = dl.select("dt");
                         Elements dds = dl.select("dd");
+                        Elements dts_r = dr.select("dt");
+                        Elements dds_r = dr.select("dd");
 
                         Iterator<Element> dtsIterator = dts.iterator();
                         Iterator<Element> ddsIterator = dds.iterator();
+                        Iterator<Element> dts_rIterator = dts_r.iterator();
+                        Iterator<Element> dds_rIterator = dds_r.iterator();
 
                         while (dtsIterator.hasNext() && ddsIterator.hasNext()) {
                             Element dt = (Element) dtsIterator.next();
@@ -188,14 +211,29 @@ public class SearchableActivity extends AppCompatActivity {
                             builder.append(dt.text() + " " + dd.text() + "\n");
                             System.out.println(dt.text() + dd.text());
                         }
-                    }
-                    //builder.append(band_stats.text());
 
-//                    Elements links = doc.select("a[href]");
-//                    for (Element link : links) {
-//                        builder.append("\n").append("Link : ").append(link.attr("href"))
-//                                .append("\n").append("Text : ").append(link.text());
-//                    }
+                        while (dts_rIterator.hasNext() && dds_rIterator.hasNext()) {
+                            Element dt_r = (Element) dts_rIterator.next();
+                            Element dd_r = (Element) dds_rIterator.next();
+
+                            switch (dt_r.text()){
+                                case "Genre:":
+                                    genre_in = dt_r.text() + " " + dd_r.text().replaceAll("\\s{2,}", " ").trim();
+                                    break;
+                                case "Lyrical themes:":
+                                    lyrical_in = dt_r.text() + " " + dd_r.text().replaceAll("\\s{2,}", " ").trim();
+                                    break;
+                                case "Current label:":
+                                    label_in = dt_r.text() + " " + dd_r.text().replaceAll("\\s{2,}", " ").trim();
+                                    break;
+                                default:
+                                    break;
+                            }
+
+                            builder.append(dt_r.text() + " " + dd_r.text() + "\n");
+                            System.out.println(dt_r.text() + dd_r.text());
+                        }
+                    }
 
                 } catch (IOException e) {
                     builder.append("Error : ").append(e.getMessage()).append("\n");
@@ -210,6 +248,7 @@ public class SearchableActivity extends AppCompatActivity {
                         band_comment = (TextView) findViewById(R.id.band_comment);
                         band_comment.setText(comment_in);
                         band_comment.setVisibility(View.VISIBLE);
+
                         TextView name = (TextView) findViewById(R.id.band_name);
                         name.setText(band_name);
                         TextView country = (TextView) findViewById(R.id.band_country);
@@ -220,6 +259,13 @@ public class SearchableActivity extends AppCompatActivity {
                         status.setText(status_in);
                         TextView formed = (TextView) findViewById(R.id.band_formed);
                         formed.setText(formed_in);
+                        TextView genre = (TextView) findViewById(R.id.band_genre);
+                        genre.setText(genre_in);
+                        TextView lyrics = (TextView) findViewById(R.id.band_lyrics);
+                        lyrics.setText(lyrical_in);
+                        TextView label = (TextView) findViewById(R.id.band_label);
+                        label.setText(label_in);
+
                         ImageView logo = (ImageView) findViewById(R.id.logo);
                         logo.setImageBitmap(logo_bmp);
                         ImageView band_pic = (ImageView) findViewById(R.id.band_pic);

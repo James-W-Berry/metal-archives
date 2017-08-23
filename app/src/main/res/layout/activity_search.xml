@@ -60,6 +60,8 @@
                         android:gravity="start"
                         android:layout_marginStart="10dp"
                         android:layout_marginLeft="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"
                         android:textColor="@color/suggest"
                         android:textSize="16sp"/>
                 </TableRow>
@@ -69,10 +71,15 @@
                         android:id="@+id/band_location"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:ellipsize="none"
+                        android:layout_weight="1"
+                        android:scrollHorizontally="false"
                         android:layout_gravity="start"
                         android:gravity="start"
                         android:layout_marginStart="10dp"
                         android:layout_marginLeft="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"
                         android:textColor="@color/suggest"
                         android:textSize="16sp"/>
                 </TableRow>
@@ -88,6 +95,8 @@
                         android:layout_gravity="start"
                         android:layout_marginStart="10dp"
                         android:layout_marginLeft="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"
                         android:textColor="@color/suggest"
                         android:textSize="16sp"/>
                 </TableRow>
@@ -100,6 +109,50 @@
                         android:layout_gravity="start"
                         android:layout_marginStart="10dp"
                         android:layout_marginLeft="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"
+                        android:textColor="@color/suggest"
+                        android:textSize="16sp"/>
+                </TableRow>
+
+                <TableRow>
+                    <TextView
+                        android:id="@+id/band_genre"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"
+                        android:textColor="@color/suggest"
+                        android:textSize="16sp"/>
+                </TableRow>
+
+                <TableRow>
+                    <TextView
+                        android:id="@+id/band_lyrics"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"
+                        android:textColor="@color/suggest"
+                        android:textSize="16sp"/>
+                </TableRow>
+
+                <TableRow>
+                    <TextView
+                        android:id="@+id/band_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"
                         android:textColor="@color/suggest"
                         android:textSize="16sp"/>
                 </TableRow>

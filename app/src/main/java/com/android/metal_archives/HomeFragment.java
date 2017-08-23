@@ -41,8 +41,9 @@ public class HomeFragment extends Fragment{
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && getActivity() != null) {
             getActivity().setTitle("Home");
-            //getActivity().findViewById(R.id.searchable_toolbar).setVisibility(View.GONE);
             getActivity().findViewById(R.id.search_text).setVisibility(View.GONE);
+            getActivity().findViewById(R.id.clear_search).setVisibility(View.GONE);
+            getActivity().findViewById(R.id.search_layout).setVisibility(View.GONE);
         }
     }
 

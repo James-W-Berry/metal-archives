@@ -24,20 +24,38 @@
         android:padding="10dp"
         android:visibility="gone"/>
 
-    <EditText
-        android:id="@+id/search_edit"
-        android:imeOptions="actionSearch"
-        android:inputType="text"
-        android:background="@drawable/edit_text"
-        android:textSize="16sp"
-        android:textColor="@color/colorPrimary"
-        android:hint="@string/search_hint"
-        android:textColorHint="@color/colorPrimary"
+    <FrameLayout
+        android:id="@+id/search_layout"
         android:layout_width="match_parent"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:visibility="gone"/>
+        android:visibility="gone">
+
+        <EditText
+            android:id="@+id/search_edit"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:background="@drawable/edit_text"
+            android:textSize="16sp"
+            android:textColor="@color/colorPrimary"
+            android:hint="@string/search_hint"
+            android:textColorHint="@color/colorPrimary"
+            android:layout_width="match_parent"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:contentDescription="clear search"
+            android:id="@+id/clear_search"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="25dp"
+            android:layout_marginEnd="25dp"
+            android:layout_gravity="right|center_vertical"
+            android:visibility="gone"/>
+    </FrameLayout>
 
 </android.support.v7.widget.Toolbar>
