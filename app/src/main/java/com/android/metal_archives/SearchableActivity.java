@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -57,6 +58,7 @@ public class SearchableActivity extends AppCompatActivity {
     private EditText search;
     private FrameLayout search_frame;
     private ImageView search_clear;
+    private ProgressBar search_proress;
     private TextView search_prep;
     private TableLayout band_tile;
     private TextView band_comment;
@@ -133,6 +135,8 @@ public class SearchableActivity extends AppCompatActivity {
     private void getWebsite(String band) {
         Log.i("SeachableActivity", "searching for " + band);
         final String band_name = band;
+        search_proress = (ProgressBar) findViewById(R.id.search_progress);
+        search_proress.setVisibility(View.VISIBLE);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -242,6 +246,7 @@ public class SearchableActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        search_proress.setVisibility(View.GONE);
                         search_prep.setVisibility(View.GONE);
                         band_tile = (TableLayout) findViewById(R.id.band_tile);
                         band_tile.setVisibility(View.VISIBLE);

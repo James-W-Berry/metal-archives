@@ -21,6 +21,15 @@
                 android:textSize="12sp"
                 android:text="Enter a band"/>
 
+            <ProgressBar
+                android:id="@+id/search_progress"
+                android:indeterminateDrawable="@drawable/circular_progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminateDuration="500"
+                android:visibility="gone"/>
+
             <TableLayout
                 android:id="@+id/band_tile"
                 android:layout_width="match_parent"
