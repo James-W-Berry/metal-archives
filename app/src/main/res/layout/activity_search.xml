@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent" android:background="@color/colorPrimaryDark">
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:orientation="vertical" android:layout_width="match_parent"
@@ -34,13 +34,8 @@
                 android:id="@+id/band_tile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
                 android:padding="10dp"
-                android:background="@color/colorPrimary"
+                android:background="@color/white"
                 android:visibility="gone">
 
                 <TableRow
@@ -48,11 +43,12 @@
                     android:layout_width="match_parent">
                     <TextView
                         android:id="@+id/band_name"
+                        android:textColor="@color/colorPrimary"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
                         android:layout_marginLeft="10dp"
-                        android:textColor="@color/white"
+                        android:layout_weight="1"
                         android:textSize="30sp"
                         android:textStyle="bold" />
                 </TableRow>
@@ -71,7 +67,6 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginEnd="10dp"
                         android:layout_marginRight="10dp"
-                        android:textColor="@color/suggest"
                         android:textSize="16sp"/>
                 </TableRow>
 
@@ -89,7 +84,6 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginEnd="10dp"
                         android:layout_marginRight="10dp"
-                        android:textColor="@color/suggest"
                         android:textSize="16sp"/>
                 </TableRow>
 
@@ -106,7 +100,6 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginEnd="10dp"
                         android:layout_marginRight="10dp"
-                        android:textColor="@color/suggest"
                         android:textSize="16sp"/>
                 </TableRow>
 
@@ -120,7 +113,6 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginEnd="10dp"
                         android:layout_marginRight="10dp"
-                        android:textColor="@color/suggest"
                         android:textSize="16sp"/>
                 </TableRow>
 
@@ -134,7 +126,6 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginEnd="10dp"
                         android:layout_marginRight="10dp"
-                        android:textColor="@color/suggest"
                         android:textSize="16sp"/>
                 </TableRow>
 
@@ -148,7 +139,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginEnd="10dp"
                         android:layout_marginRight="10dp"
-                        android:textColor="@color/suggest"
+                        android:layout_weight="1"
                         android:textSize="16sp"/>
                 </TableRow>
 
@@ -162,7 +153,6 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginEnd="10dp"
                         android:layout_marginRight="10dp"
-                        android:textColor="@color/suggest"
                         android:textSize="16sp"/>
                 </TableRow>
 
@@ -173,12 +163,6 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorPrimary"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
                 android:padding="10dp"
                 android:visibility="gone">
 
@@ -211,16 +195,76 @@
                 android:id="@+id/band_comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
                 android:padding="10dp"
-                android:textColor="@color/suggest"
                 android:textSize="14sp"
-                android:background="@color/colorPrimary"
+                android:background="@color/white"
                 android:visibility="gone"/>
+
+            <TableLayout
+                android:id="@+id/album_table"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@color/white"
+                android:stretchColumns="0,1,2,3"
+                android:visibility="gone">
+
+                <TableRow>
+                    <TextView
+                        android:id="@+id/album_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:text="Name" />
+
+                    <TextView
+                        android:id="@+id/album_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:text="Type" />
+
+                    <TextView
+                        android:id="@+id/album_year"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:text="Year" />
+
+                    <TextView
+                        android:id="@+id/album_reviews"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:text="Reviews" />
+
+                </TableRow>
+
+            </TableLayout>
+
 
         </LinearLayout>
 </ScrollView>

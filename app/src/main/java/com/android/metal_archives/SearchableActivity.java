@@ -1,5 +1,6 @@
 package com.android.metal_archives;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -23,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import org.jsoup.Jsoup;
@@ -72,13 +74,37 @@ public class SearchableActivity extends AppCompatActivity {
     private String label_in;
     private Bitmap logo_bmp;
     private Bitmap band_pic_bmp;
+    private Context context;
+
+    private TableLayout album_table;
+    private TextView name_view;
+    private TextView type_view;
+    private TextView year_view;
+    private TextView reviews_view;
+    private String[] names ;
+    private String[] name_links;
+    private String[] types;
+    private String[] years;
+    private String[] review_scores;
+    private String[] review_links;
+    private Integer album_count = 0;
+
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        context = this;
         search_prep = (TextView) findViewById(R.id.search_prep);
+
+        names = new String[100];
+        name_links = new String[100];
+        types = new String[100];
+        years = new String[100];
+        review_scores = new String[100];
+        review_links = new String[100];
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -151,33 +177,78 @@ public class SearchableActivity extends AppCompatActivity {
                     Elements band_stats = doc.select("div#band_stats");
                     Elements band_info = doc.select("div#band_info");
                     Elements band_images = doc.select("div#band_sidebar");
+                    Elements band_disco = doc.select("div#band_disco");
 
-                    System.out.println("getting logo");
+                    /* parse HTML for discography */
+                    Elements disc = band_disco.select("ul");
+                    Element complete = disc.select("li").first();
+                    Elements complete_ = complete.select("a");
+                    String completeSrc = complete_.attr("href");
+                    System.out.println(" "+completeSrc);
 
+                    try {
+                        System.out.println("fetching discography data");
+                        Document discography = Jsoup.connect(completeSrc).get();
+                        Elements disco_table = discography.select("table");
+                        Elements disco_list = disco_table.select("tr");
+                        for (Element row : disco_list){
+                            album_count++;
+                            Elements columns = row.select("td");
+                            Integer column_index = 0;
+                            for (Element column : columns){
+                                switch (column_index){
+                                    case 0:
+                                        Elements album = column.select("a");
+                                        names[album_count - 1] = album.text();
+                                        name_links[album_count - 1] = album.attr("href");
+                                        break;
+                                    case 1:
+                                        types[album_count - 1] = column.text();
+                                        break;
+                                    case 2:
+                                        years[album_count - 1] = column.text();
+                                        break;
+                                    case 3:
+                                        Elements album_reviews = column.select("a");
+                                        review_scores[album_count - 1] = album_reviews.text();
+                                        review_links[album_count - 1] = album_reviews.attr("href");
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                column_index ++;
+                            }
+                        }
+                    } catch (IOException e) {
+                        builder.append("Error : ").append(e.getMessage()).append("\n");
+                    }
+
+
+
+
+                    /* parse HTML for logo and band picture */
                     for (Element spec : band_images){
-                        System.out.println("getting logo link");
                         Elements logo = spec.select("div.band_name_img");
                         Elements img = logo.select("a");
                         String imgSrc = img.attr("href");
-                        System.out.println(imgSrc);
-                        InputStream input = new java.net.URL(imgSrc).openStream();
+                        InputStream input = new URL(imgSrc).openStream();
                         logo_bmp = BitmapFactory.decodeStream(input);
 
-                        System.out.println("getting band pic link");
                         Elements band_pic = spec.select("div.band_img");
                         Elements band_img = band_pic.select("a");
                         String bandImgSrc = band_img.attr("href");
-                        System.out.println(bandImgSrc);
-                        InputStream bandimgInput = new java.net.URL(bandImgSrc).openStream();
+                        InputStream bandimgInput = new URL(bandImgSrc).openStream();
                         band_pic_bmp = BitmapFactory.decodeStream(bandimgInput);
                     }
 
+                    /* parse HTML for band comment */
                     for (Element spec : band_info){
                         Elements comment = spec.select("div.band_comment");
                         comment_in = comment.text();
                         System.out.println(comment_in);
                     }
 
+                    /* parse HTML for band info */
                     for (Element spec : band_stats) {
                         Elements dl = spec.select("dl.float_left");
                         Elements dr = spec.select("dl.float_right");
@@ -277,6 +348,39 @@ public class SearchableActivity extends AppCompatActivity {
                         band_pic.setImageBitmap(band_pic_bmp);
                         LinearLayout pics_view = (LinearLayout) findViewById(R.id.pic_layout);
                         pics_view.setVisibility(View.VISIBLE);
+
+
+
+
+
+                        album_table = (TableLayout) findViewById(R.id.album_table);
+                        album_table.setVisibility(View.VISIBLE);
+
+
+
+                        for(int i = 0; i <= album_count; i++){
+                            TableRow album = new TableRow(context);
+                            TextView name_view = new TextView(context);
+                            TextView type_view = new TextView(context);
+                            TextView year_view = new TextView(context);
+                            TextView reviews_view = new TextView(context);
+
+                            /* set values for the view */
+                            name_view.setText(names[i]);
+                            type_view.setText(types[i]);
+                            year_view.setText(years[i]);
+                            reviews_view.setText(review_scores[i]);
+
+                            /* add views to row view */
+
+                            album.addView(name_view);
+                            album.addView(type_view);
+                            album.addView(year_view);
+                            album.addView(reviews_view);
+
+                            /* add row to table */
+                            album_table.addView(album, i + 1);
+                        }
                     }
                 });
             }
