@@ -24,16 +24,18 @@
             <ProgressBar
                 android:id="@+id/search_progress"
                 android:indeterminateDrawable="@drawable/circular_progress_bar"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:indeterminateDuration="500"
+                android:background="@color/white"
                 android:visibility="gone"/>
 
             <TableLayout
                 android:id="@+id/band_tile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:padding="10dp"
                 android:background="@color/white"
                 android:visibility="gone">
@@ -200,68 +202,29 @@
                 android:background="@color/white"
                 android:visibility="gone"/>
 
+            <TextView
+                android:id="@+id/discography"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimary"
+                android:text="Discography"
+                android:background="@color/white"
+                android:visibility="gone"/>
+
             <TableLayout
                 android:id="@+id/album_table"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:padding="10dp"
-                android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:background="@color/white"
-                android:stretchColumns="0,1,2,3"
                 android:visibility="gone">
-
-                <TableRow>
-                    <TextView
-                        android:id="@+id/album_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="start"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginLeft="10dp"
-
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:text="Name" />
-
-                    <TextView
-                        android:id="@+id/album_type"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="start"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginRight="10dp"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:text="Type" />
-
-                    <TextView
-                        android:id="@+id/album_year"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginRight="10dp"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:text="Year" />
-
-                    <TextView
-                        android:id="@+id/album_reviews"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="start"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginRight="10dp"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:text="Reviews" />
-
-                </TableRow>
 
             </TableLayout>
 

@@ -13,8 +13,11 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewDebug;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -34,6 +37,7 @@ import org.jsoup.select.Elements;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import java.awt.font.TextAttribute;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -53,7 +57,9 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 
 /**
- * Created by bej2ply on 8/18/2017.
+ * Author: James Berry
+ * Description: Fetches user provided band page, parses the
+ * relevant data from the html, and displays the information
  */
 
 public class SearchableActivity extends AppCompatActivity {
@@ -77,10 +83,6 @@ public class SearchableActivity extends AppCompatActivity {
     private Context context;
 
     private TableLayout album_table;
-    private TextView name_view;
-    private TextView type_view;
-    private TextView year_view;
-    private TextView reviews_view;
     private String[] names ;
     private String[] name_links;
     private String[] types;
@@ -110,6 +112,9 @@ public class SearchableActivity extends AppCompatActivity {
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
+        album_table = (TableLayout) findViewById(R.id.album_table);
+
+
         // add back arrow to toolbar
         if (getSupportActionBar() != null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -137,6 +142,8 @@ public class SearchableActivity extends AppCompatActivity {
                     search.clearFocus(); // close keyboard
                     InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(search.getWindowToken(), 0);
+                    cleanTable(album_table);
+                    album_count = 0;
                     getWebsite(search.getText().toString());
                     return true;
                 }
@@ -150,6 +157,13 @@ public class SearchableActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
+    }
+
+    private void cleanTable(TableLayout table) {
+        int childCount = table.getChildCount();
+        if (childCount > 0) {
+            table.removeViews(0, childCount);
+        }
     }
 
     private View.OnClickListener clearSearchListener = new View.OnClickListener() {
@@ -349,37 +363,39 @@ public class SearchableActivity extends AppCompatActivity {
                         LinearLayout pics_view = (LinearLayout) findViewById(R.id.pic_layout);
                         pics_view.setVisibility(View.VISIBLE);
 
+                        TextView disco_header = (TextView) findViewById(R.id.discography);
+                        disco_header.setVisibility(View.VISIBLE);
 
-
-
-
-                        album_table = (TableLayout) findViewById(R.id.album_table);
                         album_table.setVisibility(View.VISIBLE);
 
 
 
-                        for(int i = 0; i <= album_count; i++){
+                        for(int i = 0; i < album_count; i++) {
                             TableRow album = new TableRow(context);
+                            TableRow album_info = new TableRow(context);
+
                             TextView name_view = new TextView(context);
                             TextView type_view = new TextView(context);
-                            TextView year_view = new TextView(context);
-                            TextView reviews_view = new TextView(context);
 
                             /* set values for the view */
+                            name_view.setId(100 + i);
                             name_view.setText(names[i]);
-                            type_view.setText(types[i]);
-                            year_view.setText(years[i]);
-                            reviews_view.setText(review_scores[i]);
+                            name_view.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                            name_view.setTextSize(18);
+
+                            type_view.setId(200 + i);
+                            type_view.setText(years[i] + " " + types[i] + " \nReviews: " + review_scores[i] +"\n");
+                            type_view.setTextSize(14);
 
                             /* add views to row view */
-
                             album.addView(name_view);
-                            album.addView(type_view);
-                            album.addView(year_view);
-                            album.addView(reviews_view);
+                            album_info.addView(type_view);
 
                             /* add row to table */
-                            album_table.addView(album, i + 1);
+                            if (names[i] != null) {
+                                album_table.addView(album);
+                                album_table.addView(album_info);
+                            }
                         }
                     }
                 });
