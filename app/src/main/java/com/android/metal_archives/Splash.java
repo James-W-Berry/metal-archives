@@ -15,7 +15,7 @@ public class Splash extends Activity{
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
-        Intent intent = new Intent(this, Home.class);
+        Intent intent = new Intent(this, Main.class);
         startActivity(intent);
         finish();
     }

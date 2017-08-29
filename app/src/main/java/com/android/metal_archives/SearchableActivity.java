@@ -91,9 +91,7 @@ public class SearchableActivity extends AppCompatActivity {
     private String[] review_links;
     private Integer album_count = 0;
 
-
-
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -123,8 +121,8 @@ public class SearchableActivity extends AppCompatActivity {
 
         search = (EditText) findViewById(R.id.search_edit);
         search.setVisibility(View.VISIBLE);
+
         search_clear = (ImageView) findViewById(R.id.clear_search);
-        
         search_clear.setVisibility(View.VISIBLE);
         search_clear.setOnClickListener(clearSearchListener);
         search_frame = (FrameLayout) findViewById(R.id.search_layout);
