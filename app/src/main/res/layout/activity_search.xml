@@ -28,8 +28,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:indeterminateDuration="500"
-                android:background="@color/white"
-                android:visibility="gone"/>
+                android:visibility="invisible"/>
 
             <TableLayout
                 android:id="@+id/band_tile"
