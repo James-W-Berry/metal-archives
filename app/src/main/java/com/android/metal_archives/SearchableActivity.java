@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Looper;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -64,6 +66,8 @@ public class SearchableActivity extends AppCompatActivity {
     private String[] review_scores;
     private String[] review_links;
     private Integer album_count = 0;
+
+    private DiscoParser discoParser;
 
 
     @Override
@@ -150,155 +154,173 @@ public class SearchableActivity extends AppCompatActivity {
         final String band_name = band;
         search_proress = (ProgressBar) findViewById(R.id.search_progress);
         search_proress.setVisibility(View.VISIBLE);
+
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Looper.prepare();
                 final StringBuilder builder = new StringBuilder();
 
                 try {
                     Document doc = Jsoup.connect("https://www.metal-archives.com/bands/" + band_name).get();
-                    String title = doc.title();
 
-                    builder.append(band_name).append("\n\n");
 
-                    Elements band_stats = doc.select("div#band_stats");
-                    Elements band_info = doc.select("div#band_info");
-                    Elements band_images = doc.select("div#band_sidebar");
-                    Elements band_disco = doc.select("div#band_disco");
 
-                    /* parse HTML for discography */
-                    Elements disc = band_disco.select("ul");
-                    Element complete = disc.select("li").first();
-                    Elements complete_ = complete.select("a");
-                    String completeSrc = complete_.attr("href");
-                    System.out.println(" "+completeSrc);
+                    // TODO: if search results in several options, generate search results page
+//
+                    // TODO: else present band information
 
-                    try {
-                        System.out.println("fetching discography data");
-                        Document discography = Jsoup.connect(completeSrc).get();
-                        Elements disco_table = discography.select("table");
-                        Elements disco_list = disco_table.select("tr");
-                        for (Element row : disco_list){
-                            album_count++;
-                            Elements columns = row.select("td");
-                            Integer column_index = 0;
-                            for (Element column : columns){
-                                switch (column_index){
-                                    case 0:
-                                        Elements album = column.select("a");
-                                        names[album_count - 1] = album.text();
-                                        name_links[album_count - 1] = album.attr("href");
+                        //present band details
+                        builder.append(band_name).append("\n\n");
+
+                        Elements band_stats = doc.select("div#band_stats");
+                        Elements band_info = doc.select("div#band_info");
+                        Elements band_images = doc.select("div#band_sidebar");
+                        //Elements band_disco = doc.select("div#band_disco");
+
+                        /* parse HTML for discography */
+                        discoParser = new DiscoParser(doc);
+                        album_count = discoParser.fetchComplete();
+                        names = discoParser.names();
+                        types = discoParser.types();
+                        years = discoParser.years();
+                        review_scores = discoParser.scores();
+                        name_links = discoParser.name_srcs();
+                        review_links = discoParser.review_srcs();
+//                        Elements disc = band_disco.select("ul");
+//                        Element complete = disc.select("li").first();
+//                        Elements complete_ = complete.select("a");
+//                        String completeSrc = complete_.attr("href");
+//                        System.out.println(" " + completeSrc);
+
+//                        try {
+//                            System.out.println("fetching discography data");
+//                            Document discography = Jsoup.connect(discoParser.getCompleteDisco()).get();
+//                            Elements disco_table = discography.select("table");
+//                            Elements disco_list = disco_table.select("tr");
+//                            for (Element row : disco_list) {
+//                                album_count++;
+//                                Elements columns = row.select("td");
+//                                Integer column_index = 0;
+//                                for (Element column : columns) {
+//                                    switch (column_index) {
+//                                        case 0:
+//                                            Elements album = column.select("a");
+//                                            names[album_count - 1] = album.text();
+//                                            name_links[album_count - 1] = album.attr("href");
+//                                            break;
+//                                        case 1:
+//                                            types[album_count - 1] = column.text();
+//                                            break;
+//                                        case 2:
+//                                            years[album_count - 1] = column.text();
+//                                            break;
+//                                        case 3:
+//                                            Elements album_reviews = column.select("a");
+//                                            review_scores[album_count - 1] = album_reviews.text();
+//                                            review_links[album_count - 1] = album_reviews.attr("href");
+//                                            break;
+//                                        default:
+//                                            break;
+//                                    }
+//                                    column_index++;
+//                                }
+//                            }
+//                        } catch (IOException e) {
+//                            builder.append("Error : ").append(e.getMessage()).append("\n");
+//                        }
+
+
+
+                        /* parse HTML for logo and band picture */
+                        for (Element spec : band_images) {
+                            Elements logo = spec.select("div.band_name_img");
+                            Elements img = logo.select("a");
+                            String imgSrc = img.attr("href");
+                            InputStream input = new URL(imgSrc).openStream();
+                            logo_bmp = BitmapFactory.decodeStream(input);
+
+                            Elements band_pic = spec.select("div.band_img");
+                            Elements band_img = band_pic.select("a");
+                            String bandImgSrc = band_img.attr("href");
+                            InputStream bandimgInput = new URL(bandImgSrc).openStream();
+                            band_pic_bmp = BitmapFactory.decodeStream(bandimgInput);
+                        }
+
+                        /* parse HTML for band comment */
+                        for (Element spec : band_info) {
+                            Elements comment = spec.select("div.band_comment");
+                            comment_in = comment.text();
+                            System.out.println(comment_in);
+                        }
+
+                        /* parse HTML for band info */
+                        for (Element spec : band_stats) {
+                            Elements dl = spec.select("dl.float_left");
+                            Elements dr = spec.select("dl.float_right");
+                            Elements dts = dl.select("dt");
+                            Elements dds = dl.select("dd");
+                            Elements dts_r = dr.select("dt");
+                            Elements dds_r = dr.select("dd");
+
+                            Iterator<Element> dtsIterator = dts.iterator();
+                            Iterator<Element> ddsIterator = dds.iterator();
+                            Iterator<Element> dts_rIterator = dts_r.iterator();
+                            Iterator<Element> dds_rIterator = dds_r.iterator();
+
+                            while (dtsIterator.hasNext() && ddsIterator.hasNext()) {
+                                Element dt = (Element) dtsIterator.next();
+                                Element dd = (Element) ddsIterator.next();
+
+                                switch (dt.text()) {
+                                    case "Country of origin:":
+                                        country_in = dt.text() + " " + dd.text().replaceAll("\\s{2,}", " ").trim();
                                         break;
-                                    case 1:
-                                        types[album_count - 1] = column.text();
+                                    case "Location:":
+                                        location_in = dt.text() + " " + dd.text().replaceAll("\\s{2,}", " ").trim();
                                         break;
-                                    case 2:
-                                        years[album_count - 1] = column.text();
+                                    case "Status:":
+                                        status_in = dt.text() + " " + dd.text().replaceAll("\\s{2,}", " ").trim();
                                         break;
-                                    case 3:
-                                        Elements album_reviews = column.select("a");
-                                        review_scores[album_count - 1] = album_reviews.text();
-                                        review_links[album_count - 1] = album_reviews.attr("href");
+                                    case "Formed in:":
+                                        formed_in = dt.text() + " " + dd.text().replaceAll("\\s{2,}", " ").trim();
                                         break;
                                     default:
                                         break;
                                 }
-                                column_index ++;
-                            }
-                        }
-                    } catch (IOException e) {
-                        builder.append("Error : ").append(e.getMessage()).append("\n");
-                    }
 
-
-
-
-                    /* parse HTML for logo and band picture */
-                    for (Element spec : band_images){
-                        Elements logo = spec.select("div.band_name_img");
-                        Elements img = logo.select("a");
-                        String imgSrc = img.attr("href");
-                        InputStream input = new URL(imgSrc).openStream();
-                        logo_bmp = BitmapFactory.decodeStream(input);
-
-                        Elements band_pic = spec.select("div.band_img");
-                        Elements band_img = band_pic.select("a");
-                        String bandImgSrc = band_img.attr("href");
-                        InputStream bandimgInput = new URL(bandImgSrc).openStream();
-                        band_pic_bmp = BitmapFactory.decodeStream(bandimgInput);
-                    }
-
-                    /* parse HTML for band comment */
-                    for (Element spec : band_info){
-                        Elements comment = spec.select("div.band_comment");
-                        comment_in = comment.text();
-                        System.out.println(comment_in);
-                    }
-
-                    /* parse HTML for band info */
-                    for (Element spec : band_stats) {
-                        Elements dl = spec.select("dl.float_left");
-                        Elements dr = spec.select("dl.float_right");
-                        Elements dts = dl.select("dt");
-                        Elements dds = dl.select("dd");
-                        Elements dts_r = dr.select("dt");
-                        Elements dds_r = dr.select("dd");
-
-                        Iterator<Element> dtsIterator = dts.iterator();
-                        Iterator<Element> ddsIterator = dds.iterator();
-                        Iterator<Element> dts_rIterator = dts_r.iterator();
-                        Iterator<Element> dds_rIterator = dds_r.iterator();
-
-                        while (dtsIterator.hasNext() && ddsIterator.hasNext()) {
-                            Element dt = (Element) dtsIterator.next();
-                            Element dd = (Element) ddsIterator.next();
-
-                            switch (dt.text()){
-                                case "Country of origin:":
-                                    country_in = dt.text() + " " + dd.text().replaceAll("\\s{2,}", " ").trim();
-                                    break;
-                                case "Location:":
-                                    location_in = dt.text() + " " + dd.text().replaceAll("\\s{2,}", " ").trim();
-                                    break;
-                                case "Status:":
-                                    status_in = dt.text() + " " + dd.text().replaceAll("\\s{2,}", " ").trim();
-                                    break;
-                                case "Formed in:":
-                                    formed_in = dt.text() + " " + dd.text().replaceAll("\\s{2,}", " ").trim();
-                                    break;
-                                default:
-                                    break;
+                                builder.append(dt.text() + " " + dd.text() + "\n");
+                                System.out.println(dt.text() + dd.text());
                             }
 
-                            builder.append(dt.text() + " " + dd.text() + "\n");
-                            System.out.println(dt.text() + dd.text());
-                        }
+                            while (dts_rIterator.hasNext() && dds_rIterator.hasNext()) {
+                                Element dt_r = (Element) dts_rIterator.next();
+                                Element dd_r = (Element) dds_rIterator.next();
 
-                        while (dts_rIterator.hasNext() && dds_rIterator.hasNext()) {
-                            Element dt_r = (Element) dts_rIterator.next();
-                            Element dd_r = (Element) dds_rIterator.next();
+                                switch (dt_r.text()) {
+                                    case "Genre:":
+                                        genre_in = dt_r.text() + " " + dd_r.text().replaceAll("\\s{2,}", " ").trim();
+                                        break;
+                                    case "Lyrical themes:":
+                                        lyrical_in = dt_r.text() + " " + dd_r.text().replaceAll("\\s{2,}", " ").trim();
+                                        break;
+                                    case "Current label:":
+                                        label_in = dt_r.text() + " " + dd_r.text().replaceAll("\\s{2,}", " ").trim();
+                                        break;
+                                    default:
+                                        break;
+                                }
 
-                            switch (dt_r.text()){
-                                case "Genre:":
-                                    genre_in = dt_r.text() + " " + dd_r.text().replaceAll("\\s{2,}", " ").trim();
-                                    break;
-                                case "Lyrical themes:":
-                                    lyrical_in = dt_r.text() + " " + dd_r.text().replaceAll("\\s{2,}", " ").trim();
-                                    break;
-                                case "Current label:":
-                                    label_in = dt_r.text() + " " + dd_r.text().replaceAll("\\s{2,}", " ").trim();
-                                    break;
-                                default:
-                                    break;
+                                builder.append(dt_r.text() + " " + dd_r.text() + "\n");
+                                System.out.println(dt_r.text() + dd_r.text());
                             }
-
-                            builder.append(dt_r.text() + " " + dd_r.text() + "\n");
-                            System.out.println(dt_r.text() + dd_r.text());
                         }
-                    }
+
 
                 } catch (IOException e) {
-                    builder.append("Error : ").append(e.getMessage()).append("\n");
+                    System.out.println("Error : " + e.getMessage() + "\n");
+                    finish();
+                    return;
                 }
 
                 runOnUiThread(new Runnable() {
@@ -344,9 +366,11 @@ public class SearchableActivity extends AppCompatActivity {
 
 
                         for(int i = 0; i < album_count; i++) {
+                            // TODO: add horizontal scrolling view for albums, one row with album art and details
                             TableRow album = new TableRow(context);
                             TableRow album_info = new TableRow(context);
-
+//                            ImageView DiscoView = (ImageView) findViewById(R.id.cover_img);
+//                            DiscoView.setImageBitmap();
                             TextView name_view = new TextView(context);
                             TextView type_view = new TextView(context);
 
@@ -368,6 +392,7 @@ public class SearchableActivity extends AppCompatActivity {
                             if (names[i] != null) {
                                 album_table.addView(album);
                                 album_table.addView(album_info);
+
                             }
                         }
                     }
