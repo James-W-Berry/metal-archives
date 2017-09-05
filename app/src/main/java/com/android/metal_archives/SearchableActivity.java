@@ -392,7 +392,6 @@ public class SearchableActivity extends AppCompatActivity {
                             if (names[i] != null) {
                                 album_table.addView(album);
                                 album_table.addView(album_info);
-
                             }
                         }
                     }
