@@ -10,7 +10,8 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 
 /**
- * Created by BEJ2PLY on 9/4/2017.
+ * Author: James Berry
+ * Description: Discography parser class
  */
 
 public class DiscoParser extends AppCompatActivity {
@@ -103,15 +104,13 @@ public class DiscoParser extends AppCompatActivity {
         } catch (IOException e) {
             System.out.println("Error : " + e.getMessage() + "\n");
         }
-
+        System.out.println(album_count.toString() + " albums");
         return album_count;
     }
 
     private String getCompleteDiscoSource(){
         Elements disco_options = full_document.select("div#band_disco").select("ul");
         Elements disco_complete = disco_options.select("li").first().select("a");
-        String disco_complete_source = disco_complete.attr("href");
-        System.out.println(" " + disco_complete_source);
-        return disco_complete_source;
+        return(disco_complete.attr("href"));
     }
 }

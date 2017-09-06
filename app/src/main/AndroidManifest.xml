@@ -22,66 +22,6 @@
             </intent-filter>
         </activity>
 
-        <!--<activity-->
-        <!--android:name=".Home"-->
-        <!--android:theme="@style/AppTheme">-->
-        <!--<intent-filter>-->
-            <!--<action android:name="android.intent.action.MAIN" />-->
-            <!--<category android:name="android.intent.category.DEFAULT" />-->
-        <!--</intent-filter>-->
-        <!--</activity>-->
-
-        <!--<activity-->
-            <!--android:name=".ProfileActivity"-->
-            <!--android:theme="@style/AppTheme"-->
-            <!--android:parentActivityName=".Home">-->
-            <!--<meta-data-->
-                <!--android:name="android.support.PARENT_ACTIVITY"-->
-                <!--android:value=".Home" />-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
-            <!--</intent-filter>-->
-        <!--</activity>-->
-
-        <!--<activity-->
-            <!--android:name=".InfoActivity"-->
-            <!--android:theme="@style/AppTheme"-->
-            <!--android:parentActivityName=".Home">-->
-            <!--<meta-data-->
-                <!--android:name="android.support.PARENT_ACTIVITY"-->
-                <!--android:value=".Home" />-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
-            <!--</intent-filter>-->
-        <!--</activity>-->
-
-        <!--<activity-->
-            <!--android:name=".SettingsActivity"-->
-            <!--android:theme="@style/AppTheme"-->
-            <!--android:parentActivityName=".Home">-->
-            <!--<meta-data-->
-                <!--android:name="android.support.PARENT_ACTIVITY"-->
-                <!--android:value=".Home" />-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
-            <!--</intent-filter>-->
-        <!--</activity>-->
-
-        <!--<activity-->
-            <!--android:name=".UserLogActivity"-->
-            <!--android:theme="@style/AppTheme"-->
-            <!--android:parentActivityName=".Home">-->
-            <!--<meta-data-->
-                <!--android:name="android.support.PARENT_ACTIVITY"-->
-                <!--android:value=".Home" />-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
-            <!--</intent-filter>-->
-        <!--</activity>-->
 
         <activity
             android:name=".Main"
