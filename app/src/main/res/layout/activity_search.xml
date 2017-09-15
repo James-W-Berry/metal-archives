@@ -19,16 +19,25 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:textSize="12sp"
-                android:text="Enter a band"/>
+                android:text="Enter a band"
+                android:visibility="gone"/>
 
+            <!--<ProgressBar-->
+                <!--android:id="@+id/search_progress"-->
+                <!--android:indeterminateDrawable="@drawable/circular_progress_bar"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:indeterminateDuration="500"-->
+                <!--android:visibility="invisible"/>-->
+            
             <ProgressBar
-                android:id="@+id/search_progress"
-                android:indeterminateDrawable="@drawable/circular_progress_bar"
+                android:id="@+id/flat_search_progress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:indeterminateDuration="500"
-                android:visibility="invisible"/>
+                android:background="@color/colorPrimaryDark"
+                android:visibility="gone"/>
 
             <TableLayout
                 android:id="@+id/band_tile"
