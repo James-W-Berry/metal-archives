@@ -20,6 +20,7 @@ public class InfoParser extends AppCompatActivity {
     }
 
     // parameters
+    private String name_;
     private String comment_;
     private String country_;
     private String location_;
@@ -31,6 +32,9 @@ public class InfoParser extends AppCompatActivity {
 
 
     // accessors and mutators
+    public String name(){
+        return name_;
+    }
     public String comment(){
         return comment_;
     }
@@ -69,6 +73,14 @@ public class InfoParser extends AppCompatActivity {
             Elements comment = item.select("div.band_comment");
             comment_ = comment.text();
         }
+    }
+
+    public void parseName(Elements name_in){
+        for (Element item : name_in){
+            Elements name = item.select("h1.band_name");
+            name_ = name.text();
+        }
+
     }
 
     public void parseInfo(Elements info_in){

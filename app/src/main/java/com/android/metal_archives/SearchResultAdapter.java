@@ -6,6 +6,7 @@ package com.android.metal_archives;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +17,13 @@ import android.widget.TextView;
 public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.ViewHolder> {
     private List<String> bands;
     private List<String> details;
-    public Integer selected_item;
-    public OnRecycleViewSelected mCallback;
+    private Context mContext;
 
+    public SearchResultAdapter(List<String> NameDataset, List<String> DetailsDataset, Context context) {
+        bands = NameDataset;
+        details = DetailsDataset;
+        this.mContext = context;
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView txtHeader;
@@ -43,15 +48,6 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
         notifyItemRemoved(position);
     }
 
-    public SearchResultAdapter(List<String> NameDataset, List<String> DetailsDataset) {
-        bands = NameDataset;
-        details = DetailsDataset;
-    }
-
-    // Container Activity must implement this interface
-    public interface OnRecycleViewSelected {
-        public void onRecycleViewSelected(int position);
-    }
 
 
     @Override
@@ -71,24 +67,22 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
         final String detail = details.get(position);
         holder.txtHeader.setText(name);
 
-        //TODO: pass position back to SearchableActivity via interface
         holder.txtHeader.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                selected_item = position;
-                System.out.println("searchresultadapter recycle view clicked: " + position);
-                // This makes sure that the container activity has implemented
-                // the callback interface. If not, it throws an exception
-                mCallback.onRecycleViewSelected(position);
+                if(mContext instanceof SearchableActivity){
+                    ((SearchableActivity)mContext).onRecycleViewSelected(position);
+                }
+
             }
         });
 
         holder.txtFooter.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                selected_item = position;
-                System.out.println("searchresultadapter recycle view clicked: " + position);
-                mCallback.onRecycleViewSelected(position);
+                if(mContext instanceof SearchableActivity){
+                    ((SearchableActivity)mContext).onRecycleViewSelected(position);
+                }
             }
         });
 

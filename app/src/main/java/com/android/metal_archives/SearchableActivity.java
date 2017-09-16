@@ -1,23 +1,15 @@
 package com.android.metal_archives;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
-import android.provider.ContactsContract;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
@@ -30,14 +22,13 @@ import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,11 +38,10 @@ import java.util.List;
  * relevant data from the html, and displays the information
  */
 
-public class SearchableActivity extends AppCompatActivity implements SearchResultAdapter.OnRecycleViewSelected{
+public class SearchableActivity extends AppCompatActivity {
     private EditText search;
     private FrameLayout search_frame;
     private ImageView search_clear;
-    private ProgressBar search_proress;
     private ProgressBar flatbar;
     private TextView search_prep;
     private TableLayout band_tile;
@@ -69,11 +59,9 @@ public class SearchableActivity extends AppCompatActivity implements SearchResul
     private BandPage bandPage;
     private SearchResultPage searchResultPage;
     private ViewPageResult viewPageResult;
-    private LinearLayout search_result_table;
     private String band_of_interest;
 
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     @Override
@@ -290,20 +278,16 @@ public class SearchableActivity extends AppCompatActivity implements SearchResul
             }
         }
         // define an adapter
-        mAdapter = new SearchResultAdapter(names, details);
+        SearchResultAdapter mAdapter = new SearchResultAdapter(names, details, context);
         recyclerView.setAdapter(mAdapter);
-
     }
 
     public void onRecycleViewSelected(int position){
-        System.out.println("made it back to SearchableActivity!");
         System.out.println(searchResultPage.bandLinks()[position]);
         System.out.println(searchResultPage.bandLinks()[position].substring(searchResultPage.bandLinks()[position].lastIndexOf('/') - (band_of_interest.length())));
-        //getWebsite(searchResultPage.bandLinks()[position].substring(searchResultPage.bandLinks()[position].lastIndexOf('/') - (band_of_interest.length())));
+        getWebsite(searchResultPage.bandLinks()[position].substring(searchResultPage.bandLinks()[position].lastIndexOf('/') - (band_of_interest.length())));
     }
 
-
-    private View.OnClickListener adapterListener;
 
     private void initializeSearchingView(){
         setContentView(R.layout.activity_searching);
@@ -338,12 +322,12 @@ public class SearchableActivity extends AppCompatActivity implements SearchResul
             searchResultPage = new SearchResultPage();
             viewPageResult = new ViewPageResult();
 
+
             try {
                 doc = Jsoup.connect("https://www.metal-archives.com/bands/" + band).get();
                 //System.out.println(doc);
                 Elements search_results = doc.select("div#content_wrapper").select("ul");
                 System.out.println(search_results.select("li").first().text());
-
 
                 if(!(search_results.select("li").first().text().contains("Search on eBay"))) {
                     /* parse search results */
@@ -357,10 +341,14 @@ public class SearchableActivity extends AppCompatActivity implements SearchResul
 
                     viewPageResult.setSearchResultPage(searchResultPage);
 
+                } else if(doc.select("div#content_wrapper").select("h4").text().equals("Band not found")){
+                    System.out.println("error: band not found");
+
                 } else {
                     /* parse general info and comment */
                     System.out.println("parsing general info and comment");
                     infoParser = new InfoParser();
+                    infoParser.parseName(doc.select("div#band_info"));
                     infoParser.parseComment(doc.select("div#band_info"));
                     infoParser.parseInfo(doc.select("div#band_stats"));
                     publishProgress(25);
@@ -379,7 +367,7 @@ public class SearchableActivity extends AppCompatActivity implements SearchResul
                     publishProgress(95);
 
                     /* populate bandPage */
-                    bandPage.setName(band_of_interest);
+                    bandPage.setName(infoParser.name());
                     bandPage.setComment(infoParser.comment());
                     bandPage.setCountry(infoParser.country());
                     bandPage.setLocation(infoParser.location());
@@ -422,13 +410,10 @@ public class SearchableActivity extends AppCompatActivity implements SearchResul
             searchResultPage = result.getSearchResultsPage();
 
             if(searchResultPage != null){
-                // old
-                //initializeSearchResultView(searchResultPage);
 
-                // new
                 initializeSearchResultView(searchResultPage);
 
-            } else {
+            } else if(bandPage != null) {
 
                 flatbar.setVisibility(View.GONE);
 
@@ -481,7 +466,6 @@ public class SearchableActivity extends AppCompatActivity implements SearchResul
 
 
                 for (int i = 0; i < album_count; i++) {
-                    // TODO: add horizontal scrolling view for albums, one row with album art and details
                     TableRow album = new TableRow(context);
                     TableRow album_info = new TableRow(context);
 //                            ImageView DiscoView = (ImageView) findViewById(R.id.cover_img);
@@ -507,6 +491,10 @@ public class SearchableActivity extends AppCompatActivity implements SearchResul
                         album_table.addView(album_info);
                     }
                 }
+            } else {
+                initializeSearchView();
+                Toast toast = Toast.makeText(context,"band not found! please try again", Toast.LENGTH_SHORT);
+                toast.show();
             }
         }
 
