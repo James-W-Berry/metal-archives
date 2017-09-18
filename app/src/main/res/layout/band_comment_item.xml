@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="6dip"
+    android:background="@color/cardview_light_background">
+
+    <!--<ImageView-->
+    <!--android:id="@+id/logo"-->
+    <!--android:layout_width="?android:attr/listPreferredItemHeight"-->
+    <!--android:layout_height="?android:attr/listPreferredItemHeight"-->
+    <!--android:layout_alignParentTop="true"-->
+    <!--android:layout_marginRight="6dip"-->
+    <!--android:layout_marginEnd="6dip"-->
+    <!--android:contentDescription="band icon"-->
+    <!--android:src="@mipmap/ic_group_black_48dp"-->
+    <!--android:background="@color/colorPrimaryDark"/>-->
+
+    <TextView
+        android:id="@+id/band_comment"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@id/logo"
+        android:layout_toRightOf="@id/logo"
+        android:gravity="center_vertical"
+        android:text="example band comment"
+        android:textSize="12sp" />
+
+</RelativeLayout>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="6dip"
+    android:background="@color/cardview_light_background">
+
+    <!--<ImageView-->
+        <!--android:id="@+id/logo"-->
+        <!--android:layout_width="?android:attr/listPreferredItemHeight"-->
+        <!--android:layout_height="?android:attr/listPreferredItemHeight"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_marginRight="6dip"-->
+        <!--android:layout_marginEnd="6dip"-->
+        <!--android:contentDescription="band icon"-->
+        <!--android:src="@mipmap/ic_group_black_48dp"-->
+        <!--android:background="@color/colorPrimaryDark"/>-->
+
+    <TextView
+        android:id="@+id/band_country"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@id/logo"
+        android:layout_toRightOf="@id/logo"
+        android:gravity="center_vertical"
+        android:text="example band country"
+        android:maxLines="1"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/band_genre"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/band_country"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@id/logo"
+        android:layout_toRightOf="@id/logo"
+        android:ellipsize="marquee"
+        android:maxLines="2"
+        android:text="example band genre"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/band_location"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/band_genre"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@id/logo"
+        android:layout_toRightOf="@id/logo"
+        android:ellipsize="marquee"
+        android:maxLines="2"
+        android:text="example band location"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/band_status"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/band_location"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@id/logo"
+        android:layout_toRightOf="@id/logo"
+        android:ellipsize="marquee"
+        android:maxLines="2"
+        android:text="example band status"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/band_lyrics"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/band_status"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@id/logo"
+        android:layout_toRightOf="@id/logo"
+        android:ellipsize="marquee"
+        android:maxLines="2"
+        android:text="example band lyrics"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/band_formed"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/band_lyrics"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@id/logo"
+        android:layout_toRightOf="@id/logo"
+        android:ellipsize="marquee"
+        android:maxLines="2"
+        android:text="example band formed in"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/band_label"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/band_formed"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@id/logo"
+        android:layout_toRightOf="@id/logo"
+        android:ellipsize="marquee"
+        android:maxLines="2"
+        android:text="example band label"
+        android:textSize="12sp" />
+</RelativeLayout>

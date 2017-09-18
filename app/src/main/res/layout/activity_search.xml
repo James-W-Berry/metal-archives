@@ -21,15 +21,6 @@
                 android:textSize="12sp"
                 android:text="Enter a band"
                 android:visibility="gone"/>
-
-            <!--<ProgressBar-->
-                <!--android:id="@+id/search_progress"-->
-                <!--android:indeterminateDrawable="@drawable/circular_progress_bar"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="center"-->
-                <!--android:indeterminateDuration="500"-->
-                <!--android:visibility="invisible"/>-->
             
             <ProgressBar
                 android:id="@+id/flat_search_progress"

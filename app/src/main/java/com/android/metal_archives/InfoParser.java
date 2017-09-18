@@ -72,7 +72,9 @@ public class InfoParser extends AppCompatActivity {
         for (Element item : comment_in) {
             Elements comment = item.select("div.band_comment");
             comment_ = comment.text();
+            //Elements more_comment = item.select("div.tool_strip");
         }
+
     }
 
     public void parseName(Elements name_in){

@@ -33,8 +33,13 @@
 
     <!-- Tabs -->
     <style name="TabStyle" parent="Theme.AppCompat">
-        <item name="android:background">@color/white</item>
-        <!--<item name="colorControlHighlight">@color/ripple</item>-->
+        <item name="android:background">@color/cardview_light_background</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:tabStripEnabled">false</item>
+        <item name="tabPaddingStart">0dp</item>
+        <item name="tabPaddingEnd">0dp</item>
+        <item name="android:padding">0dp</item>
     </style>
 
     <style name="noAnimTheme" parent="Theme.AppCompat.Light.NoActionBar">
