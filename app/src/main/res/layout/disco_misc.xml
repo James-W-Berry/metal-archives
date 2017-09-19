@@ -9,6 +9,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="Misc."/>
+        android:text="MISC."
+        android:textColor="@color/white"
+        android:textStyle="bold"/>
 
 </LinearLayout>

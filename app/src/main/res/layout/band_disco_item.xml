@@ -29,7 +29,7 @@
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@id/album_cover"
         android:layout_toRightOf="@id/album_cover"
-        android:text="year"
+        android:text="title"
         android:textSize="12sp" />
 
     <TextView

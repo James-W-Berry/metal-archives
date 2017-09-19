@@ -21,6 +21,8 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.GridLayout;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -37,6 +39,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.android.metal_archives.R.layout.disco_complete;
@@ -72,7 +75,12 @@ public class SearchableActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private LinearLayout disco_view;
+    private ExpandableHeightGridView disco_complete_view;
+    private ExpandableHeightGridView disco_main_view;
+    private ExpandableHeightGridView disco_lives_view;
+    private ExpandableHeightGridView disco_demos_view;
+    private ExpandableHeightGridView disco_misc_view;
+
     private TabHost tabHost;
 
     @Override
@@ -92,7 +100,12 @@ public class SearchableActivity extends AppCompatActivity {
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
-        disco_view = (LinearLayout) findViewById(R.id.disco_scroll_view);
+        disco_complete_view = (ExpandableHeightGridView) findViewById(R.id.disco_complete_view);
+        disco_main_view = (ExpandableHeightGridView) findViewById(R.id.disco_main_view);
+        disco_lives_view = (ExpandableHeightGridView) findViewById(R.id.disco_lives_view);
+        disco_demos_view = (ExpandableHeightGridView) findViewById(R.id.disco_demos_view);
+        disco_misc_view = (ExpandableHeightGridView) findViewById(R.id.disco_misc_view);
+
 
         // add back arrow to toolbar
         if (getSupportActionBar() != null){
@@ -318,7 +331,7 @@ public class SearchableActivity extends AppCompatActivity {
 
             try {
                 doc = Jsoup.connect("https://www.metal-archives.com/bands/" + band).get();
-                System.out.println(doc);
+                //System.out.println(doc);
                 Elements search_results = doc.select("div#content_wrapper").select("ul");
                 System.out.println(search_results.select("li").first().text());
 
@@ -495,35 +508,81 @@ public class SearchableActivity extends AppCompatActivity {
                 host.getTabWidget().getChildAt(4).setLayoutParams(params);
 
 
-                for (int i = 1; i < album_count; i++) {
-                    System.out.println("adding discography item #" + i + " with title: " + bandPage.discoItemName()[i]);
+                Integer[] complete_index = new Integer[album_count];
+                Arrays.fill(complete_index, 0);
+                Integer main_count = 0;
+                Integer[] mains_index = new Integer[album_count];
+                Arrays.fill(mains_index, 0);
+                Integer lives_count = 0;
+                Integer[] lives_index = new Integer[album_count];
+                Arrays.fill(lives_index, 0);
+                Integer demos_count = 0;
+                Integer[] demos_index = new Integer[album_count];
+                Arrays.fill(demos_index, 0);
+                Integer misc_count = 0;
+                Integer[] misc_index = new Integer[album_count];
+                Arrays.fill(misc_index, 0);
 
-                    // instantiate another disco item view
-                    LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    View disco_item = inflater.inflate(R.layout.band_disco_item, null, false);
 
-                    TextView title = (TextView) disco_item.findViewById(R.id.disco_item_title);
-                    TextView year = (TextView) disco_item.findViewById(R.id.disco_item_year);
-                    TextView type = (TextView) disco_item.findViewById(R.id.disco_item_type);
-                    TextView score = (TextView) disco_item.findViewById(R.id.disco_item_score);
-                    TextView reviews = (TextView) disco_item.findViewById(R.id.disco_item_reviews);
+                // parse disco item types for relevant filter, create indexed array, pass modified album_count to relevant_album_count
+                for(int i = 0; i < album_count - 1; i++){
+                    complete_index[i] = 1;
 
-
-                    title.setText(bandPage.discoItemName()[i]);
-                    title.setTextSize(12);
-                    year.setText(bandPage.discoItemYear()[i]);
-                    title.setTextSize(12);
-                    type.setText(bandPage.discoItemType()[i]);
-                    type.setTextSize(12);
-                    score.setText(bandPage.discoItemScore()[i]);
-                    score.setTextSize(12);
-                    reviews.setText("Reviews");
-                    reviews.setTextSize(12);
-
-                    if(disco_view != null){
-                        disco_view.addView(disco_item);
+                    switch(bandPage.discoItemType()[i+1]){
+                        case "Full-length":
+                            main_count++;
+                            mains_index[i] = 1;
+                            System.out.println("adding full length " + bandPage.discoItemName()[i+1] + " to index " + i);
+                            break;
+                        case "Live album":
+                            lives_count++;
+                            lives_index[i] = 1;
+                            break;
+                        case "Demo":
+                            demos_count++;
+                            demos_index[i] = 1;
+                            break;
+                        default:
+                            misc_count++;
+                            misc_index[i] = 1;
+                            break;
                     }
                 }
+
+                System.out.println("complete index: " + Arrays.toString(complete_index));
+                System.out.println("main index: " + Arrays.toString(mains_index));
+                System.out.println("lives index: " + Arrays.toString(lives_index));
+                System.out.println("demos index: " + Arrays.toString(demos_index));
+                System.out.println("misc index: " + Arrays.toString(misc_index));
+
+                System.out.println(Integer.toString(main_count) + " albums, " + Integer.toString(lives_count) + " lives, "+Integer.toString(demos_count) +
+                        " demos, " +Integer.toString(misc_count) +" misc items");
+
+
+                DiscographyAdapter discoCompleteAdapter = new DiscographyAdapter(context, bandPage, album_count, album_count, complete_index);
+                disco_complete_view.setAdapter(discoCompleteAdapter);
+
+                DiscographyAdapter discoMainAdapter = new DiscographyAdapter(context, bandPage, album_count, main_count, mains_index);
+                disco_main_view.setAdapter(discoMainAdapter);
+
+                DiscographyAdapter discoLivesAdapter = new DiscographyAdapter(context, bandPage, album_count, lives_count,lives_index);
+                disco_lives_view.setAdapter(discoLivesAdapter);
+
+                DiscographyAdapter discoDemosAdapter = new DiscographyAdapter(context, bandPage, album_count, demos_count,demos_index);
+                disco_demos_view.setAdapter(discoDemosAdapter);
+
+                DiscographyAdapter discoMiscAdapter = new DiscographyAdapter(context, bandPage, album_count, misc_count, misc_index);
+                disco_misc_view.setAdapter(discoMiscAdapter);
+
+                // add item copy to complete tab
+                if (disco_complete_view != null){
+                    disco_complete_view.setExpanded(true);
+                    disco_main_view.setExpanded(true);
+                    disco_lives_view.setExpanded(true);
+                    disco_demos_view.setExpanded(true);
+                    disco_misc_view.setExpanded(true);
+                }
+
             } else {
                 initializeSearchView();
                 Toast toast = Toast.makeText(context,"band not found! please try again", Toast.LENGTH_SHORT);

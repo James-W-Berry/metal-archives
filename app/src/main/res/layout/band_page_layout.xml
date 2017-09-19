@@ -84,7 +84,7 @@
             <android.support.v7.widget.CardView
                 android:id="@+id/discography_card"
                 android:layout_width="match_parent"
-                android:layout_height="200dip"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
@@ -96,86 +96,157 @@
                 <TabHost
                     android:id="@+id/disco_selector"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true">
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:orientation="vertical">
 
                         <TabWidget
                             android:id="@android:id/tabs"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:background="@color/cardview_dark_background">
                         </TabWidget>
 
                         <FrameLayout
                             android:id="@android:id/tabcontent"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:padding="2dp">
 
-                            <LinearLayout
+                            <RelativeLayout
                                 android:id="@+id/tab1"
-                                android:labelFor="@+id/tab1"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="#ffc916"
-                                android:orientation="vertical">
+                                android:layout_height="wrap_content"
+                                android:paddingRight="@dimen/activity_horizontal_margin"
+                                android:paddingEnd="@dimen/activity_horizontal_margin"
+                                android:paddingLeft="@dimen/activity_horizontal_margin"
+                                android:paddingStart="@dimen/activity_horizontal_margin"
+                                android:paddingTop="@dimen/activity_vertical_margin"
+                                android:paddingBottom="@dimen/activity_vertical_margin"
+                                android:background="@color/cardview_light_background">
 
-                                <HorizontalScrollView
+                                <com.android.metal_archives.ExpandableHeightGridView
+                                    android:id="@+id/disco_complete_view"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_gravity="center_vertical"
-                                    android:scrollbars="none">
+                                    android:gravity="center"
+                                    android:horizontalSpacing="2dp"
+                                    android:isScrollContainer="false"
+                                    android:numColumns="2"
+                                    android:stretchMode="columnWidth"
+                                    android:verticalSpacing="20dp" />
 
-                                    <LinearLayout
-                                        android:id="@+id/disco_scroll_view"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:orientation="horizontal">
+                            </RelativeLayout>
 
-                                    </LinearLayout>
-
-                                </HorizontalScrollView>
-
-                            </LinearLayout>
-
-                            <LinearLayout
+                            <RelativeLayout
                                 android:id="@+id/tab2"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="#da8200"
-                                android:orientation="vertical">
-                            </LinearLayout>
+                                android:layout_height="wrap_content"
+                                android:paddingRight="@dimen/activity_horizontal_margin"
+                                android:paddingEnd="@dimen/activity_horizontal_margin"
+                                android:paddingLeft="@dimen/activity_horizontal_margin"
+                                android:paddingStart="@dimen/activity_horizontal_margin"
+                                android:paddingTop="@dimen/activity_vertical_margin"
+                                android:paddingBottom="@dimen/activity_vertical_margin"
+                                android:background="@color/cardview_light_background">
 
-                            <LinearLayout
+                                <com.android.metal_archives.ExpandableHeightGridView
+                                    android:id="@+id/disco_main_view"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:horizontalSpacing="2dp"
+                                    android:isScrollContainer="false"
+                                    android:numColumns="2"
+                                    android:stretchMode="columnWidth"
+                                    android:verticalSpacing="20dp" />
+
+                            </RelativeLayout>
+
+                            <RelativeLayout
                                 android:id="@+id/tab3"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="#5b89ff"
-                                android:orientation="vertical">
-                            </LinearLayout>
+                                android:layout_height="wrap_content"
+                                android:paddingRight="@dimen/activity_horizontal_margin"
+                                android:paddingEnd="@dimen/activity_horizontal_margin"
+                                android:paddingLeft="@dimen/activity_horizontal_margin"
+                                android:paddingStart="@dimen/activity_horizontal_margin"
+                                android:paddingTop="@dimen/activity_vertical_margin"
+                                android:paddingBottom="@dimen/activity_vertical_margin"
+                                android:background="@color/cardview_light_background">
 
-                            <LinearLayout
+                                <com.android.metal_archives.ExpandableHeightGridView
+                                    android:id="@+id/disco_lives_view"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:horizontalSpacing="2dp"
+                                    android:isScrollContainer="false"
+                                    android:numColumns="2"
+                                    android:stretchMode="columnWidth"
+                                    android:verticalSpacing="20dp" />
+
+                            </RelativeLayout>
+
+                            <RelativeLayout
                                 android:id="@+id/tab4"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="#5b89ff"
-                                android:orientation="vertical">
-                            </LinearLayout>
+                                android:layout_height="wrap_content"
+                                android:paddingRight="@dimen/activity_horizontal_margin"
+                                android:paddingEnd="@dimen/activity_horizontal_margin"
+                                android:paddingLeft="@dimen/activity_horizontal_margin"
+                                android:paddingStart="@dimen/activity_horizontal_margin"
+                                android:paddingTop="@dimen/activity_vertical_margin"
+                                android:paddingBottom="@dimen/activity_vertical_margin"
+                                android:background="@color/cardview_light_background">
 
-                            <LinearLayout
+                                <com.android.metal_archives.ExpandableHeightGridView
+                                    android:id="@+id/disco_demos_view"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:horizontalSpacing="2dp"
+                                    android:isScrollContainer="false"
+                                    android:numColumns="2"
+                                    android:stretchMode="columnWidth"
+                                    android:verticalSpacing="20dp" />
+
+                            </RelativeLayout>
+
+                            <RelativeLayout
                                 android:id="@+id/tab5"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="#5b89ff"
-                                android:orientation="vertical">
-                            </LinearLayout>
+                                android:layout_height="wrap_content"
+                                android:paddingRight="@dimen/activity_horizontal_margin"
+                                android:paddingEnd="@dimen/activity_horizontal_margin"
+                                android:paddingLeft="@dimen/activity_horizontal_margin"
+                                android:paddingStart="@dimen/activity_horizontal_margin"
+                                android:paddingTop="@dimen/activity_vertical_margin"
+                                android:paddingBottom="@dimen/activity_vertical_margin"
+                                android:background="@color/cardview_light_background">
+
+                                <com.android.metal_archives.ExpandableHeightGridView
+                                    android:id="@+id/disco_misc_view"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:horizontalSpacing="2dp"
+                                    android:isScrollContainer="false"
+                                    android:numColumns="2"
+                                    android:stretchMode="columnWidth"
+                                    android:verticalSpacing="20dp" />
+
+                            </RelativeLayout>
+
                         </FrameLayout>
+
                     </LinearLayout>
+
                 </TabHost>
 
             </android.support.v7.widget.CardView>
