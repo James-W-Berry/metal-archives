@@ -11,8 +11,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import java.util.Arrays;
-
 public class DiscographyAdapter extends BaseAdapter {
 
     private final Context mContext;
@@ -75,8 +73,9 @@ public class DiscographyAdapter extends BaseAdapter {
                     continue;
                 }
             }
-        } else {} // discography item already added for this position
-
+        } else {
+            // discography item already added for this position
+        }
 
         return convertView;
     }
