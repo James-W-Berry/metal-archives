@@ -525,14 +525,13 @@ public class SearchableActivity extends AppCompatActivity {
 
 
                 // parse disco item types for relevant filter, create indexed array, pass modified album_count to relevant_album_count
-                for(int i = 0; i < album_count - 1; i++){
+                for(int i = 0; i < album_count; i++){
                     complete_index[i] = 1;
 
-                    switch(bandPage.discoItemType()[i+1]){
+                    switch(bandPage.discoItemType()[i]){
                         case "Full-length":
                             main_count++;
                             mains_index[i] = 1;
-                            System.out.println("adding full length " + bandPage.discoItemName()[i+1] + " to index " + i);
                             break;
                         case "Live album":
                             lives_count++;
@@ -559,19 +558,19 @@ public class SearchableActivity extends AppCompatActivity {
                         " demos, " +Integer.toString(misc_count) +" misc items");
 
 
-                DiscographyAdapter discoCompleteAdapter = new DiscographyAdapter(context, bandPage, album_count, album_count, complete_index);
+                DiscographyAdapter discoCompleteAdapter = new DiscographyAdapter(context, bandPage, album_count, album_count, complete_index, "Complete");
                 disco_complete_view.setAdapter(discoCompleteAdapter);
 
-                DiscographyAdapter discoMainAdapter = new DiscographyAdapter(context, bandPage, album_count, main_count, mains_index);
+                DiscographyAdapter discoMainAdapter = new DiscographyAdapter(context, bandPage, album_count, main_count, mains_index, "Mains");
                 disco_main_view.setAdapter(discoMainAdapter);
 
-                DiscographyAdapter discoLivesAdapter = new DiscographyAdapter(context, bandPage, album_count, lives_count,lives_index);
+                DiscographyAdapter discoLivesAdapter = new DiscographyAdapter(context, bandPage, album_count, lives_count,lives_index, "Lives");
                 disco_lives_view.setAdapter(discoLivesAdapter);
 
-                DiscographyAdapter discoDemosAdapter = new DiscographyAdapter(context, bandPage, album_count, demos_count,demos_index);
+                DiscographyAdapter discoDemosAdapter = new DiscographyAdapter(context, bandPage, album_count, demos_count,demos_index, "Demos");
                 disco_demos_view.setAdapter(discoDemosAdapter);
 
-                DiscographyAdapter discoMiscAdapter = new DiscographyAdapter(context, bandPage, album_count, misc_count, misc_index);
+                DiscographyAdapter discoMiscAdapter = new DiscographyAdapter(context, bandPage, album_count, misc_count, misc_index, "Misc.");
                 disco_misc_view.setAdapter(discoMiscAdapter);
 
                 // add item copy to complete tab

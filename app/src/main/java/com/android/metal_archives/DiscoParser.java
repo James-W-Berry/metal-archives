@@ -71,33 +71,38 @@ public class DiscoParser extends AppCompatActivity {
             Document discography = Jsoup.connect(src).get();
             Elements disco_list = discography.select("table").select("tr");
 
+            Integer row_tracker = 0;
             for (Element row : disco_list) {
-                album_count++;
-                Elements columns = row.select("td");
-                Integer column_index = 0;
+                if(row_tracker == 0){
+                    row_tracker++;
+                } else {
+                    album_count++;
+                    Elements columns = row.select("td");
+                    Integer column_index = 0;
 
-                for (Element column : columns) {
-                    switch (column_index) {
-                        case 0:
-                            Elements album = column.select("a");
-                            name_[album_count - 1] = album.text();
-                            name_src_[album_count - 1] = album.attr("href");
-                            break;
-                        case 1:
-                            type_[album_count - 1] = column.text();
-                            break;
-                        case 2:
-                            year_[album_count - 1] = column.text();
-                            break;
-                        case 3:
-                            Elements album_reviews = column.select("a");
-                            score_[album_count - 1] = album_reviews.text();
-                            review_src_[album_count - 1] = album_reviews.attr("href");
-                            break;
-                        default:
-                            break;
+                    for (Element column : columns) {
+                        switch (column_index) {
+                            case 0:
+                                Elements album = column.select("a");
+                                name_[album_count - 1] = album.text();
+                                name_src_[album_count - 1] = album.attr("href");
+                                break;
+                            case 1:
+                                type_[album_count - 1] = column.text();
+                                break;
+                            case 2:
+                                year_[album_count - 1] = column.text();
+                                break;
+                            case 3:
+                                Elements album_reviews = column.select("a");
+                                score_[album_count - 1] = album_reviews.text();
+                                review_src_[album_count - 1] = album_reviews.attr("href");
+                                break;
+                            default:
+                                break;
+                        }
+                        column_index++;
                     }
-                    column_index++;
                 }
             }
 

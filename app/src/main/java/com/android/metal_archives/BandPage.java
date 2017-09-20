@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 
 import org.jsoup.nodes.Document;
 
+import java.util.Arrays;
+
 /**
  * Author: James Berry
  * Description:
@@ -193,5 +195,7 @@ public class BandPage extends AppCompatActivity{
         System.out.println(lyrical_themes_);
         System.out.println(label_);
         System.out.println(comment_);
+
+        System.out.println(Arrays.toString(disco_item_name_));
     }
 }
