@@ -1,6 +1,7 @@
 package com.android.metal_archives;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
@@ -315,6 +316,13 @@ public class SearchableActivity extends AppCompatActivity {
         }
     };
 
+    private View.OnClickListener spotifyListener = new View.OnClickListener(){
+        public void onClick(View v) {
+            Intent spotify_intent = new Intent(context, MainActivity.class);
+            startActivity(spotify_intent);
+        }
+    };
+
 
     private class Parser extends AsyncTask<String, Integer, ViewPageResult> { //URL input, Integer progress, BandPage result
         protected ViewPageResult doInBackground(String... params){
@@ -430,6 +438,9 @@ public class SearchableActivity extends AppCompatActivity {
                 //band_tile.setVisibility(View.VISIBLE);
                 ImageView band_pic = (ImageView) findViewById(R.id.band_pic);
                 band_pic.setImageBitmap(bandPage.bandPic());
+
+                band_pic.setOnClickListener(spotifyListener);
+
                 TextView name = (TextView) findViewById(R.id.band_name);
                 name.setText(bandPage.name());
                 //ImageView logo = (ImageView) findViewById(R.id.logo);
@@ -581,6 +592,7 @@ public class SearchableActivity extends AppCompatActivity {
                     disco_demos_view.setExpanded(true);
                     disco_misc_view.setExpanded(true);
                 }
+
 
             } else {
                 initializeSearchView();
