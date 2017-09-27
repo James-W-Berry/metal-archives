@@ -1,5 +1,6 @@
 package com.android.metal_archives;
 
+import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 
 import org.jsoup.Jsoup;
@@ -36,6 +37,7 @@ public class DiscoParser extends AppCompatActivity {
     private String[] year_;
     private String[] score_;
     private String[] review_src_;
+    private Bitmap[] covers_;
 
     // accessors and mutators
     public String[] names(){

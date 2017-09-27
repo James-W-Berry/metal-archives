@@ -6,31 +6,24 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Layout;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.GridLayout;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,8 +35,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static com.android.metal_archives.R.layout.disco_complete;
 
 /**
  * Author: James Berry
@@ -107,6 +98,11 @@ public class SearchableActivity extends AppCompatActivity {
         disco_demos_view = (ExpandableHeightGridView) findViewById(R.id.disco_demos_view);
         disco_misc_view = (ExpandableHeightGridView) findViewById(R.id.disco_misc_view);
 
+        disco_complete_view.setOnItemClickListener(discoListener);
+        disco_main_view.setOnItemClickListener(discoListener);
+        disco_lives_view.setOnItemClickListener(discoListener);
+        disco_demos_view.setOnItemClickListener(discoListener);
+        disco_misc_view.setOnItemClickListener(discoListener);
 
         // add back arrow to toolbar
         if (getSupportActionBar() != null){
@@ -152,6 +148,21 @@ public class SearchableActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
     }
+
+    private AdapterView.OnItemClickListener discoListener = new AdapterView.OnItemClickListener(){
+        @Override
+        public void onItemClick(AdapterView<?> parent, View v,
+                                int position, long id) {
+            Intent disco_intent = new Intent(context, DiscoFocusActivity.class);
+            //disco_intent.putExtra("VIEW_VIEW", v.findViewById(R.id.disco_item_title).);
+            //disco_intent.putExtra("POSITION_INT", Integer.toString(position));
+            disco_intent.putExtra("ITEM_NAME", bandPage.discoItemName()[position]);
+            //disco_intent.putExtra("ITEM_URL", bandPage.discoItemNameSrc()[position]);
+            //disco_intent.putExtra("ITEM_URL", bandPage.discoItemNameSrc()[position]);
+            disco_intent.putExtra("ITEM_URL", bandPage.discoItemNameSrc()[position]);
+            startActivity(disco_intent);
+        }
+    };
 
 
 
@@ -318,7 +329,7 @@ public class SearchableActivity extends AppCompatActivity {
 
     private View.OnClickListener spotifyListener = new View.OnClickListener(){
         public void onClick(View v) {
-            Intent spotify_intent = new Intent(context, MainActivity.class);
+            Intent spotify_intent = new Intent(context, SpotifyActivity.class);
             startActivity(spotify_intent);
         }
     };
@@ -431,11 +442,8 @@ public class SearchableActivity extends AppCompatActivity {
 
                 flatbar.setVisibility(View.GONE);
 
-                //initializeSearchView();
                 initializeBandView();
 
-                //band_tile = (TableLayout) findViewById(R.id.band_tile);
-                //band_tile.setVisibility(View.VISIBLE);
                 ImageView band_pic = (ImageView) findViewById(R.id.band_pic);
                 band_pic.setImageBitmap(bandPage.bandPic());
 
@@ -462,13 +470,6 @@ public class SearchableActivity extends AppCompatActivity {
                 band_comment = (TextView) findViewById(R.id.band_comment);
                 band_comment.setText(bandPage.comment());
 
-//                ImageView logo = (ImageView) findViewById(R.id.logo);
-//                logo.setImageBitmap(bandPage.logo());
-//
-//
-//
-//                LinearLayout pics_view = (LinearLayout) findViewById(R.id.pic_layout);
-//                pics_view.setVisibility(View.VISIBLE);
 
                 TabHost host = (TabHost)findViewById(R.id.disco_selector);
                 host.setup();

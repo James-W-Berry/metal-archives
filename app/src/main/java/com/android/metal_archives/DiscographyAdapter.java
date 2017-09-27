@@ -68,6 +68,9 @@ public class DiscographyAdapter extends BaseAdapter {
                     score_copy.setText(bandPage.discoItemScore()[i]);
                     reviews_copy.setText("Reviews");
                     filter_index[i] = 0; // clear the index
+
+                    // set onclick listener
+
                     break;
                 } else {
                     continue;

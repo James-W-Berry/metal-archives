@@ -20,6 +20,10 @@ public class DiscoItem extends AppCompatActivity{
     private Integer rating_;
     private Integer reviewers_;
     private Bitmap cover_;
+    private String[] tracks_;
+    private Integer track_count_;
+    private String [] track_length_;
+    private String [] track_number_;
 
     // accessors and mutators
     public String title(){
@@ -46,6 +50,22 @@ public class DiscoItem extends AppCompatActivity{
         return cover_;
     }
 
+    public String[] tracks(){
+        return tracks_;
+    }
+
+    public String[] track_length(){
+        return track_length_;
+    }
+
+    public String[] track_number(){
+        return track_number_;
+    }
+
+    public Integer track_count(){
+        return track_count_;
+    }
+
     public void set_title(String title_in){
         title_ = title_in;
     }
@@ -68,6 +88,22 @@ public class DiscoItem extends AppCompatActivity{
 
     public void set_cover(Bitmap cover_in){
         cover_ = cover_in;
+    }
+
+    public void set_tracks(String[] tracks_in){
+        tracks_ = tracks_in;
+    }
+
+    public void set_track_count(Integer track_count_in){
+        track_count_ = track_count_in;
+    }
+
+    public void set_track_lengths(String[] track_lenghts_in){
+        track_length_ = track_lenghts_in;
+    }
+
+    public void set_track_numbers(String[] track_number_in){
+        track_number_ = track_number_in;
     }
 
     // methods
