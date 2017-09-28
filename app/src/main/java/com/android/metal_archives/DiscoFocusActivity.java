@@ -1,11 +1,13 @@
 package com.android.metal_archives;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -23,11 +25,14 @@ public class DiscoFocusActivity extends AppCompatActivity {
 
     private Document doc;
     private AlbumParser albumParser;
+    private ExpandableHeightGridView track_list_view;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.disco_item_view_layout);
+        context = this;
         Intent intent = getIntent();
         TextView name = (TextView) findViewById(R.id.disco_focus_name);
         name.setText(intent.getStringExtra("ITEM_NAME"));
@@ -66,10 +71,15 @@ public class DiscoFocusActivity extends AppCompatActivity {
 
         protected void onPostExecute(DiscoItem result) {
             for(int i = 0; i < result.track_count() - 1; i++){
-                //TODO: replicate view adapter process found in SearchableActivity
+                //TODO: replicate search result RecylerView process
                 System.out.println(result.track_number()[i] + " " + result.tracks()[i] + "    " + result.track_length()[i] + "    Show lyrics");
             }
             System.out.println("Total duration: " + (result.tracks()[result.track_count() -1]));
+
+            track_list_view = (ExpandableHeightGridView) findViewById(R.id.track_list);
+
+            TrackAdapter trackAdapter = new TrackAdapter(context, result.track_count(), result);
+            track_list_view.setAdapter(trackAdapter);
         }
     }
 }

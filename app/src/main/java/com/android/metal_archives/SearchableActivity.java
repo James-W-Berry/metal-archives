@@ -193,7 +193,7 @@ public class SearchableActivity extends AppCompatActivity {
         search_frame = (FrameLayout) findViewById(R.id.search_layout);
         search_frame.setVisibility(View.VISIBLE);
 
-        search.requestFocus(); // open keyboard for search
+        //search.requestFocus(); // open keyboard for search
         if(search.requestFocus()) {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }

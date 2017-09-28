@@ -109,6 +109,10 @@ public class DiscoItem extends AppCompatActivity{
     // methods
     public void Display(){
         Log.i("DiscoItem: ", title_ + " | " + year_ + " | " + format_ + " | " + rating_ + " | " + reviewers_);
+        for(int i = 0; i< tracks().length; i++){
+            Log.i("DiscoItem: ", tracks()[i] + " | " + year_ + " | " + format_ + " | " + rating_ + " | " + reviewers_);
+
+        }
     }
 
 }
