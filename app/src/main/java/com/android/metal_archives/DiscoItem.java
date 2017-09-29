@@ -11,7 +11,8 @@ import android.util.Log;
 
 public class DiscoItem extends AppCompatActivity{
     // constructor
-    public DiscoItem(){}
+    public DiscoItem(){
+    }
 
     // parameters
     private String title_;
@@ -22,8 +23,10 @@ public class DiscoItem extends AppCompatActivity{
     private Bitmap cover_;
     private String[] tracks_;
     private Integer track_count_;
-    private String [] track_length_;
-    private String [] track_number_;
+    private String[] track_length_;
+    private String[] track_number_;
+    private String[] track_lyric_urls_;
+    private String track_lyrics_;
 
     // accessors and mutators
     public String title(){
@@ -66,6 +69,14 @@ public class DiscoItem extends AppCompatActivity{
         return track_count_;
     }
 
+    public String[] track_lyric_urls(){
+        return track_lyric_urls_;
+    }
+
+    public String track_lyrics(){
+        return track_lyrics_;
+    }
+
     public void set_title(String title_in){
         title_ = title_in;
     }
@@ -104,6 +115,14 @@ public class DiscoItem extends AppCompatActivity{
 
     public void set_track_numbers(String[] track_number_in){
         track_number_ = track_number_in;
+    }
+
+    public void set_track_lyric_urls(String[] track_lyric_urls_in){
+        track_lyric_urls_ = track_lyric_urls_in;
+    }
+
+    public void set_track_lyrics(String track_lyrics_in){
+        track_lyrics_ = track_lyrics_in;
     }
 
     // methods

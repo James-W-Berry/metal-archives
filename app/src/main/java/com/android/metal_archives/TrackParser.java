@@ -1,8 +1,13 @@
 package com.android.metal_archives;
 
+import android.os.AsyncTask;
+
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
+import java.io.IOException;
 
 /**
  * Created by bej2ply on 9/26/2017.
@@ -74,7 +79,7 @@ public class TrackParser {
                             track_length_[relevant_row_count] = td.text();
                             break;
                         case "3":
-                            lyric_urls_[relevant_row_count] = td.text();
+                            lyric_urls_[relevant_row_count] = td.select("a").attr("href");
                             break;
                         default:
                             break;
@@ -87,4 +92,5 @@ public class TrackParser {
 
         return relevant_row_count;
     }
+
 }

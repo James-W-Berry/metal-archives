@@ -1,21 +1,37 @@
 package com.android.metal_archives;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
+import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+
+import static java.security.AccessController.getContext;
 
 /**
  * Created by BEJ2PLY on 9/23/2017.
@@ -27,6 +43,10 @@ public class DiscoFocusActivity extends AppCompatActivity {
     private AlbumParser albumParser;
     private ExpandableHeightGridView track_list_view;
     private Context context;
+    private DiscoItem discoItem;
+    private PopupWindow pw;
+    private TextView lyrics;
+    private TextView loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +56,9 @@ public class DiscoFocusActivity extends AppCompatActivity {
         Intent intent = getIntent();
         TextView name = (TextView) findViewById(R.id.disco_focus_name);
         name.setText(intent.getStringExtra("ITEM_NAME"));
+        loading = (TextView) findViewById(R.id.disco_focus_loading);
+        loading.setVisibility(View.VISIBLE);
+
         new AlbumParser().execute(intent.getStringExtra("ITEM_URL"));
     }
 
@@ -45,7 +68,7 @@ public class DiscoFocusActivity extends AppCompatActivity {
             if (Looper.myLooper() == null) {
                 Looper.prepare();
             }
-            DiscoItem discoItem = new DiscoItem();
+            discoItem = new DiscoItem();
             String disco_url = params[0];
 
             try {
@@ -57,10 +80,14 @@ public class DiscoFocusActivity extends AppCompatActivity {
                 discoItem.set_track_count(track_count);
                 discoItem.set_track_lengths(trackParser.track_lengths());
                 discoItem.set_track_numbers(trackParser.track_numbers());
+                discoItem.set_track_lyric_urls(trackParser.urls());
+
+                CoverParser coverParser = new CoverParser(doc);
+                discoItem.set_cover(coverParser.cover());
+
             } catch (IOException e) {
                 Log.e("DiscoFocusActivity", e.toString());
             }
-
 
             return discoItem;
         }
@@ -80,6 +107,98 @@ public class DiscoFocusActivity extends AppCompatActivity {
 
             TrackAdapter trackAdapter = new TrackAdapter(context, result.track_count(), result);
             track_list_view.setAdapter(trackAdapter);
+
+            // add item copy to complete tab
+            if (track_list_view != null){
+                track_list_view.setExpanded(true);
+            }
+
+            track_list_view.setOnItemClickListener(trackListener);
+
+            loading.setVisibility(View.GONE);
+
+            ImageView cover = (ImageView) findViewById(R.id.disco_focus_cover);
+            cover.setImageBitmap(discoItem.cover());
+
         }
     }
+
+    private class LyricParser extends AsyncTask<String, Integer, String> { //URL input, Integer progress, Lyric result
+        protected String doInBackground(String... params) {
+            String lyric_url = params[0];
+            System.out.println("lyric id: " + lyric_url);
+
+            if (lyric_url != null && lyric_url.contains("#")) {
+                lyric_url = lyric_url.substring(1, lyric_url.length());
+            }
+
+            try {
+                Document lyric_doc;
+                lyric_doc = Jsoup.connect("https://metal-archives.com/release/ajax-view-lyrics/id/" + lyric_url).get();
+                lyric_doc.outputSettings(new Document.OutputSettings().prettyPrint(false)); //makes html() preserve linebreaks and spacing
+                lyric_doc.select("br").append("\n");
+                String lyric_body = lyric_doc.html().replaceAll("\\\\n", "\n");
+                System.out.println(Jsoup.clean(lyric_body, "", Whitelist.none(), new Document.OutputSettings().prettyPrint(false)));
+                discoItem.set_track_lyrics(Jsoup.clean(lyric_body, "", Whitelist.none(), new Document.OutputSettings().prettyPrint(false)));
+            } catch (IOException e) {
+                System.out.println(e.toString());
+            }
+
+            return discoItem.track_lyrics();
+        }
+
+        protected void onProgressUpdate(Integer... progress){
+
+        }
+
+        protected void onPostExecute(String result) {
+            lyrics.setText(result);
+        }
+    }
+
+
+
+    private AdapterView.OnItemClickListener trackListener = new AdapterView.OnItemClickListener(){
+        @Override
+        public void onItemClick(AdapterView<?> parent, View v,
+                                int position, long id) {
+            try {
+                new LyricParser().execute(discoItem.track_lyric_urls()[position]);
+
+                //We need to get the instance of the LayoutInflater, use the context of this activity
+                LayoutInflater inflater = (LayoutInflater) DiscoFocusActivity.this
+                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                //Inflate the view from a predefined XML layout
+                View layout = inflater.inflate(R.layout.lyric_view,
+                        (ViewGroup) findViewById(R.id.popup_element));
+                // create a PopupWindow
+                DisplayMetrics displayMetrics = new DisplayMetrics();
+                getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                int height = displayMetrics.heightPixels;
+                int width = displayMetrics.widthPixels;
+                pw = new PopupWindow(layout, width, height, true);
+
+                // display the popup in the center
+                pw.showAtLocation(v, Gravity.CENTER, 0, 0);
+
+                TextView title = (TextView) layout.findViewById(R.id.song_title);
+                title.setText(discoItem.tracks()[position]);
+
+                lyrics = (TextView) layout.findViewById(R.id.lyric_content);
+
+                ImageView close_lyric_view = (ImageView) layout.findViewById(R.id.close_lyric_view);
+                close_lyric_view.setOnClickListener(closeLyricListener);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    };
+
+    private View.OnClickListener closeLyricListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            pw.dismiss();
+        }
+    };
 }

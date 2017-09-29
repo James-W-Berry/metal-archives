@@ -74,6 +74,7 @@ public class SearchableActivity extends AppCompatActivity {
     private ExpandableHeightGridView disco_misc_view;
 
     private TabHost tabHost;
+    public static final int OPEN_NEW_ACTIVITY = 42;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -154,19 +155,17 @@ public class SearchableActivity extends AppCompatActivity {
         public void onItemClick(AdapterView<?> parent, View v,
                                 int position, long id) {
             Intent disco_intent = new Intent(context, DiscoFocusActivity.class);
-            //disco_intent.putExtra("VIEW_VIEW", v.findViewById(R.id.disco_item_title).);
-            //disco_intent.putExtra("POSITION_INT", Integer.toString(position));
-            disco_intent.putExtra("ITEM_NAME", bandPage.discoItemName()[position]);
-            //disco_intent.putExtra("ITEM_URL", bandPage.discoItemNameSrc()[position]);
-            //disco_intent.putExtra("ITEM_URL", bandPage.discoItemNameSrc()[position]);
-            disco_intent.putExtra("ITEM_URL", bandPage.discoItemNameSrc()[position]);
-            startActivity(disco_intent);
+            TextView title = (TextView) v.findViewById(R.id.disco_item_title);
+            disco_intent.putExtra("ITEM_NAME", title.getText()); //this is complete array
+
+            TextView src = (TextView) v.findViewById(R.id.disco_item_src);
+            disco_intent.putExtra("ITEM_URL", src.getText());
+
+            startActivityForResult(disco_intent, OPEN_NEW_ACTIVITY);
         }
     };
 
-
-
-
+    
     private void initializeSearchView() {
         setContentView(R.layout.activity_search);
         context = this;
@@ -193,7 +192,7 @@ public class SearchableActivity extends AppCompatActivity {
         search_frame = (FrameLayout) findViewById(R.id.search_layout);
         search_frame.setVisibility(View.VISIBLE);
 
-        //search.requestFocus(); // open keyboard for search
+        search.requestFocus(); // open keyboard for search
         if(search.requestFocus()) {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
@@ -352,7 +351,7 @@ public class SearchableActivity extends AppCompatActivity {
                 doc = Jsoup.connect("https://www.metal-archives.com/bands/" + band).get();
                 //System.out.println(doc);
                 Elements search_results = doc.select("div#content_wrapper").select("ul");
-                System.out.println(search_results.select("li").first().text());
+                //System.out.println(search_results.select("li").first().text());
 
                 if(!(search_results.select("li").first().text().contains("Search on eBay"))) {
                     /* parse search results */
@@ -560,14 +559,14 @@ public class SearchableActivity extends AppCompatActivity {
                     }
                 }
 
-                System.out.println("complete index: " + Arrays.toString(complete_index));
-                System.out.println("main index: " + Arrays.toString(mains_index));
-                System.out.println("lives index: " + Arrays.toString(lives_index));
-                System.out.println("demos index: " + Arrays.toString(demos_index));
-                System.out.println("misc index: " + Arrays.toString(misc_index));
-
-                System.out.println(Integer.toString(main_count) + " albums, " + Integer.toString(lives_count) + " lives, "+Integer.toString(demos_count) +
-                        " demos, " +Integer.toString(misc_count) +" misc items");
+//                System.out.println("complete index: " + Arrays.toString(complete_index));
+//                System.out.println("main index: " + Arrays.toString(mains_index));
+//                System.out.println("lives index: " + Arrays.toString(lives_index));
+//                System.out.println("demos index: " + Arrays.toString(demos_index));
+//                System.out.println("misc index: " + Arrays.toString(misc_index));
+//
+//                System.out.println(Integer.toString(main_count) + " albums, " + Integer.toString(lives_count) + " lives, "+Integer.toString(demos_count) +
+//                        " demos, " +Integer.toString(misc_count) +" misc items");
 
 
                 DiscographyAdapter discoCompleteAdapter = new DiscographyAdapter(context, bandPage, album_count, album_count, complete_index, "Complete");
@@ -615,6 +614,23 @@ public class SearchableActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         overridePendingTransition(0, 0);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == OPEN_NEW_ACTIVITY) {
+            if (search != null && search.requestFocus()) {
+                search.clearFocus();
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+                imm.hideSoftInputFromWindow(search.getWindowToken(), 0);
+            }
+        }
     }
 
     @Override

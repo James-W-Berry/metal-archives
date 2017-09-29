@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 /**
@@ -14,7 +15,7 @@ import android.widget.TextView;
  */
 
 public class Main extends AppCompatActivity {
-    public Toolbar toolbar;
+    public Button enter;
     public TextView search_text;
     Context context;
 
@@ -25,16 +26,9 @@ public class Main extends AppCompatActivity {
         context = this;
 
         // toolbar to replace default toolbar
-        toolbar = (Toolbar) findViewById(R.id.home_toolbar);
-        setSupportActionBar(toolbar);
+        enter = (Button) findViewById(R.id.home_toolbar);
 
-        // add back arrow to toolbar
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-            getSupportActionBar().setDisplayShowHomeEnabled(false);
-        }
-        search_text = (TextView) findViewById(R.id.search_text);
-        search_text.setOnClickListener(new View.OnClickListener() {
+        enter.setOnClickListener(new View.OnClickListener() {
             Intent intent;
             @Override
             public void onClick(View v) {

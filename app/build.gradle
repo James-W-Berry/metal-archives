@@ -42,4 +42,5 @@ dependencies {
 
     compile 'com.spotify.android:auth:1.0.0-alpha'
     compile 'com.spotify.sdk:spotify-player-24-noconnect-2.20b@aar'
+
 }

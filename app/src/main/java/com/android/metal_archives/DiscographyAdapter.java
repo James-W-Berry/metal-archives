@@ -56,16 +56,18 @@ public class DiscographyAdapter extends BaseAdapter {
             TextView type_copy = (TextView) convertView.findViewById(R.id.disco_item_type);
             TextView score_copy = (TextView) convertView.findViewById(R.id.disco_item_score);
             TextView reviews_copy = (TextView) convertView.findViewById(R.id.disco_item_reviews);
+            TextView source_copy = (TextView) convertView.findViewById(R.id.disco_item_src);
 
             for (int i = 0; i < disco_items; i++) {
                 if (filter_index[i] == 1) {
                     //System.out.println(Arrays.toString(filter_index));
-                    System.out.println("found "+ filter + " " + bandPage.discoItemName()[i]
-                            +" at index "+ Integer.toString(i));
+//                    System.out.println("found "+ filter + " " + bandPage.discoItemName()[i]
+//                            +" at index "+ Integer.toString(i));
                     title_copy.setText(bandPage.discoItemName()[i]);
                     year_copy.setText(bandPage.discoItemYear()[i]);
                     type_copy.setText(bandPage.discoItemType()[i]);
                     score_copy.setText(bandPage.discoItemScore()[i]);
+                    source_copy.setText(bandPage.discoItemNameSrc()[i]);
                     reviews_copy.setText("Reviews");
                     filter_index[i] = 0; // clear the index
 

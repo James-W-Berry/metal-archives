@@ -6,15 +6,33 @@
     android:orientation="vertical"
     android:background="@color/colorPrimaryDark">
 
-        <TextView
-            android:id="@+id/disco_focus_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:textSize="24sp"
-            android:text="Album Name"/>
+    <TextView
+        android:id="@+id/disco_focus_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:text="Loading Album..."/>
+
+    <TextView
+        android:id="@+id/disco_focus_loading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:text="Loading Album..."/>
+
+    <ImageView
+        android:contentDescription="album cover"
+        android:id="@+id/disco_focus_cover"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:gravity="center" />
 
         <ScrollView
             android:layout_width="match_parent"
@@ -66,7 +84,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/cardview_light_background"
+                    android:background="@color/colorPrimaryDark"
                     android:elevation="100dp"
                     android:padding="6dip"
                     card_view:cardCornerRadius="8dp">
