@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:id="@+id/lyric_popup_element"
+    android:layout_height="match_parent" android:id="@+id/comment_popup_element"
     android:background="@color/cardview_dark_background">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/song_title"
+        android:id="@+id/band_name"
         android:textSize="24sp"
         android:layout_marginTop="10dp"
         android:gravity="center"
         android:layout_centerHorizontal="true"
-        android:text="Song Title Here"
+        android:text="Band Name Here"
         android:textColor="@color/white"/>
 
 
     <ImageView
-        android:contentDescription="close lyric window"
-        android:id="@+id/close_lyric_view"
+        android:contentDescription="close comment window"
+        android:id="@+id/close_comment_view"
         android:src="@android:drawable/ic_menu_close_clear_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -29,25 +29,19 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/song_title"
-        android:layout_marginTop="10dp">
+        android:layout_below="@id/band_name"
+        android:layout_marginTop="10dp"
+        android:padding="5dp">
 
-        <LinearLayout
-            android:orientation="vertical"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="75dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/lyric_content"
-                android:layout_marginTop="10dp"
-                android:gravity="center"
-                android:text="loading lyrics..."
-                android:textColor="@color/white"/>
-
-        </LinearLayout>
+            android:id="@+id/comment_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="25dp"
+            android:gravity="center"
+            android:text="loading comment..."
+            android:textColor="@color/white"/>
 
     </ScrollView>
 

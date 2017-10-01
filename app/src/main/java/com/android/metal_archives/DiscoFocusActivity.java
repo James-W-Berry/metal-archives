@@ -44,7 +44,7 @@ public class DiscoFocusActivity extends AppCompatActivity {
     private ExpandableHeightGridView track_list_view;
     private Context context;
     private DiscoItem discoItem;
-    private PopupWindow pw;
+    private PopupWindow lyric_popup;
     private TextView lyrics;
     private TextView loading;
 
@@ -98,7 +98,6 @@ public class DiscoFocusActivity extends AppCompatActivity {
 
         protected void onPostExecute(DiscoItem result) {
             for(int i = 0; i < result.track_count() - 1; i++){
-                //TODO: replicate search result RecylerView process
                 System.out.println(result.track_number()[i] + " " + result.tracks()[i] + "    " + result.track_length()[i] + "    Show lyrics");
             }
             System.out.println("Total duration: " + (result.tracks()[result.track_count() -1]));
@@ -170,16 +169,16 @@ public class DiscoFocusActivity extends AppCompatActivity {
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 //Inflate the view from a predefined XML layout
                 View layout = inflater.inflate(R.layout.lyric_view,
-                        (ViewGroup) findViewById(R.id.popup_element));
+                        (ViewGroup) findViewById(R.id.lyric_popup_element));
                 // create a PopupWindow
                 DisplayMetrics displayMetrics = new DisplayMetrics();
                 getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
                 int height = displayMetrics.heightPixels;
                 int width = displayMetrics.widthPixels;
-                pw = new PopupWindow(layout, width, height, true);
+                lyric_popup = new PopupWindow(layout, width, height, true);
 
                 // display the popup in the center
-                pw.showAtLocation(v, Gravity.CENTER, 0, 0);
+                lyric_popup.showAtLocation(v, Gravity.CENTER, 0, 0);
 
                 TextView title = (TextView) layout.findViewById(R.id.song_title);
                 title.setText(discoItem.tracks()[position]);
@@ -198,7 +197,7 @@ public class DiscoFocusActivity extends AppCompatActivity {
 
     private View.OnClickListener closeLyricListener = new View.OnClickListener() {
         public void onClick(View v) {
-            pw.dismiss();
+            lyric_popup.dismiss();
         }
     };
 }

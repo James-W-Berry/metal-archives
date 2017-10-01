@@ -30,7 +30,6 @@ public class InfoParser extends AppCompatActivity {
     private String lyrical_themes_;
     private String label_;
 
-
     // accessors and mutators
     public String name(){
         return name_;
@@ -72,7 +71,6 @@ public class InfoParser extends AppCompatActivity {
         for (Element item : comment_in) {
             Elements comment = item.select("div.band_comment");
             comment_ = comment.text();
-            //Elements more_comment = item.select("div.tool_strip");
         }
 
     }

@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:padding="6dip"
-    android:background="@color/cardview_light_background">
+    android:background="@color/cardview_dark_background">
 
     <!--<ImageView-->
         <!--android:id="@+id/logo"-->
@@ -27,6 +27,7 @@
         android:layout_toRightOf="@id/logo"
         android:gravity="center_vertical"
         android:text="example band country"
+        android:textColor="@color/white"
         android:maxLines="1"
         android:textSize="12sp" />
 
@@ -42,6 +43,7 @@
         android:ellipsize="marquee"
         android:maxLines="2"
         android:text="example band genre"
+        android:textColor="@color/white"
         android:textSize="12sp" />
 
     <TextView
@@ -56,6 +58,7 @@
         android:ellipsize="marquee"
         android:maxLines="2"
         android:text="example band location"
+        android:textColor="@color/white"
         android:textSize="12sp" />
 
     <TextView
@@ -70,6 +73,7 @@
         android:ellipsize="marquee"
         android:maxLines="2"
         android:text="example band status"
+        android:textColor="@color/white"
         android:textSize="12sp" />
 
     <TextView
@@ -84,6 +88,7 @@
         android:ellipsize="marquee"
         android:maxLines="2"
         android:text="example band lyrics"
+        android:textColor="@color/white"
         android:textSize="12sp" />
 
     <TextView
@@ -98,6 +103,7 @@
         android:ellipsize="marquee"
         android:maxLines="2"
         android:text="example band formed in"
+        android:textColor="@color/white"
         android:textSize="12sp" />
 
     <TextView
@@ -112,5 +118,6 @@
         android:ellipsize="marquee"
         android:maxLines="2"
         android:text="example band label"
+        android:textColor="@color/white"
         android:textSize="12sp" />
 </RelativeLayout>

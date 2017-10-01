@@ -11,7 +11,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -21,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TabHost;
 import android.widget.TableLayout;
@@ -29,6 +32,8 @@ import android.widget.Toast;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
@@ -53,6 +58,10 @@ public class SearchableActivity extends AppCompatActivity {
 
     private TableLayout album_table;
     private Integer album_count = 0;
+    private String band_id;
+    private TextView comment_content;
+    private PopupWindow comment_popup;
+    private String read_more_check;
 
     private DiscoParser discoParser;
     private ImageParser imageParser;
@@ -165,7 +174,7 @@ public class SearchableActivity extends AppCompatActivity {
         }
     };
 
-    
+
     private void initializeSearchView() {
         setContentView(R.layout.activity_search);
         context = this;
@@ -349,9 +358,15 @@ public class SearchableActivity extends AppCompatActivity {
 
             try {
                 doc = Jsoup.connect("https://www.metal-archives.com/bands/" + band).get();
-                //System.out.println(doc);
+                System.out.println(doc);
+                String page_url = doc.select("h1.band_name").select("a").attr("href");
+                band_id = page_url.substring(page_url.lastIndexOf("/") + 1);
+                System.out.println("band id: " + band_id);
+
                 Elements search_results = doc.select("div#content_wrapper").select("ul");
-                //System.out.println(search_results.select("li").first().text());
+
+                read_more_check = doc.select("div.tool_strip.bottom.right").select("a").text();
+                //System.out.println(read_more_check);
 
                 if(!(search_results.select("li").first().text().contains("Search on eBay"))) {
                     /* parse search results */
@@ -468,6 +483,46 @@ public class SearchableActivity extends AppCompatActivity {
                 label_view.setText(bandPage.label());
                 band_comment = (TextView) findViewById(R.id.band_comment);
                 band_comment.setText(bandPage.comment());
+
+                if(read_more_check.equals("Read more")) {
+                    band_comment.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            try {
+                                new CommentParser().execute(band_id);
+
+                                //We need to get the instance of the LayoutInflater, use the context of this activity
+                                LayoutInflater inflater = (LayoutInflater) SearchableActivity.this
+                                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+                                //Inflate the view from a predefined XML layout
+                                View layout = inflater.inflate(R.layout.more_comment_view,
+                                        (ViewGroup) findViewById(R.id.comment_popup_element));
+
+                                // create a PopupWindow
+                                DisplayMetrics displayMetrics = new DisplayMetrics();
+                                getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                                int height = displayMetrics.heightPixels;
+                                int width = displayMetrics.widthPixels;
+                                comment_popup = new PopupWindow(layout, width, height, true);
+
+                                // display the popup in the center
+                                comment_popup.showAtLocation(v, Gravity.CENTER, 0, 0);
+
+                                TextView band_name = (TextView) layout.findViewById(R.id.band_name);
+                                band_name.setText(bandPage.name());
+
+                                comment_content = (TextView) layout.findViewById(R.id.comment_content);
+
+                                ImageView close_comment_view = (ImageView) layout.findViewById(R.id.close_comment_view);
+                                close_comment_view.setOnClickListener(closeCommentListener);
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }
 
 
                 TabHost host = (TabHost)findViewById(R.id.disco_selector);
@@ -601,6 +656,41 @@ public class SearchableActivity extends AppCompatActivity {
             }
         }
 
+    }
+
+    private View.OnClickListener closeCommentListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            comment_popup.dismiss();
+        }
+    };
+
+
+    private class CommentParser extends AsyncTask<String, Integer, String> { //URL input, Integer progress, Lyric result
+        protected String doInBackground(String... params) {
+            String band_id = params[0];
+
+            try {
+                Document comment_doc;
+                comment_doc = Jsoup.connect("https://metal-archives.com/band/read-more/id/" + band_id).get();
+                comment_doc.outputSettings(new Document.OutputSettings().prettyPrint(false)); //makes html() preserve linebreaks and spacing
+                comment_doc.select("br").append("\n");
+                String comment_body = comment_doc.html().replaceAll("\\\\n", "\n");
+                System.out.println(Jsoup.clean(comment_body, "", Whitelist.none(), new Document.OutputSettings().prettyPrint(false)));
+                bandPage.setMoreComment(Jsoup.clean(comment_body, "", Whitelist.none(), new Document.OutputSettings().prettyPrint(false)));
+            } catch (IOException e) {
+                System.out.println(e.toString());
+            }
+
+            return bandPage.more_comment();
+        }
+
+        protected void onProgressUpdate(Integer... progress){
+
+        }
+
+        protected void onPostExecute(String result) {
+            comment_content.setText(bandPage.more_comment());
+        }
     }
 
     public void getWebsite(String band) {

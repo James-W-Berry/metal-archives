@@ -6,7 +6,7 @@
     android:padding="2dip"
     android:layout_marginRight="50dip"
     android:layout_marginEnd="50dip"
-    android:background="@color/cardview_light_background"
+    android:background="@color/colorPrimaryDark"
     android:gravity="center_vertical">
 
     <ImageView
@@ -18,7 +18,7 @@
     android:layout_marginEnd="6dip"
     android:contentDescription="album cover art"
     android:src="@mipmap/ic_album_black_48dp"
-    android:background="@color/cardview_light_background"/>
+    android:background="@color/cardview_dark_background"/>
 
     <TextView
         android:id="@+id/disco_item_title"
@@ -29,7 +29,11 @@
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@id/album_cover"
         android:layout_toRightOf="@id/album_cover"
+        android:ellipsize="end"
+        android:maxLines="2"
         android:text="title"
+        android:textColor="@color/white"
+        android:textStyle="bold"
         android:textSize="12sp" />
 
     <TextView
@@ -47,15 +51,27 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/disco_item_title"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
         android:layout_toEndOf="@id/album_cover"
         android:layout_toRightOf="@id/album_cover"
         android:text="year"
+        android:textColor="@color/white"
         android:textSize="12sp" />
 
     <TextView
         android:id="@+id/disco_item_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/disco_item_year"
+        android:layout_toRightOf="@id/disco_item_year"
+        android:layout_below="@id/disco_item_title"
+        android:text="format"
+        android:textColor="@color/white"
+        android:paddingStart="5dp"
+        android:paddingLeft="5dp"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/disco_item_score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/disco_item_year"
@@ -63,32 +79,21 @@
         android:layout_alignParentEnd="true"
         android:layout_toEndOf="@id/album_cover"
         android:layout_toRightOf="@id/album_cover"
-        android:text="format"
-        android:textSize="12sp" />
-
-    <TextView
-        android:id="@+id/disco_item_score"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/disco_item_type"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@id/album_cover"
-        android:layout_toRightOf="@id/album_cover"
+        android:textColor="@color/white"
         android:text="score"
         android:textSize="12sp" />
 
-    <TextView
-        android:id="@+id/disco_item_reviews"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/disco_item_score"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@id/album_cover"
-        android:layout_toRightOf="@id/album_cover"
-        android:text="reviews"
-        android:textSize="12sp" />
+    <!--<TextView-->
+        <!--android:id="@+id/disco_item_reviews"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@id/disco_item_score"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--android:layout_toEndOf="@id/album_cover"-->
+        <!--android:layout_toRightOf="@id/album_cover"-->
+        <!--android:text="reviews"-->
+        <!--android:textSize="12sp" />-->
 
 
 </RelativeLayout>

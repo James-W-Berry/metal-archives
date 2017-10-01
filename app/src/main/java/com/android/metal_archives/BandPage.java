@@ -29,6 +29,7 @@ public class BandPage extends AppCompatActivity{
     private String lyrical_themes_;
     private String label_;
     private String comment_;
+    private String more_comment_;
     private Bitmap logo_;
     private Bitmap band_pic_;
     private String[] disco_item_name_;
@@ -77,6 +78,10 @@ public class BandPage extends AppCompatActivity{
 
     public String comment(){
         return comment_;
+    }
+
+    public String more_comment(){
+        return more_comment_;
     }
 
     public Bitmap logo(){
@@ -151,6 +156,10 @@ public class BandPage extends AppCompatActivity{
         comment_ = comment_in;
     }
 
+    public void setMoreComment(String more_comment_in){
+        more_comment_ = more_comment_in;
+    }
+
     public void setLogo(Bitmap logo_in){
         logo_ = logo_in;
     }
@@ -195,7 +204,7 @@ public class BandPage extends AppCompatActivity{
         System.out.println(lyrical_themes_);
         System.out.println(label_);
         System.out.println(comment_);
-
+        System.out.println(more_comment_);
         System.out.println(Arrays.toString(disco_item_name_));
     }
 }

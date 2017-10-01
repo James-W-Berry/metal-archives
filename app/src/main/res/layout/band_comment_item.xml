@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:padding="6dip"
-    android:background="@color/cardview_light_background">
+    android:background="@color/cardview_dark_background">
 
     <!--<ImageView-->
     <!--android:id="@+id/logo"-->
@@ -27,6 +27,7 @@
         android:layout_toRightOf="@id/logo"
         android:gravity="center_vertical"
         android:text="example band comment"
+        android:textColor="@color/white"
         android:textSize="12sp" />
 
 </RelativeLayout>

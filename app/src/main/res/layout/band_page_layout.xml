@@ -89,7 +89,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="5dp"
-                android:background="@color/cardview_light_background"
+                android:background="@color/cardview_dark_background"
                 android:elevation="100dp"
                 card_view:cardCornerRadius="8dp">
 
@@ -109,13 +109,14 @@
                             android:id="@android:id/tabs"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@color/cardview_dark_background">
+                            android:background="@color/colorPrimary">
                         </TabWidget>
 
                         <FrameLayout
                             android:id="@android:id/tabcontent"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:background="@color/colorPrimary"
                             android:padding="2dp">
 
                             <RelativeLayout
@@ -128,7 +129,7 @@
                                 android:paddingStart="@dimen/activity_horizontal_margin"
                                 android:paddingTop="@dimen/activity_vertical_margin"
                                 android:paddingBottom="@dimen/activity_vertical_margin"
-                                android:background="@color/cardview_light_background">
+                                android:background="@color/colorPrimaryDark">
 
                                 <com.android.metal_archives.ExpandableHeightGridView
                                     android:id="@+id/disco_complete_view"
@@ -153,7 +154,7 @@
                                 android:paddingStart="@dimen/activity_horizontal_margin"
                                 android:paddingTop="@dimen/activity_vertical_margin"
                                 android:paddingBottom="@dimen/activity_vertical_margin"
-                                android:background="@color/cardview_light_background">
+                                android:background="@color/colorPrimaryDark">
 
                                 <com.android.metal_archives.ExpandableHeightGridView
                                     android:id="@+id/disco_main_view"
@@ -178,7 +179,7 @@
                                 android:paddingStart="@dimen/activity_horizontal_margin"
                                 android:paddingTop="@dimen/activity_vertical_margin"
                                 android:paddingBottom="@dimen/activity_vertical_margin"
-                                android:background="@color/cardview_light_background">
+                                android:background="@color/colorPrimaryDark">
 
                                 <com.android.metal_archives.ExpandableHeightGridView
                                     android:id="@+id/disco_lives_view"
@@ -203,7 +204,7 @@
                                 android:paddingStart="@dimen/activity_horizontal_margin"
                                 android:paddingTop="@dimen/activity_vertical_margin"
                                 android:paddingBottom="@dimen/activity_vertical_margin"
-                                android:background="@color/cardview_light_background">
+                                android:background="@color/colorPrimaryDark">
 
                                 <com.android.metal_archives.ExpandableHeightGridView
                                     android:id="@+id/disco_demos_view"
@@ -228,7 +229,7 @@
                                 android:paddingStart="@dimen/activity_horizontal_margin"
                                 android:paddingTop="@dimen/activity_vertical_margin"
                                 android:paddingBottom="@dimen/activity_vertical_margin"
-                                android:background="@color/cardview_light_background">
+                                android:background="@color/colorPrimaryDark">
 
                                 <com.android.metal_archives.ExpandableHeightGridView
                                     android:id="@+id/disco_misc_view"
