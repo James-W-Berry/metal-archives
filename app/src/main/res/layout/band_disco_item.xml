@@ -83,17 +83,12 @@
         android:text="score"
         android:textSize="12sp" />
 
-    <!--<TextView-->
-        <!--android:id="@+id/disco_item_reviews"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_below="@id/disco_item_score"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_alignParentEnd="true"-->
-        <!--android:layout_toEndOf="@id/album_cover"-->
-        <!--android:layout_toRightOf="@id/album_cover"-->
-        <!--android:text="reviews"-->
-        <!--android:textSize="12sp" />-->
+    <TextView
+        android:id="@+id/disco_item_reviews"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/disco_item_score"
+        android:visibility="gone" />
 
 
 </RelativeLayout>

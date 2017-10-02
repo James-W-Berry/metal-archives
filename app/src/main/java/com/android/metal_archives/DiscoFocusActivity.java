@@ -9,6 +9,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -40,13 +42,15 @@ import static java.security.AccessController.getContext;
 public class DiscoFocusActivity extends AppCompatActivity {
 
     private Document doc;
-    private AlbumParser albumParser;
+    private Document review_doc;
     private ExpandableHeightGridView track_list_view;
+    private ExpandableHeightGridView review_list_view;
     private Context context;
     private DiscoItem discoItem;
     private PopupWindow lyric_popup;
     private TextView lyrics;
     private TextView loading;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,16 +63,66 @@ public class DiscoFocusActivity extends AppCompatActivity {
         loading = (TextView) findViewById(R.id.disco_focus_loading);
         loading.setVisibility(View.VISIBLE);
 
-        new AlbumParser().execute(intent.getStringExtra("ITEM_URL"));
+        discoItem = new DiscoItem();
+
+        new AlbumParserTask().execute(intent.getStringExtra("ITEM_URL"));
+        new ReviewParserTask().execute(intent.getStringExtra("ITEM_REVIEW_SRC"));
     }
 
-    private class AlbumParser extends AsyncTask<String, Integer, DiscoItem> { //URL input, Integer progress, BandPage result
+    private class ReviewParserTask extends AsyncTask<String, Integer, DiscoItem> { //URL input, Integer progress, DiscoItem result
         protected DiscoItem doInBackground(String... params) {
-            /* parse doc from URL and populate BandPage class */
+            /* parse doc from URL and populate DiscoItem class */
             if (Looper.myLooper() == null) {
                 Looper.prepare();
             }
-            discoItem = new DiscoItem();
+
+            String review_url = params[0];
+
+            try {
+                review_doc = Jsoup.connect(review_url).get();
+                ReviewParser reviewParser = new ReviewParser(review_doc);
+                Integer review_count = reviewParser.parseReviews();
+                discoItem.set_review_titles(reviewParser.review_titles());
+                discoItem.set_review_details(reviewParser.review_details());
+                discoItem.set_review_contents(reviewParser.review_contents());
+                discoItem.set_review_count(review_count);
+            } catch (IOException e){
+                System.out.println(e.toString());
+            }
+
+            return discoItem;
+        }
+
+        protected void onProgressUpdate(Integer... progress) {
+        }
+
+        protected void onPostExecute(DiscoItem result) {
+            for(int i = 0; i < result.review_count(); i++){
+                System.out.println("adding review: " + result.review_titles()[i]);
+            }
+
+            review_list_view = (ExpandableHeightGridView) findViewById(R.id.review_list);
+            ReviewAdapter reviewAdapter = new ReviewAdapter(context, result.review_count(), result);
+
+            review_list_view.setAdapter(reviewAdapter);
+
+            // add item copy to complete tab
+            if (review_list_view != null){
+                review_list_view.setExpanded(true);
+            }
+
+            review_list_view.setOnItemClickListener(reviewListener);
+
+
+        }
+    }
+
+    private class AlbumParserTask extends AsyncTask<String, Integer, DiscoItem> { //URL input, Integer progress, DiscoItem result
+        protected DiscoItem doInBackground(String... params) {
+            /* parse doc from URL and populate DiscoItem class */
+            if (Looper.myLooper() == null) {
+                Looper.prepare();
+            }
             String disco_url = params[0];
 
             try {
@@ -154,6 +208,16 @@ public class DiscoFocusActivity extends AppCompatActivity {
             lyrics.setText(result);
         }
     }
+
+    private AdapterView.OnItemClickListener reviewListener = new AdapterView.OnItemClickListener(){
+        @Override
+        public void onItemClick(AdapterView<?> parent, View v,
+                                int position, long id) {
+            TextView review_content = (TextView) v.findViewById(R.id.review_content);
+            review_content.setVisibility(View.VISIBLE);
+
+        }
+    };
 
 
 

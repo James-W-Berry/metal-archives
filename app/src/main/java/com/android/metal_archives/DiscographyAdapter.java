@@ -55,7 +55,7 @@ public class DiscographyAdapter extends BaseAdapter {
             TextView year_copy = (TextView) convertView.findViewById(R.id.disco_item_year);
             TextView type_copy = (TextView) convertView.findViewById(R.id.disco_item_type);
             TextView score_copy = (TextView) convertView.findViewById(R.id.disco_item_score);
-//            TextView reviews_copy = (TextView) convertView.findViewById(R.id.disco_item_reviews);
+            TextView reviews_copy = (TextView) convertView.findViewById(R.id.disco_item_reviews);
             TextView source_copy = (TextView) convertView.findViewById(R.id.disco_item_src);
 
             for (int i = 0; i < disco_items; i++) {
@@ -68,7 +68,7 @@ public class DiscographyAdapter extends BaseAdapter {
                     type_copy.setText(bandPage.discoItemType()[i]);
                     score_copy.setText(bandPage.discoItemScore()[i]);
                     source_copy.setText(bandPage.discoItemNameSrc()[i]);
-//                    reviews_copy.setText("Reviews");
+                    reviews_copy.setText(bandPage.discoItemScoreSrc()[i]);
                     filter_index[i] = 0; // clear the index
 
                     // set onclick listener

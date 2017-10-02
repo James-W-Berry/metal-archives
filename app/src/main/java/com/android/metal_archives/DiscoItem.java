@@ -27,6 +27,10 @@ public class DiscoItem extends AppCompatActivity{
     private String[] track_number_;
     private String[] track_lyric_urls_;
     private String track_lyrics_;
+    private String[] review_titles_;
+    private String[] review_details_;
+    private String[] review_contents_;
+    private Integer review_count_;
 
     // accessors and mutators
     public String title(){
@@ -77,6 +81,21 @@ public class DiscoItem extends AppCompatActivity{
         return track_lyrics_;
     }
 
+    public String[] review_titles(){
+        return review_titles_;
+    }
+
+    public String[] review_details(){
+        return review_details_;
+    }
+    public String[] review_contents(){
+        return review_contents_;
+    }
+
+    public Integer review_count(){
+        return review_count_;
+    }
+
     public void set_title(String title_in){
         title_ = title_in;
     }
@@ -123,6 +142,22 @@ public class DiscoItem extends AppCompatActivity{
 
     public void set_track_lyrics(String track_lyrics_in){
         track_lyrics_ = track_lyrics_in;
+    }
+
+    public void set_review_titles(String[] review_titles_in){
+        review_titles_ = review_titles_in;
+    }
+
+    public void set_review_details(String[] review_details_in){
+        review_details_ = review_details_in;
+    }
+
+    public void set_review_contents(String[] review_contents_in){
+        review_contents_ = review_contents_in;
+    }
+
+    public void set_review_count(Integer review_count_in){
+        review_count_ = review_count_in;
     }
 
     // methods

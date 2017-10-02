@@ -35,6 +35,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Elements;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -167,8 +168,10 @@ public class SearchableActivity extends AppCompatActivity {
             TextView title = (TextView) v.findViewById(R.id.disco_item_title);
             disco_intent.putExtra("ITEM_NAME", title.getText()); //this is complete array
 
-            TextView src = (TextView) v.findViewById(R.id.disco_item_src);
-            disco_intent.putExtra("ITEM_URL", src.getText());
+            TextView disco_item_src = (TextView) v.findViewById(R.id.disco_item_src);
+            disco_intent.putExtra("ITEM_URL", disco_item_src.getText());
+            TextView disco_review_src = (TextView) v.findViewById(R.id.disco_item_reviews);
+            disco_intent.putExtra("ITEM_REVIEW_SRC", disco_review_src.getText());
 
             startActivityForResult(disco_intent, OPEN_NEW_ACTIVITY);
         }
@@ -358,7 +361,7 @@ public class SearchableActivity extends AppCompatActivity {
 
             try {
                 doc = Jsoup.connect("https://www.metal-archives.com/bands/" + band).get();
-                System.out.println(doc);
+                //System.out.println(doc);
                 String page_url = doc.select("h1.band_name").select("a").attr("href");
                 band_id = page_url.substring(page_url.lastIndexOf("/") + 1);
                 System.out.println("band id: " + band_id);
