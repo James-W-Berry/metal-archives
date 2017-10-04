@@ -220,7 +220,6 @@ public class DiscoFocusActivity extends AppCompatActivity {
             //TODO: implement view adapter for review content, scrollview isn't adapting to
             // 'gone' visibility text view for review content.
 
-
         }
     };
 
