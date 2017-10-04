@@ -1,39 +1,27 @@
 package com.android.metal_archives;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Point;
-import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.safety.Whitelist;
-import org.jsoup.select.Elements;
 
 import java.io.IOException;
-
-import static java.security.AccessController.getContext;
 
 /**
  * Created by BEJ2PLY on 9/23/2017.
@@ -112,7 +100,6 @@ public class DiscoFocusActivity extends AppCompatActivity {
             }
 
             review_list_view.setOnItemClickListener(reviewListener);
-
 
         }
     }
@@ -213,13 +200,29 @@ public class DiscoFocusActivity extends AppCompatActivity {
         @Override
         public void onItemClick(AdapterView<?> parent, View v,
                                 int position, long id) {
+
             TextView review_content = (TextView) v.findViewById(R.id.review_content);
-            review_content.setVisibility(View.VISIBLE);
+            ImageView review_arrow = (ImageView) v.findViewById(R.id.review_arrow);
+
+            if(review_content.getVisibility() == View.GONE){
+                review_content.setVisibility(View.VISIBLE);
+                review_arrow.setImageResource(R.mipmap.ic_expand_less_white_48dp);
+            } else{
+                review_content.setVisibility(View.GONE);
+                review_arrow.setImageResource(R.mipmap.ic_expand_more_white_48dp);
+            }
+
+            // add item copy to complete tab
+            if (review_list_view != null){
+                review_list_view.setExpanded(true);
+            }
+
+            //TODO: implement view adapter for review content, scrollview isn't adapting to
+            // 'gone' visibility text view for review content.
+
 
         }
     };
-
-
 
     private AdapterView.OnItemClickListener trackListener = new AdapterView.OnItemClickListener(){
         @Override

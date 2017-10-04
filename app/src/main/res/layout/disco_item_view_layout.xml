@@ -14,7 +14,7 @@
         android:gravity="center"
         android:textColor="@color/white"
         android:textSize="24sp"
-        android:text="Loading Album..."/>
+        android:text="Loading Album..." />
 
     <TextView
         android:id="@+id/disco_focus_loading"
@@ -84,7 +84,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/colorPrimaryDark"
+                    card_view:cardBackgroundColor="@color/colorPrimaryDark"
                     android:elevation="100dp"
                     android:padding="6dip"
                     card_view:cardCornerRadius="8dp">
@@ -100,11 +100,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:horizontalSpacing="10dp"
+                    android:horizontalSpacing="2dp"
                     android:isScrollContainer="false"
                     android:numColumns="1"
-                    android:padding="6dip"
-                    android:stretchMode="columnWidth" />
+                    android:stretchMode="columnWidth"
+                    android:verticalSpacing="20dp" />
 
 
             </LinearLayout>
