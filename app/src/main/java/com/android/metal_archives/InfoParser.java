@@ -80,7 +80,6 @@ public class InfoParser extends AppCompatActivity {
             Elements name = item.select("h1.band_name");
             name_ = name.text();
         }
-
     }
 
     public void parseInfo(Elements info_in){
@@ -110,7 +109,6 @@ public class InfoParser extends AppCompatActivity {
                     default:
                         break;
                 }
-
             }
 
             while (right_key_iterator.hasNext() && right_value_iterator.hasNext()) {

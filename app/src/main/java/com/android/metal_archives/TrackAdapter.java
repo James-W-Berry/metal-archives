@@ -53,22 +53,26 @@ public class TrackAdapter extends BaseAdapter {
 
 
             if(discoItem.tracks()[position] == null && !(position == discoItem.track_count() - 1)) {
-                // likely a record side or separate disc distinction
+                //System.out.println("adding disc distinction row to track card");
                 number_copy.setText(discoItem.track_number()[position]);
                 duration_copy.setVisibility(View.GONE);
             } else if(position == discoItem.track_count() - 1) {
-                // last track row, album duration
+                //System.out.println("adding duration row to track card");
                 number_copy.setText("Total duration: ");
                 title_copy.setText(discoItem.tracks()[position]);
             } else {
                 //System.out.println("adding track " + discoItem.tracks()[position]);
+                //System.out.println("lyric url: "+ discoItem.track_lyric_urls()[position]);
                 number_copy.setText(discoItem.track_number()[position]);
                 title_copy.setText(discoItem.tracks()[position]);
                 duration_copy.setText(discoItem.track_length()[position]);
-                lyrics_copy.setText("lyrics >");
+                if(discoItem.track_lyric_urls()[position] != null && !(discoItem.track_lyric_urls()[position]).equals("")) {
+                    lyrics_copy.setText("lyrics");
+                }
             }
         } else {
             // track item already added for this position
+            //System.out.println("track already added to this position");
         }
 
         return convertView;

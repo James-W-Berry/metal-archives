@@ -34,66 +34,75 @@
         android:padding="10dp"
         android:gravity="center" />
 
-        <ScrollView
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fillViewport="true">
+            android:layout_height="wrap_content">
 
-            <LinearLayout
-                android:orientation="vertical"
+            <android.support.v7.widget.CardView
+                android:id="@+id/track_card"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/cardview_dark_background"
+                android:elevation="100dp"
+                android:padding="6dip"
+                card_view:cardCornerRadius="8dp">
 
-                <android.support.v7.widget.CardView
-                    android:id="@+id/track_card"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@color/cardview_dark_background"
-                    android:elevation="100dp"
-                    android:padding="6dip"
-                    card_view:cardCornerRadius="8dp">
-
-                    <RelativeLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                        <com.android.metal_archives.ExpandableHeightGridView
-                            android:id="@+id/track_list"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:horizontalSpacing="2dp"
-                            android:isScrollContainer="false"
-                            android:numColumns="1"
-                            android:stretchMode="columnWidth" />
-                    </RelativeLayout>
+                    <com.android.metal_archives.ExpandableHeightGridView
+                        android:id="@+id/track_list"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:horizontalSpacing="2dp"
+                        android:isScrollContainer="false"
+                        android:numColumns="1"
+                        android:stretchMode="columnWidth"
+                        android:background="@color/colorPrimary"/>
+                </RelativeLayout>
 
-                </android.support.v7.widget.CardView>
+            </android.support.v7.widget.CardView>
 
 
+            <android.support.v7.widget.CardView
+                android:id="@+id/album_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                card_view:cardBackgroundColor="@color/colorPrimaryDark"
+                android:elevation="100dp"
+                android:padding="6dip"
+                card_view:cardCornerRadius="8dp">
 
-                <android.support.v7.widget.CardView
-                    android:id="@+id/album_info"
+                <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginTop="5dp"
-                    card_view:cardBackgroundColor="@color/colorPrimaryDark"
-                    android:elevation="100dp"
-                    android:padding="6dip"
-                    card_view:cardCornerRadius="8dp">
+                    android:layout_height="wrap_content"/>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+            </android.support.v7.widget.CardView>
 
-                </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                card_view:cardBackgroundColor="@color/colorPrimaryDark">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
                 <com.android.metal_archives.ExpandableHeightGridView
                     android:id="@+id/review_list"
@@ -104,11 +113,14 @@
                     android:isScrollContainer="false"
                     android:numColumns="1"
                     android:stretchMode="columnWidth"
-                    android:verticalSpacing="20dp" />
+                    android:verticalSpacing="5dp" />
 
+                </RelativeLayout>
 
-            </LinearLayout>
+            </android.support.v7.widget.CardView>
 
-        </ScrollView>
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>

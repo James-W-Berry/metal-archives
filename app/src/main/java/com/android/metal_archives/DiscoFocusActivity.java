@@ -36,8 +36,10 @@ public class DiscoFocusActivity extends AppCompatActivity {
     private Context context;
     private DiscoItem discoItem;
     private PopupWindow lyric_popup;
+    private PopupWindow review_popup;
     private TextView lyrics;
     private TextView loading;
+    private TrackAdapter trackAdapter;
 
 
     @Override
@@ -139,21 +141,26 @@ public class DiscoFocusActivity extends AppCompatActivity {
 
         protected void onPostExecute(DiscoItem result) {
             for(int i = 0; i < result.track_count() - 1; i++){
-                System.out.println(result.track_number()[i] + " " + result.tracks()[i] + "    " + result.track_length()[i] + "    Show lyrics");
+                System.out.println(result.track_number()[i] + " " + result.tracks()[i] + "    " + result.track_length()[i]);
             }
             System.out.println("Total duration: " + (result.tracks()[result.track_count() -1]));
 
             track_list_view = (ExpandableHeightGridView) findViewById(R.id.track_list);
 
-            TrackAdapter trackAdapter = new TrackAdapter(context, result.track_count(), result);
+            trackAdapter = new TrackAdapter(context, result.track_count(), result);
             track_list_view.setAdapter(trackAdapter);
+
+//            // add item copy to complete tab
+//            if (track_list_view != null){
+//                track_list_view.setExpanded(true);
+//            }
+
+            track_list_view.setOnItemClickListener(trackListener);
 
             // add item copy to complete tab
             if (track_list_view != null){
                 track_list_view.setExpanded(true);
             }
-
-            track_list_view.setOnItemClickListener(trackListener);
 
             loading.setVisibility(View.GONE);
 
@@ -198,64 +205,72 @@ public class DiscoFocusActivity extends AppCompatActivity {
 
     private AdapterView.OnItemClickListener reviewListener = new AdapterView.OnItemClickListener(){
         @Override
-        public void onItemClick(AdapterView<?> parent, View v,
-                                int position, long id) {
+        public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 
-            TextView review_content = (TextView) v.findViewById(R.id.review_content);
-            ImageView review_arrow = (ImageView) v.findViewById(R.id.review_arrow);
+            //We need to get the instance of the LayoutInflater, use the context of this activity
+            LayoutInflater inflater = (LayoutInflater) DiscoFocusActivity.this
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            //Inflate the view from a predefined XML layout
+            View layout = inflater.inflate(R.layout.review_view,
+                    (ViewGroup) findViewById(R.id.review_popup_element));
+            // create a PopupWindow
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            int height = displayMetrics.heightPixels;
+            int width = displayMetrics.widthPixels;
+            review_popup = new PopupWindow(layout, width, height, true);
 
-            if(review_content.getVisibility() == View.GONE){
-                review_content.setVisibility(View.VISIBLE);
-                review_arrow.setImageResource(R.mipmap.ic_expand_less_white_48dp);
-            } else{
-                review_content.setVisibility(View.GONE);
-                review_arrow.setImageResource(R.mipmap.ic_expand_more_white_48dp);
-            }
+            // display the popup in the center
+            review_popup.showAtLocation(v, Gravity.CENTER, 0, 0);
 
-            // add item copy to complete tab
-            if (review_list_view != null){
-                review_list_view.setExpanded(true);
-            }
+            TextView review_title = (TextView) layout.findViewById(R.id.review_popup_title);
+            review_title.setText(discoItem.review_titles()[position]);
 
-            //TODO: implement view adapter for review content, scrollview isn't adapting to
-            // 'gone' visibility text view for review content.
+            TextView review_details = (TextView) layout.findViewById(R.id.review_popup_details);
+            review_details.setText(discoItem.review_details()[position]);
 
+            TextView review_content = (TextView) layout.findViewById(R.id.review_popup_content);
+            review_content.setText(discoItem.review_contents()[position]);
+
+            ImageView close_review_view = (ImageView) layout.findViewById(R.id.close_review_view);
+            close_review_view.setOnClickListener(closeReviewListener);
         }
     };
 
     private AdapterView.OnItemClickListener trackListener = new AdapterView.OnItemClickListener(){
         @Override
-        public void onItemClick(AdapterView<?> parent, View v,
-                                int position, long id) {
-            try {
-                new LyricParser().execute(discoItem.track_lyric_urls()[position]);
+        public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+            if(discoItem.track_lyric_urls()[position] != null && !(discoItem.track_lyric_urls()[position]).equals("")) {
+                try {
+                    new LyricParser().execute(discoItem.track_lyric_urls()[position]);
 
-                //We need to get the instance of the LayoutInflater, use the context of this activity
-                LayoutInflater inflater = (LayoutInflater) DiscoFocusActivity.this
-                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                //Inflate the view from a predefined XML layout
-                View layout = inflater.inflate(R.layout.lyric_view,
-                        (ViewGroup) findViewById(R.id.lyric_popup_element));
-                // create a PopupWindow
-                DisplayMetrics displayMetrics = new DisplayMetrics();
-                getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-                int height = displayMetrics.heightPixels;
-                int width = displayMetrics.widthPixels;
-                lyric_popup = new PopupWindow(layout, width, height, true);
+                    //We need to get the instance of the LayoutInflater, use the context of this activity
+                    LayoutInflater inflater = (LayoutInflater) DiscoFocusActivity.this
+                            .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    //Inflate the view from a predefined XML layout
+                    View layout = inflater.inflate(R.layout.lyric_view,
+                            (ViewGroup) findViewById(R.id.lyric_popup_element));
+                    // create a PopupWindow
+                    DisplayMetrics displayMetrics = new DisplayMetrics();
+                    getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                    int height = displayMetrics.heightPixels;
+                    int width = displayMetrics.widthPixels;
+                    lyric_popup = new PopupWindow(layout, width, height, true);
 
-                // display the popup in the center
-                lyric_popup.showAtLocation(v, Gravity.CENTER, 0, 0);
+                    // display the popup in the center
+                    lyric_popup.showAtLocation(v, Gravity.CENTER, 0, 0);
 
-                TextView title = (TextView) layout.findViewById(R.id.song_title);
-                title.setText(discoItem.tracks()[position]);
+                    TextView title = (TextView) layout.findViewById(R.id.song_title);
+                    title.setText(discoItem.tracks()[position]);
 
-                lyrics = (TextView) layout.findViewById(R.id.lyric_content);
+                    lyrics = (TextView) layout.findViewById(R.id.lyric_content);
 
-                ImageView close_lyric_view = (ImageView) layout.findViewById(R.id.close_lyric_view);
-                close_lyric_view.setOnClickListener(closeLyricListener);
+                    ImageView close_lyric_view = (ImageView) layout.findViewById(R.id.close_lyric_view);
+                    close_lyric_view.setOnClickListener(closeLyricListener);
 
-            } catch (Exception e) {
-                e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
         }
@@ -264,6 +279,12 @@ public class DiscoFocusActivity extends AppCompatActivity {
     private View.OnClickListener closeLyricListener = new View.OnClickListener() {
         public void onClick(View v) {
             lyric_popup.dismiss();
+        }
+    };
+
+    private View.OnClickListener closeReviewListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            review_popup.dismiss();
         }
     };
 }

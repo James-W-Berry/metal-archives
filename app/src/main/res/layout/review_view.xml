@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:id="@+id/review_popup_element"
+    android:background="@color/colorPrimary"
+    >
+
+    <ImageView
+        android:contentDescription="close review window"
+        android:id="@+id/close_review_view"
+        android:src="@mipmap/ic_navigate_before_white_48dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"/>
+
+    <TextView
+        android:id="@+id/review_popup_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:paddingStart="35dp"
+        android:paddingLeft="35dp"
+        android:paddingRight="35dp"
+        android:paddingEnd="35dp"
+        android:elevation="100dp"
+        android:layout_centerHorizontal="true"
+        android:text="Review Title Here"
+        android:textColor="@color/white"/>
+
+    <TextView
+        android:id="@+id/review_popup_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="review details"
+        android:textColor="@color/colorAccent"
+        android:textSize="18sp"
+        android:paddingStart="35dp"
+        android:paddingLeft="35dp"
+        android:paddingRight="35dp"
+        android:paddingEnd="35dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="5dp"
+        android:textStyle="italic"
+        android:elevation="100dp"
+        android:layout_below="@+id/review_popup_title"
+        android:layout_centerHorizontal="true" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/review_popup_details"
+        android:background="@color/colorPrimaryDark"
+        android:id="@+id/scrollView2">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="75dp">
+
+            <TextView
+                android:id="@+id/review_popup_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="review content"
+                android:gravity="center_horizontal"
+                android:layout_weight="1"
+                android:textColor="@color/colorAccent"
+                android:visibility="visible" />
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
