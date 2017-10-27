@@ -55,12 +55,8 @@ public class DiscoFocusActivity extends AppCompatActivity {
 
         discoItem = new DiscoItem();
 
-        if(intent.getStringExtra("ITEM_URL") != null){
-            new AlbumParserTask().execute(intent.getStringExtra("ITEM_URL"));
-        }
-        if(intent.getStringExtra("ITEM_REVIEW_SRC") != null) {
-            new ReviewParserTask().execute(intent.getStringExtra("ITEM_REVIEW_SRC"));
-        }
+        new AlbumParserTask().execute(intent.getStringExtra("ITEM_URL"));
+        new ReviewParserTask().execute(intent.getStringExtra("ITEM_REVIEW_SRC"));
     }
 
     private class ReviewParserTask extends AsyncTask<String, Integer, DiscoItem> { //URL input, Integer progress, DiscoItem result

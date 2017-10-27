@@ -91,7 +91,8 @@ public class SearchableActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         context = this;
-        initializeSearchView();
+        getWebsite( getIntent().getStringExtra("BAND"));
+        // initializeSearchView();
     }
 
     private void initializeBandView() {
@@ -167,6 +168,7 @@ public class SearchableActivity extends AppCompatActivity {
             Intent disco_intent = new Intent(context, DiscoFocusActivity.class);
             TextView title = (TextView) v.findViewById(R.id.disco_item_title);
             disco_intent.putExtra("ITEM_NAME", title.getText()); //this is complete array
+
             TextView disco_item_src = (TextView) v.findViewById(R.id.disco_item_src);
             disco_intent.putExtra("ITEM_URL", disco_item_src.getText());
             TextView disco_review_src = (TextView) v.findViewById(R.id.disco_item_reviews);
@@ -175,6 +177,7 @@ public class SearchableActivity extends AppCompatActivity {
             startActivityForResult(disco_intent, OPEN_NEW_ACTIVITY);
         }
     };
+
 
     private void initializeSearchView() {
         setContentView(R.layout.activity_search);
@@ -315,6 +318,7 @@ public class SearchableActivity extends AppCompatActivity {
         getWebsite(searchResultPage.bandLinks()[position].substring(searchResultPage.bandLinks()[position].lastIndexOf('/') - (band_of_interest.length())));
     }
 
+
     private void initializeSearchingView(){
         setContentView(R.layout.activity_searching);
         flatbar = (ProgressBar) findViewById(R.id.flat_search_progress);
@@ -328,6 +332,7 @@ public class SearchableActivity extends AppCompatActivity {
         }
     }
 
+
     private View.OnClickListener clearSearchListener = new View.OnClickListener() {
         public void onClick(View v) {
             search.setText("");
@@ -336,80 +341,11 @@ public class SearchableActivity extends AppCompatActivity {
 
     private View.OnClickListener spotifyListener = new View.OnClickListener(){
         public void onClick(View v) {
-            Intent spotify_intent = new Intent(context, SpotifyActivity.class);
-            startActivity(spotify_intent);
+//            Intent spotify_intent = new Intent(context, SpotifyActivity.class);
+//            startActivity(spotify_intent);
         }
     };
 
-    private class InfoParserTask extends AsyncTask<String, Integer, ViewPageResult> {
-        protected ViewPageResult doInBackground(String... params) {
-            if (Looper.myLooper() == null) {
-                Looper.prepare();
-            }
-
-            System.out.println("parsing general info and comment");
-            infoParser = new InfoParser();
-            infoParser.parseName(doc.select("div#band_info"));
-            infoParser.parseComment(doc.select("div#band_info"));
-            infoParser.parseInfo(doc.select("div#band_stats"));
-            publishProgress(25);
-
-            bandPage.setName(infoParser.name());
-            bandPage.setComment(infoParser.comment());
-            bandPage.setCountry(infoParser.country());
-            bandPage.setLocation(infoParser.location());
-            bandPage.setStatus(infoParser.status());
-            bandPage.setYearFormed(infoParser.founded());
-            //bandPage.setYearsActive(infoParser.yearsActive()); Not currently parsed
-            bandPage.setGenre(infoParser.genre());
-            bandPage.setLyricalThemes(infoParser.lyrical_themes());
-            bandPage.setLabel(infoParser.label());
-
-            bandPage.display();
-            viewPageResult.setBandPage(bandPage);
-
-            return viewPageResult;
-        }
-        protected void onProgressUpdate(Integer... progress){
-            // option: update progress bar instead of progress circle
-            System.out.println(progress[progress.length-1].toString());
-            flatbar.setProgress(progress[progress.length-1]);
-        }
-
-        protected void onPostExecute(ViewPageResult result){
-            bandPage = new BandPage();
-            bandPage = result.getBandPage();
-
-            flatbar.setVisibility(View.GONE);
-
-            initializeBandView();
-
-            ImageView band_pic = (ImageView) findViewById(R.id.band_pic);
-            band_pic.setImageBitmap(bandPage.bandPic());
-
-            band_pic.setOnClickListener(spotifyListener);
-
-            TextView name = (TextView) findViewById(R.id.band_name);
-            name.setText(bandPage.name());
-            //ImageView logo = (ImageView) findViewById(R.id.logo);
-            //logo.setImageBitmap(bandPage.logo());
-            TextView country = (TextView) findViewById(R.id.band_country);
-            country.setText(bandPage.country());
-            TextView genre_view = (TextView) findViewById(R.id.band_genre);
-            genre_view.setText(bandPage.genre());
-            TextView location_view = (TextView) findViewById(R.id.band_location);
-            location_view.setText(bandPage.location());
-            TextView status_view = (TextView) findViewById(R.id.band_status);
-            status_view.setText(bandPage.status());
-            TextView lyrics = (TextView) findViewById(R.id.band_lyrics);
-            lyrics.setText(bandPage.lyricalThemes());
-            TextView formed_view = (TextView) findViewById(R.id.band_formed);
-            formed_view.setText(bandPage.yearFormed());
-            TextView label_view = (TextView) findViewById(R.id.band_label);
-            label_view.setText(bandPage.label());
-
-        }
-    }
 
     private class Parser extends AsyncTask<String, Integer, ViewPageResult> { //URL input, Integer progress, BandPage result
         protected ViewPageResult doInBackground(String... params){
@@ -422,6 +358,7 @@ public class SearchableActivity extends AppCompatActivity {
             bandPage = new BandPage();
             searchResultPage = new SearchResultPage();
             viewPageResult = new ViewPageResult();
+
 
             try {
                 doc = Jsoup.connect("https://www.metal-archives.com/bands/" + band).get();
@@ -451,16 +388,13 @@ public class SearchableActivity extends AppCompatActivity {
                     System.out.println("error: band not found");
 
                 } else {
-//                    /* parse general info and comment */
-//                    System.out.println("parsing general info and comment");
-//                    infoParser = new InfoParser();
-//                    infoParser.parseName(doc.select("div#band_info"));
-//                    infoParser.parseComment(doc.select("div#band_info"));
-//                    infoParser.parseInfo(doc.select("div#band_stats"));
-//                    publishProgress(25);
-
-                    //TODO: need to seperate out these async tasks
-                    //new InfoParserTask().execute("");
+                    /* parse general info and comment */
+                    System.out.println("parsing general info and comment");
+                    infoParser = new InfoParser();
+                    infoParser.parseName(doc.select("div#band_info"));
+                    infoParser.parseComment(doc.select("div#band_info"));
+                    infoParser.parseInfo(doc.select("div#band_stats"));
+                    publishProgress(25);
 
                     /* parse logo and band pic*/
                     System.out.println("parsing logo and band pic");
@@ -476,16 +410,16 @@ public class SearchableActivity extends AppCompatActivity {
                     publishProgress(95);
 
                     /* populate bandPage */
-//                    bandPage.setName(infoParser.name());
-//                    bandPage.setComment(infoParser.comment());
-//                    bandPage.setCountry(infoParser.country());
-//                    bandPage.setLocation(infoParser.location());
-//                    bandPage.setStatus(infoParser.status());
-//                    bandPage.setYearFormed(infoParser.founded());
-//                    //bandPage.setYearsActive(infoParser.yearsActive()); Not currently parsed
-//                    bandPage.setGenre(infoParser.genre());
-//                    bandPage.setLyricalThemes(infoParser.lyrical_themes());
-//                    bandPage.setLabel(infoParser.label());
+                    bandPage.setName(infoParser.name());
+                    bandPage.setComment(infoParser.comment());
+                    bandPage.setCountry(infoParser.country());
+                    bandPage.setLocation(infoParser.location());
+                    bandPage.setStatus(infoParser.status());
+                    bandPage.setYearFormed(infoParser.founded());
+                    //bandPage.setYearsActive(infoParser.yearsActive()); Not currently parsed
+                    bandPage.setGenre(infoParser.genre());
+                    bandPage.setLyricalThemes(infoParser.lyrical_themes());
+                    bandPage.setLabel(infoParser.label());
                     bandPage.setLogo(imageParser.logo());
                     bandPage.setBandPic(imageParser.band_pic());
                     bandPage.setDiscoItemName(discoParser.names());
@@ -524,33 +458,33 @@ public class SearchableActivity extends AppCompatActivity {
 
             } else if(bandPage != null) {
 
-//                flatbar.setVisibility(View.GONE);
-//
-//                initializeBandView();
-//
-//                ImageView band_pic = (ImageView) findViewById(R.id.band_pic);
-//                band_pic.setImageBitmap(bandPage.bandPic());
-//
-//                band_pic.setOnClickListener(spotifyListener);
-//
-//                TextView name = (TextView) findViewById(R.id.band_name);
-//                name.setText(bandPage.name());
-//                //ImageView logo = (ImageView) findViewById(R.id.logo);
-//                //logo.setImageBitmap(bandPage.logo());
-//                TextView country = (TextView) findViewById(R.id.band_country);
-//                country.setText(bandPage.country());
-//                TextView genre_view = (TextView) findViewById(R.id.band_genre);
-//                genre_view.setText(bandPage.genre());
-//                TextView location_view = (TextView) findViewById(R.id.band_location);
-//                location_view.setText(bandPage.location());
-//                TextView status_view = (TextView) findViewById(R.id.band_status);
-//                status_view.setText(bandPage.status());
-//                TextView lyrics = (TextView) findViewById(R.id.band_lyrics);
-//                lyrics.setText(bandPage.lyricalThemes());
-//                TextView formed_view = (TextView) findViewById(R.id.band_formed);
-//                formed_view.setText(bandPage.yearFormed());
-//                TextView label_view = (TextView) findViewById(R.id.band_label);
-//                label_view.setText(bandPage.label());
+                flatbar.setVisibility(View.GONE);
+
+                initializeBandView();
+
+                ImageView band_pic = (ImageView) findViewById(R.id.band_pic);
+                band_pic.setImageBitmap(bandPage.bandPic());
+
+                band_pic.setOnClickListener(spotifyListener);
+
+                TextView name = (TextView) findViewById(R.id.band_name);
+                name.setText(bandPage.name());
+                //ImageView logo = (ImageView) findViewById(R.id.logo);
+                //logo.setImageBitmap(bandPage.logo());
+                TextView country = (TextView) findViewById(R.id.band_country);
+                country.setText(bandPage.country());
+                TextView genre_view = (TextView) findViewById(R.id.band_genre);
+                genre_view.setText(bandPage.genre());
+                TextView location_view = (TextView) findViewById(R.id.band_location);
+                location_view.setText(bandPage.location());
+                TextView status_view = (TextView) findViewById(R.id.band_status);
+                status_view.setText(bandPage.status());
+                TextView lyrics = (TextView) findViewById(R.id.band_lyrics);
+                lyrics.setText(bandPage.lyricalThemes());
+                TextView formed_view = (TextView) findViewById(R.id.band_formed);
+                formed_view.setText(bandPage.yearFormed());
+                TextView label_view = (TextView) findViewById(R.id.band_label);
+                label_view.setText(bandPage.label());
                 band_comment = (TextView) findViewById(R.id.band_comment);
                 band_comment.setText(bandPage.comment());
 
@@ -734,6 +668,7 @@ public class SearchableActivity extends AppCompatActivity {
         }
     };
 
+
     private class CommentParser extends AsyncTask<String, Integer, String> { //URL input, Integer progress, Lyric result
         protected String doInBackground(String... params) {
             String band_id = params[0];
@@ -768,6 +703,7 @@ public class SearchableActivity extends AppCompatActivity {
         new Parser().execute(band);
     }
 
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -798,5 +734,6 @@ public class SearchableActivity extends AppCompatActivity {
         finish();
         return true;
     }
+
 
 }

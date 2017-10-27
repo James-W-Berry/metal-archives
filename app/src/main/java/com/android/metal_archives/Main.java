@@ -4,19 +4,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
+import android.widget.ImageView;
 
 /**
  * Author: James Berry
- * Description: Homepage activity
+ * Description: Homepage activity where user searches for bands of interest
  */
 
 public class Main extends AppCompatActivity {
-    public Button enter;
-    public TextView search_text;
+    ImageView search_action;
+    EditText search_band_text;
     Context context;
 
     @Override
@@ -25,15 +24,15 @@ public class Main extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         context = this;
 
-        // toolbar to replace default toolbar
-        enter = (Button) findViewById(R.id.home_toolbar);
+        search_band_text = (EditText) findViewById(R.id.search_band_edittext) ;
+        search_action = (ImageView) findViewById(R.id.search_action);
 
-        enter.setOnClickListener(new View.OnClickListener() {
+        search_action.setOnClickListener(new View.OnClickListener() {
             Intent intent;
             @Override
             public void onClick(View v) {
-                //launch search activity
                 intent = new Intent(context, SearchableActivity.class);
+                intent.putExtra("BAND", search_band_text.getText().toString() );
                 startActivity(intent);
             }
         });
