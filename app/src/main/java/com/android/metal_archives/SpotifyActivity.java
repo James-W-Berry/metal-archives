@@ -104,14 +104,14 @@
 //
 //    @Override
 //    public void onLoggedIn() {
-//        Log.d("MainActivity", "User logged in");
+//        Log.d("MainActivity", "user logged in");
 //
 //        mPlayer.playUri(null, "spotify:track:75PPmkeoaWPhStZMPwh0UP", 0, 0);
 //    }
 //
 //    @Override
 //    public void onLoggedOut() {
-//        Log.d("MainActivity", "User logged out");
+//        Log.d("MainActivity", "user logged out");
 //    }
 //
 //    @Override

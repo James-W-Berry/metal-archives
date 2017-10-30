@@ -40,7 +40,7 @@
             <!--android:theme="@android:style/Theme.Translucent.NoTitleBar"/>-->
 
         <activity
-            android:name=".Main"
+            android:name=".Home"
             android:theme="@style/AppTheme">
             <intent-filter>
             <action android:name="android.intent.action.MAIN" />
@@ -49,11 +49,11 @@
         </activity>
 
         <activity android:name=".SearchableActivity"
-            android:parentActivityName=".Main"
+            android:parentActivityName=".Home"
             android:theme="@style/noAnimTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Main" />
+                android:value=".Home" />
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
