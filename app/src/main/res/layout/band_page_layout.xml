@@ -45,6 +45,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_margin="5dp"
+                    android:fontFamily="@font/dosis"
                     android:text="Band Name"
                     android:textColor="@color/white"
                     android:textSize="36sp" />

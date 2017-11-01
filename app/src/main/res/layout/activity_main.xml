@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -8,36 +9,43 @@
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="20dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:fontFamily="@font/dosis"
         android:gravity="start"
+        android:paddingLeft="20dp"
         android:text="Metallum Encyclopedium "
         android:textColor="@color/white"
-        android:textSize="20sp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:textSize="26sp" />
 
     <TextView
         android:id="@+id/subtitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="20dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/title"
+        android:fontFamily="@font/dosis"
         android:gravity="start"
+        android:paddingLeft="20dp"
         android:text="The Metal Archives "
         android:textColor="@color/white"
-        android:textSize="20sp"
-        android:layout_below="@+id/title"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:textSize="24sp" />
 
     <EditText
+        android:id="@+id/search_band_edittext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorPrimary"
         android:layout_centerVertical="true"
         android:layout_marginLeft="20dp"
         android:layout_marginStart="20dp"
-        android:hint= "Search for..."
-        android:id="@+id/search_band_edittext"/>
+        android:fontFamily="@font/dosis_light"
+        android:hint="Search for..."
+        android:textColorHint="@color/colorAccent"
+        android:imeOptions="actionSearch"
+        android:inputType="textCapWords"
+        android:textColor="@color/white"
+        android:textSize="24sp" />
 
     <ImageView
         android:id="@+id/search_action"
@@ -51,6 +59,16 @@
         android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp"
         />
+
+    <ImageView
+        android:id="@+id/search_clear"
+        android:layout_toRightOf="@id/search_band_edittext"
+        android:layout_toEndOf="@id/search_band_edittext"
+        android:layout_centerVertical="true"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:visibility="gone"
+        android:src="@mipmap/ic_clear_black_48dp"/>
 
 
 

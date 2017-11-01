@@ -91,7 +91,8 @@ public class SearchableActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         context = this;
-        getWebsite( getIntent().getStringExtra("BAND"));
+        band_of_interest = getIntent().getStringExtra("BAND");
+        getWebsite( band_of_interest );
         // initializeSearchView();
     }
 

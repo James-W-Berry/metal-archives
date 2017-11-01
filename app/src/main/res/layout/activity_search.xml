@@ -50,8 +50,7 @@
                         android:layout_marginStart="10dp"
                         android:layout_marginLeft="10dp"
                         android:layout_weight="1"
-                        android:textSize="30sp"
-                        android:textStyle="bold" />
+                        android:textSize="30sp" />
                 </TableRow>
 
                 <TableRow
