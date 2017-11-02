@@ -31,7 +31,7 @@
             android:padding="6dp"
             android:text="example band country"
             android:textColor="@color/white"
-            android:textSize="12sp" />
+            android:textSize="16sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -59,7 +59,7 @@
             android:padding="6dp"
             android:text="example band location"
             android:textColor="@color/white"
-            android:textSize="12sp" />
+            android:textSize="16sp" />
 
     </LinearLayout>
 
@@ -88,7 +88,7 @@
             android:padding="6dp"
             android:text="example band genre"
             android:textColor="@color/white"
-            android:textSize="12sp" />
+            android:textSize="16sp" />
 
     </LinearLayout>
 
@@ -117,7 +117,7 @@
             android:padding="6dp"
             android:text="example band status"
             android:textColor="@color/white"
-            android:textSize="12sp" />
+            android:textSize="16sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -145,7 +145,7 @@
             android:padding="6dp"
             android:text="example band lyrics"
             android:textColor="@color/white"
-            android:textSize="12sp" />
+            android:textSize="16sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -173,7 +173,7 @@
             android:padding="6dp"
             android:text="example band formed in"
             android:textColor="@color/white"
-            android:textSize="12sp" />
+            android:textSize="16sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -201,7 +201,7 @@
             android:padding="6dp"
             android:text="example band label"
             android:textColor="@color/white"
-            android:textSize="12sp" />
+            android:textSize="16sp" />
     </LinearLayout>
 
 </RelativeLayout>

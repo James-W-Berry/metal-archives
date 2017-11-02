@@ -10,41 +10,27 @@
     app:titleTextAppearance="@style/ToolBarTitleStyle"
     android:background="@color/colorPrimary">
 
-    <TextView
-        android:id="@+id/search_text"
-        android:background="@drawable/edit_text"
-        android:textSize="16sp"
-        android:textColor="@color/colorPrimary"
-        android:hint="Search Metal Archives"
-        android:textColorHint="@color/colorPrimary"
-        android:layout_width="match_parent"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:visibility="gone"/>
-
     <FrameLayout
         android:id="@+id/search_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <EditText
             android:id="@+id/search_edit"
+            android:fontFamily="@font/dosis_light"
+            android:hint="Search for..."
+            android:textColorHint="@color/colorAccent"
             android:imeOptions="actionSearch"
-            android:inputType="textCapSentences"
-            android:background="@drawable/edit_text"
+            android:inputType="textCapWords"
+            android:textColor="@color/white"
             android:textSize="16sp"
-            android:textColor="@color/colorPrimary"
-            android:hint="@string/search_hint"
-            android:textColorHint="@color/colorPrimary"
             android:layout_width="match_parent"
             android:layout_marginEnd="20dp"
             android:layout_marginRight="20dp"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:visibility="gone"/>
+            android:visibility="visible"/>
 
         <ImageView
             android:contentDescription="clear search"
@@ -55,7 +41,7 @@
             android:layout_marginRight="25dp"
             android:layout_marginEnd="25dp"
             android:layout_gravity="end|center_vertical"
-            android:visibility="gone"/>
+            android:visibility="visible"/>
     </FrameLayout>
 
 </android.support.v7.widget.Toolbar>

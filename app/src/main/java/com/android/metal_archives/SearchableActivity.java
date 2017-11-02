@@ -100,7 +100,6 @@ public class SearchableActivity extends AppCompatActivity {
         setContentView(R.layout.band_page_layout);
         context = this;
 
-        search_prep = (TextView) findViewById(R.id.search_prep);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
@@ -127,7 +126,6 @@ public class SearchableActivity extends AppCompatActivity {
         search.setVisibility(View.VISIBLE);
 
         search_clear = (ImageView) findViewById(R.id.clear_search);
-        search_clear.setVisibility(View.VISIBLE);
         search_clear.setOnClickListener(clearSearchListener);
         search_frame = (FrameLayout) findViewById(R.id.search_layout);
         search_frame.setVisibility(View.VISIBLE);
@@ -145,7 +143,6 @@ public class SearchableActivity extends AppCompatActivity {
                     search.clearFocus(); // close keyboard
                     InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(search.getWindowToken(), 0);
-                    //cleanTable(album_table);
                     album_count = 0;
                     band_of_interest = search.getText().toString();
                     getWebsite(search.getText().toString());
@@ -183,58 +180,7 @@ public class SearchableActivity extends AppCompatActivity {
     private void initializeSearchView() {
         setContentView(R.layout.activity_search);
         context = this;
-        search_prep = (TextView) findViewById(R.id.search_prep);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("");
-        setSupportActionBar(toolbar);
-
-        album_table = (TableLayout) findViewById(R.id.album_table);
-
-        // add back arrow to toolbar
-        if (getSupportActionBar() != null){
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
-
-        search = (EditText) findViewById(R.id.search_edit);
-        search.setVisibility(View.VISIBLE);
-
-        search_clear = (ImageView) findViewById(R.id.clear_search);
-        search_clear.setVisibility(View.VISIBLE);
-        search_clear.setOnClickListener(clearSearchListener);
-        search_frame = (FrameLayout) findViewById(R.id.search_layout);
-        search_frame.setVisibility(View.VISIBLE);
-
-        search.requestFocus(); // open keyboard for search
-        if(search.requestFocus()) {
-            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        }
-
-        // listen for search command from keyboard
-        search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    search.clearFocus(); // close keyboard
-                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(search.getWindowToken(), 0);
-                    cleanTable(album_table);
-                    //cleanTable(search_result_table);
-                    album_count = 0;
-                    band_of_interest = search.getText().toString();
-                    getWebsite(search.getText().toString());
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        // add back arrow to toolbar
-        if (getSupportActionBar() != null){
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
     }
 
     private void initializeSearchResultView(SearchResultPage result) {
