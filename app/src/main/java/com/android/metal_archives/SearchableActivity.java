@@ -2,9 +2,12 @@ package com.android.metal_archives;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -49,13 +52,14 @@ import java.util.List;
  */
 
 public class SearchableActivity extends AppCompatActivity {
+
     private EditText search;
     private FrameLayout search_frame;
     private ImageView search_clear;
-    private ProgressBar flatbar;
     private TextView search_prep;
     private TextView band_comment;
     private Context context;
+    private TextView flatbar_status;
 
     private TableLayout album_table;
     private Integer album_count = 0;
@@ -65,6 +69,7 @@ public class SearchableActivity extends AppCompatActivity {
     private String read_more_check;
 
     private DiscoParser discoParser;
+    private CoverParser coverParser;
     private ImageParser imageParser;
     private InfoParser infoParser;
     private SearchResultsParser searchResultsParser;
@@ -82,8 +87,8 @@ public class SearchableActivity extends AppCompatActivity {
     private ExpandableHeightGridView disco_lives_view;
     private ExpandableHeightGridView disco_demos_view;
     private ExpandableHeightGridView disco_misc_view;
+    private CoordinatorLayout main_view;
 
-    private TabHost tabHost;
     public static final int OPEN_NEW_ACTIVITY = 42;
 
     @Override
@@ -92,269 +97,77 @@ public class SearchableActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
         context = this;
         band_of_interest = getIntent().getStringExtra("BAND");
-        getWebsite( band_of_interest );
-        // initializeSearchView();
+        getBand( band_of_interest );
     }
 
-    private void initializeBandView() {
-        setContentView(R.layout.band_page_layout);
-        context = this;
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("");
-        setSupportActionBar(toolbar);
-
-        disco_complete_view = (ExpandableHeightGridView) findViewById(R.id.disco_complete_view);
-        disco_main_view = (ExpandableHeightGridView) findViewById(R.id.disco_main_view);
-        disco_lives_view = (ExpandableHeightGridView) findViewById(R.id.disco_lives_view);
-        disco_demos_view = (ExpandableHeightGridView) findViewById(R.id.disco_demos_view);
-        disco_misc_view = (ExpandableHeightGridView) findViewById(R.id.disco_misc_view);
-
-        disco_complete_view.setOnItemClickListener(discoListener);
-        disco_main_view.setOnItemClickListener(discoListener);
-        disco_lives_view.setOnItemClickListener(discoListener);
-        disco_demos_view.setOnItemClickListener(discoListener);
-        disco_misc_view.setOnItemClickListener(discoListener);
-
-        // add back arrow to toolbar
-        if (getSupportActionBar() != null){
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
-
-        search = (EditText) findViewById(R.id.search_edit);
-        search.setVisibility(View.VISIBLE);
-
-        search_clear = (ImageView) findViewById(R.id.clear_search);
-        search_clear.setOnClickListener(clearSearchListener);
-        search_frame = (FrameLayout) findViewById(R.id.search_layout);
-        search_frame.setVisibility(View.VISIBLE);
-
-        search.requestFocus(); // open keyboard for search
-        if(search.requestFocus()) {
-            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        }
-
-        // listen for search command from keyboard
-        search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    search.clearFocus(); // close keyboard
-                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(search.getWindowToken(), 0);
-                    album_count = 0;
-                    band_of_interest = search.getText().toString();
-                    getWebsite(search.getText().toString());
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        // add back arrow to toolbar
-        if (getSupportActionBar() != null){
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
-    }
-
-    private AdapterView.OnItemClickListener discoListener = new AdapterView.OnItemClickListener(){
-        @Override
-        public void onItemClick(AdapterView<?> parent, View v,
-                                int position, long id) {
-            Intent disco_intent = new Intent(context, DiscoFocusActivity.class);
-            TextView title = (TextView) v.findViewById(R.id.disco_item_title);
-            disco_intent.putExtra("ITEM_NAME", title.getText()); //this is complete array
-
-            TextView disco_item_src = (TextView) v.findViewById(R.id.disco_item_src);
-            disco_intent.putExtra("ITEM_URL", disco_item_src.getText());
-            TextView disco_review_src = (TextView) v.findViewById(R.id.disco_item_reviews);
-            disco_intent.putExtra("ITEM_REVIEW_SRC", disco_review_src.getText());
-
-            startActivityForResult(disco_intent, OPEN_NEW_ACTIVITY);
-        }
-    };
-
-
-    private void initializeSearchView() {
+    public void getBand(String band) {
+        Log.i("SearchableActivity", "searching for " + band);
         setContentView(R.layout.activity_search);
-        context = this;
-
+        new BandParser().execute(band);
     }
 
-    private void initializeSearchResultView(SearchResultPage result) {
-        setContentView(R.layout.recycle_search_result);
-        context = this;
+    private class BandParser extends AsyncTask<String, Integer, ViewPageResult> { //URL input, Integer progress, BandPage result
 
-        recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size
-        // of the RecyclerView
-        recyclerView.setHasFixedSize(true);
-        // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(context);
-        recyclerView.setLayoutManager(mLayoutManager);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        toolbar.setTitle("");
-        setSupportActionBar(toolbar);
-
-        // add back arrow to toolbar
-        if (getSupportActionBar() != null){
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
-
-        search = (EditText) findViewById(R.id.search_edit);
-        search.setVisibility(View.VISIBLE);
-
-        search_clear = (ImageView) findViewById(R.id.clear_search);
-        search_clear.setVisibility(View.VISIBLE);
-        search_clear.setOnClickListener(clearSearchListener);
-        search_frame = (FrameLayout) findViewById(R.id.search_layout);
-        search_frame.setVisibility(View.VISIBLE);
-
-        search.requestFocus(); // open keyboard for search
-        if(search.requestFocus()) {
-            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        }
-
-        // listen for search command from keyboard
-        search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    search.clearFocus(); // close keyboard
-                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(search.getWindowToken(), 0);
-                    album_count = 0;
-                    getWebsite(search.getText().toString());
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        // add back arrow to toolbar
-        if (getSupportActionBar() != null){
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
-
-        // populate result views
-        List<String> names = new ArrayList<>();
-        List<String> details = new ArrayList<>();
-        for (int i = 0; i < result.bands().length; i++) {
-            if (result.bands()[i] != null){
-                String name = result.bands()[i].split("-", 2)[0];
-                String detail = result.bands()[i].split("- ", 2)[1];
-                names.add(name);
-                details.add(detail);
-            }
-        }
-        // define an adapter
-        SearchResultAdapter mAdapter = new SearchResultAdapter(names, details, context);
-        recyclerView.setAdapter(mAdapter);
-    }
-
-    public void onRecycleViewSelected(int position){
-        System.out.println(searchResultPage.bandLinks()[position]);
-        System.out.println(searchResultPage.bandLinks()[position].substring(searchResultPage.bandLinks()[position].lastIndexOf('/') - (band_of_interest.length())));
-        getWebsite(searchResultPage.bandLinks()[position].substring(searchResultPage.bandLinks()[position].lastIndexOf('/') - (band_of_interest.length())));
-    }
-
-
-    private void initializeSearchingView(){
-        setContentView(R.layout.activity_searching);
-        flatbar = (ProgressBar) findViewById(R.id.flat_search_progress);
-        flatbar.setVisibility(View.VISIBLE);
-    }
-
-    private void cleanTable(TableLayout table) {
-        int childCount = table.getChildCount();
-        if (childCount > 0) {
-            table.removeViews(0, childCount);
-        }
-    }
-
-
-    private View.OnClickListener clearSearchListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            search.setText("");
-        }
-    };
-
-    private View.OnClickListener spotifyListener = new View.OnClickListener(){
-        public void onClick(View v) {
-//            Intent spotify_intent = new Intent(context, SpotifyActivity.class);
-//            startActivity(spotify_intent);
-        }
-    };
-
-
-    private class Parser extends AsyncTask<String, Integer, ViewPageResult> { //URL input, Integer progress, BandPage result
         protected ViewPageResult doInBackground(String... params){
-            /* parse doc from URL and populate BandPage class */
-            if (Looper.myLooper() == null)
-            {
-                Looper.prepare();
-            }
-            String band = params[0];
+            if (Looper.myLooper() == null) { Looper.prepare(); }
+
             bandPage = new BandPage();
             searchResultPage = new SearchResultPage();
             viewPageResult = new ViewPageResult();
 
+            flatbar_status = findViewById(R.id.search_progress_status);
+            publishProgress(0);
 
             try {
-                doc = Jsoup.connect("https://www.metal-archives.com/bands/" + band).get();
-                //System.out.println(doc);
+                doc = Jsoup.connect("https://www.metal-archives.com/bands/" + params[0]).get();
                 String page_url = doc.select("h1.band_name").select("a").attr("href");
                 band_id = page_url.substring(page_url.lastIndexOf("/") + 1);
-                System.out.println("band id: " + band_id);
-
                 Elements search_results = doc.select("div#content_wrapper").select("ul");
-
                 read_more_check = doc.select("div.tool_strip.bottom.right").select("a").text();
-                //System.out.println(read_more_check);
 
                 if(!(search_results.select("li").first().text().contains("Search on eBay"))) {
-                    /* parse search results */
-                    System.out.println("parsing search results");
+                    /* parse search results if multiple bands exist with the same name */
                     searchResultsParser = new SearchResultsParser(search_results);
                     searchResultsParser.fetchBands();
-
                     searchResultPage.setBands(searchResultsParser.bandResults());
                     searchResultPage.setBandLinks(searchResultsParser.bandLinks());
-                    searchResultPage.display();
 
                     viewPageResult.setSearchResultPage(searchResultPage);
-
                 } else if(doc.select("div#content_wrapper").select("h4").text().equals("Band not found")){
                     System.out.println("error: band not found");
 
                 } else {
                     /* parse general info and comment */
-                    System.out.println("parsing general info and comment");
+                    publishProgress(25);
                     infoParser = new InfoParser();
                     infoParser.parseName(doc.select("div#band_info"));
                     infoParser.parseComment(doc.select("div#band_info"));
                     infoParser.parseInfo(doc.select("div#band_stats"));
-                    publishProgress(25);
 
                     /* parse logo and band pic*/
-                    System.out.println("parsing logo and band pic");
+                    publishProgress(50);
                     imageParser = new ImageParser(doc.select("div#band_sidebar"));
                     imageParser.fetchLogo();
                     imageParser.fetchBandPic();
-                    publishProgress(65);
 
                     /* parse discography */
-                    System.out.println("parsing discography");
+                    publishProgress(75);
                     discoParser = new DiscoParser(doc);
                     album_count = discoParser.fetchComplete();
-                    publishProgress(95);
+
+                    // for each disco item, fetch cover and set in post execute
+                    for(int i = 0; i < discoParser.name_srcs().length; i ++){
+                        if(discoParser.name_srcs()[i] != null){
+                            try {
+                                System.out.println(discoParser.name_srcs()[i]);
+                                doc = Jsoup.connect(discoParser.name_srcs()[i]).get();
+                                coverParser = new CoverParser(doc);
+                                bandPage.setDiscoItemCover(coverParser.cover(), i);
+                            } catch (IOException e){
+                                System.out.println(e.toString());
+                            }
+                        }
+                    }
 
                     /* populate bandPage */
                     bandPage.setName(infoParser.name());
@@ -376,63 +189,70 @@ public class SearchableActivity extends AppCompatActivity {
                     bandPage.setDiscoItemScore(discoParser.scores());
                     bandPage.setDiscoItemReviewSrc(discoParser.review_srcs());
 
-                    bandPage.display();
                     viewPageResult.setBandPage(bandPage);
                 }
 
             } catch(IOException e){
                 System.out.println(e.toString());
             }
+
             return viewPageResult;
         }
 
         protected void onProgressUpdate(Integer... progress){
-            // option: update progress bar instead of progress circle
-            System.out.println(progress[progress.length-1].toString());
-            flatbar.setProgress(progress[progress.length-1]);
+
+            switch (progress[progress.length-1]){
+                case 0:
+                    flatbar_status.setText("looking for " + band_of_interest + "...");
+                    break;
+                case 25:
+                    flatbar_status.setText("gathering band information...");
+                    break;
+                case 50:
+                    flatbar_status.setText("fetching band picture...");
+                    break;
+                case 75:
+                    flatbar_status.setText("loading discography and wrapping up...");
+                    break;
+                default:
+                    break;
+            }
         }
 
         protected void onPostExecute(ViewPageResult result){
-            // update UI elements
+
             bandPage = new BandPage();
             bandPage = result.getBandPage();
-            searchResultPage = new SearchResultPage();
-            searchResultPage = result.getSearchResultsPage();
 
-            if(searchResultPage != null){
-
-                initializeSearchResultView(searchResultPage);
-
+            if(result.getSearchResultsPage() != null){
+                initializeSearchResultView(result.getSearchResultsPage());
             } else if(bandPage != null) {
-
-                flatbar.setVisibility(View.GONE);
-
                 initializeBandView();
 
-                ImageView band_pic = (ImageView) findViewById(R.id.band_pic);
+                ImageView band_pic = findViewById(R.id.band_pic);
                 band_pic.setImageBitmap(bandPage.bandPic());
 
                 band_pic.setOnClickListener(spotifyListener);
 
-                TextView name = (TextView) findViewById(R.id.band_name);
+                TextView name = findViewById(R.id.band_name);
                 name.setText(bandPage.name());
-                //ImageView logo = (ImageView) findViewById(R.id.logo);
-                //logo.setImageBitmap(bandPage.logo());
-                TextView country = (TextView) findViewById(R.id.band_country);
+                ImageView logo = findViewById(R.id.logo);
+                logo.setImageBitmap(bandPage.logo());
+                TextView country = findViewById(R.id.band_country);
                 country.setText(bandPage.country());
-                TextView genre_view = (TextView) findViewById(R.id.band_genre);
+                TextView genre_view = findViewById(R.id.band_genre);
                 genre_view.setText(bandPage.genre());
-                TextView location_view = (TextView) findViewById(R.id.band_location);
+                TextView location_view = findViewById(R.id.band_location);
                 location_view.setText(bandPage.location());
-                TextView status_view = (TextView) findViewById(R.id.band_status);
+                TextView status_view = findViewById(R.id.band_status);
                 status_view.setText(bandPage.status());
-                TextView lyrics = (TextView) findViewById(R.id.band_lyrics);
+                TextView lyrics = findViewById(R.id.band_lyrics);
                 lyrics.setText(bandPage.lyricalThemes());
-                TextView formed_view = (TextView) findViewById(R.id.band_formed);
+                TextView formed_view = findViewById(R.id.band_formed);
                 formed_view.setText(bandPage.yearFormed());
-                TextView label_view = (TextView) findViewById(R.id.band_label);
+                TextView label_view = findViewById(R.id.band_label);
                 label_view.setText(bandPage.label());
-                band_comment = (TextView) findViewById(R.id.band_comment);
+                band_comment = findViewById(R.id.band_comment);
                 band_comment.setText(bandPage.comment());
 
                 if(read_more_check.equals("Read more")) {
@@ -442,30 +262,31 @@ public class SearchableActivity extends AppCompatActivity {
                             try {
                                 new CommentParser().execute(band_id);
 
-                                //We need to get the instance of the LayoutInflater, use the context of this activity
                                 LayoutInflater inflater = (LayoutInflater) SearchableActivity.this
                                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-                                //Inflate the view from a predefined XML layout
                                 View layout = inflater.inflate(R.layout.more_comment_view,
                                         (ViewGroup) findViewById(R.id.comment_popup_element));
 
-                                // create a PopupWindow
+                                // create a PopupWindow and dim background
+                                main_view = findViewById(R.id.main_content);
+
                                 DisplayMetrics displayMetrics = new DisplayMetrics();
                                 getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-                                int height = displayMetrics.heightPixels;
-                                int width = displayMetrics.widthPixels;
+                                double dHeight  = (displayMetrics.heightPixels - displayMetrics.heightPixels*0.3);
+                                int height = (int) dHeight;
+
+                                double dWidth = (displayMetrics.widthPixels - displayMetrics.widthPixels*0.1);
+                                int width = (int) dWidth;
+
                                 comment_popup = new PopupWindow(layout, width, height, true);
-
-                                // display the popup in the center
                                 comment_popup.showAtLocation(v, Gravity.CENTER, 0, 0);
+                                dimBehind(comment_popup);
 
-                                TextView band_name = (TextView) layout.findViewById(R.id.band_name);
+                                TextView band_name = layout.findViewById(R.id.band_name);
                                 band_name.setText(bandPage.name());
-
-                                comment_content = (TextView) layout.findViewById(R.id.comment_content);
-
-                                ImageView close_comment_view = (ImageView) layout.findViewById(R.id.close_comment_view);
+                                comment_content = layout.findViewById(R.id.comment_content);
+                                ImageView close_comment_view = layout.findViewById(R.id.close_comment_view);
                                 close_comment_view.setOnClickListener(closeCommentListener);
 
                             } catch (Exception e) {
@@ -600,6 +421,8 @@ public class SearchableActivity extends AppCompatActivity {
                 }
 
 
+
+
             } else {
                 initializeSearchView();
                 Toast toast = Toast.makeText(context,"band not found! please try again", Toast.LENGTH_SHORT);
@@ -609,9 +432,196 @@ public class SearchableActivity extends AppCompatActivity {
 
     }
 
+    public static void dimBehind(PopupWindow popupWindow) {
+        View container;
+        if (popupWindow.getBackground() == null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                container = (View) popupWindow.getContentView().getParent();
+            } else {
+                container = popupWindow.getContentView();
+            }
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                container = (View) popupWindow.getContentView().getParent().getParent();
+            } else {
+                container = (View) popupWindow.getContentView().getParent();
+            }
+        }
+        Context context = popupWindow.getContentView().getContext();
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        WindowManager.LayoutParams p = (WindowManager.LayoutParams) container.getLayoutParams();
+        p.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        p.dimAmount = 0.7f;
+        wm.updateViewLayout(container, p);
+    }
+
+    private void initializeBandView() {
+        setContentView(R.layout.band_page_layout);
+        context = this;
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        //toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+
+        disco_complete_view = findViewById(R.id.disco_complete_view);
+        disco_main_view = findViewById(R.id.disco_main_view);
+        disco_lives_view = findViewById(R.id.disco_lives_view);
+        disco_demos_view = findViewById(R.id.disco_demos_view);
+        disco_misc_view = findViewById(R.id.disco_misc_view);
+
+        disco_complete_view.setOnItemClickListener(discoListener);
+        disco_main_view.setOnItemClickListener(discoListener);
+        disco_lives_view.setOnItemClickListener(discoListener);
+        disco_demos_view.setOnItemClickListener(discoListener);
+        disco_misc_view.setOnItemClickListener(discoListener);
+
+        // add back arrow to toolbar
+        if (getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+
+        search = findViewById(R.id.search_edit);
+        search_clear = findViewById(R.id.clear_search);
+        search_clear.setOnClickListener(clearSearchListener);
+
+        // listen for search command from keyboard
+        search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    search.clearFocus(); // close keyboard
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(search.getWindowToken(), 0);
+                    album_count = 0;
+                    band_of_interest = search.getText().toString();
+                    getBand(search.getText().toString());
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        // add back arrow to toolbar
+        if (getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+    }
+
+    private AdapterView.OnItemClickListener discoListener = new AdapterView.OnItemClickListener(){
+        @Override
+        public void onItemClick(AdapterView<?> parent, View v,
+                                int position, long id) {
+            Intent disco_intent = new Intent(context, DiscoFocusActivity.class);
+            TextView title = v.findViewById(R.id.disco_item_title);
+            disco_intent.putExtra("ITEM_NAME", title.getText()); //this is complete array
+
+            TextView disco_item_src = v.findViewById(R.id.disco_item_src);
+            disco_intent.putExtra("ITEM_URL", disco_item_src.getText());
+            TextView disco_review_src = v.findViewById(R.id.disco_item_reviews);
+            disco_intent.putExtra("ITEM_REVIEW_SRC", disco_review_src.getText());
+
+            startActivityForResult(disco_intent, OPEN_NEW_ACTIVITY);
+        }
+    };
+
+
+    private void initializeSearchView() {
+        setContentView(R.layout.activity_search);
+        context = this;
+    }
+
+    private void initializeSearchResultView(SearchResultPage result) {
+        setContentView(R.layout.recycle_search_result);
+        context = this;
+
+        recyclerView = findViewById(R.id.my_recycler_view);
+        recyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(context);
+        recyclerView.setLayoutManager(mLayoutManager);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+
+        // add back arrow to toolbar
+        if (getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+
+        search = findViewById(R.id.search_edit);
+
+//        earch.requestFocus(); // open keyboard for search
+//        if(search.requestFocus()) {
+//            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+//        }s
+
+        // listen for search command from keyboard
+        search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    search.clearFocus(); // close keyboard
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(search.getWindowToken(), 0);
+                    album_count = 0;
+                    band_of_interest = search.getText().toString();
+                    getBand(search.getText().toString());
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        // add back arrow to toolbar
+        if (getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+
+        // populate result views
+        List<String> names = new ArrayList<>();
+        List<String> details = new ArrayList<>();
+        for (int i = 0; i < result.bands().length; i++) {
+            if (result.bands()[i] != null){
+                String name = result.bands()[i].split("-", 2)[0];
+                String detail = result.bands()[i].split("- ", 2)[1];
+                names.add(name);
+                details.add(detail);
+            }
+        }
+        // define an adapter
+        SearchResultAdapter mAdapter = new SearchResultAdapter(names, details, context);
+        recyclerView.setAdapter(mAdapter);
+    }
+
+    public void onRecycleViewSelected(int position){
+        //System.out.println(searchResultPage.bandLinks()[position]);
+        //System.out.println(searchResultPage.bandLinks()[position].substring(searchResultPage.bandLinks()[position].lastIndexOf('/') - (band_of_interest.length())));
+        getBand(searchResultPage.bandLinks()[position].substring(searchResultPage.bandLinks()[position].lastIndexOf('/') - (band_of_interest.length())));
+    }
+
+    private View.OnClickListener clearSearchListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            search.setText("");
+        }
+    };
+
+    private View.OnClickListener spotifyListener = new View.OnClickListener(){
+        public void onClick(View v) {
+//            Intent spotify_intent = new Intent(context, SpotifyActivity.class);
+//            startActivity(spotify_intent);
+        }
+    };
+
+
     private View.OnClickListener closeCommentListener = new View.OnClickListener() {
         public void onClick(View v) {
             comment_popup.dismiss();
+            main_view.setAlpha(1.0F);
         }
     };
 
@@ -644,12 +654,6 @@ public class SearchableActivity extends AppCompatActivity {
         }
     }
 
-    public void getWebsite(String band) {
-        Log.i("SearchableActivity", "searching for " + band);
-        initializeSearchingView();
-        new Parser().execute(band);
-    }
-
 
     @Override
     protected void onPause() {
@@ -664,19 +668,18 @@ public class SearchableActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == OPEN_NEW_ACTIVITY) {
-            if (search != null && search.requestFocus()) {
-                search.clearFocus();
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-                imm.hideSoftInputFromWindow(search.getWindowToken(), 0);
-            }
-        }
+//        if (requestCode == OPEN_NEW_ACTIVITY) {
+//            if (search != null && search.requestFocus()) {
+//                search.clearFocus();
+//                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+//                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+//                imm.hideSoftInputFromWindow(search.getWindowToken(), 0);
+//            }
+//        }
     }
 
     @Override
     public boolean onSupportNavigateUp() {
-        search.setVisibility(View.GONE);
         onBackPressed();
         finish();
         return true;

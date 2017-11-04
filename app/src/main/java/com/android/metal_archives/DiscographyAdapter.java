@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class DiscographyAdapter extends BaseAdapter {
@@ -51,18 +52,20 @@ public class DiscographyAdapter extends BaseAdapter {
 
         if(!(convertView instanceof View)){
             convertView = inflater.inflate(R.layout.band_disco_item, null, false);
-            TextView title_copy = (TextView) convertView.findViewById(R.id.disco_item_title);
-            TextView year_copy = (TextView) convertView.findViewById(R.id.disco_item_year);
-            TextView type_copy = (TextView) convertView.findViewById(R.id.disco_item_type);
-            TextView score_copy = (TextView) convertView.findViewById(R.id.disco_item_score);
-            TextView reviews_copy = (TextView) convertView.findViewById(R.id.disco_item_reviews);
-            TextView source_copy = (TextView) convertView.findViewById(R.id.disco_item_src);
+            ImageView cover_copy = convertView.findViewById(R.id.album_cover);
+            TextView title_copy = convertView.findViewById(R.id.disco_item_title);
+            TextView year_copy = convertView.findViewById(R.id.disco_item_year);
+            TextView type_copy = convertView.findViewById(R.id.disco_item_type);
+            TextView score_copy = convertView.findViewById(R.id.disco_item_score);
+            TextView reviews_copy = convertView.findViewById(R.id.disco_item_reviews);
+            TextView source_copy = convertView.findViewById(R.id.disco_item_src);
 
             for (int i = 0; i < disco_items; i++) {
                 if (filter_index[i] == 1) {
                     //System.out.println(Arrays.toString(filter_index));
 //                    System.out.println("found "+ filter + " " + bandPage.discoItemName()[i]
 //                            +" at index "+ Integer.toString(i));
+                    cover_copy.setImageBitmap(bandPage.discoItemCover()[i]);
                     title_copy.setText(bandPage.discoItemName()[i]);
                     year_copy.setText(bandPage.discoItemYear()[i]);
                     type_copy.setText(bandPage.discoItemType()[i]);
@@ -70,8 +73,6 @@ public class DiscographyAdapter extends BaseAdapter {
                     source_copy.setText(bandPage.discoItemNameSrc()[i]);
                     reviews_copy.setText(bandPage.discoItemScoreSrc()[i]);
                     filter_index[i] = 0; // clear the index
-
-                    // set onclick listener
 
                     break;
                 } else {

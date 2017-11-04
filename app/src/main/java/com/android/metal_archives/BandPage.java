@@ -16,6 +16,7 @@ public class BandPage extends AppCompatActivity{
 
     // constructor
     public BandPage(){
+        disco_item_cover_ = new Bitmap[100];
     }
 
     // parameters
@@ -38,6 +39,7 @@ public class BandPage extends AppCompatActivity{
     private String[] disco_item_year_;
     private String[] disco_item_score_;
     private String[] disco_item_review_src_;
+    private Bitmap[] disco_item_cover_;
 
     // accessors and mutators
     public String name(){
@@ -116,6 +118,10 @@ public class BandPage extends AppCompatActivity{
         return disco_item_review_src_;
     }
 
+    public Bitmap[] discoItemCover(){
+        return disco_item_cover_;
+    }
+
     public void setName(String name_in){
         name_ = name_in;
     }
@@ -190,6 +196,10 @@ public class BandPage extends AppCompatActivity{
 
     public void setDiscoItemReviewSrc(String[] disco_item_review_src_in){
         disco_item_review_src_ = disco_item_review_src_in;
+    }
+
+    public void setDiscoItemCover(Bitmap cover_in, Integer index_in){
+        disco_item_cover_[index_in] = cover_in;
     }
 
     // methods

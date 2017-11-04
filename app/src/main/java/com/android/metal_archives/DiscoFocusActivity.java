@@ -48,9 +48,9 @@ public class DiscoFocusActivity extends AppCompatActivity {
         setContentView(R.layout.disco_item_view_layout);
         context = this;
         Intent intent = getIntent();
-        TextView name = (TextView) findViewById(R.id.disco_focus_name);
+        TextView name = findViewById(R.id.disco_focus_name);
         name.setText(intent.getStringExtra("ITEM_NAME"));
-        loading = (TextView) findViewById(R.id.disco_focus_loading);
+        loading = findViewById(R.id.disco_focus_loading);
         loading.setVisibility(View.VISIBLE);
 
         discoItem = new DiscoItem();
@@ -91,7 +91,7 @@ public class DiscoFocusActivity extends AppCompatActivity {
                 System.out.println("adding review: " + result.review_titles()[i]);
             }
 
-            review_list_view = (ExpandableHeightGridView) findViewById(R.id.review_list);
+            review_list_view = findViewById(R.id.review_list);
             ReviewAdapter reviewAdapter = new ReviewAdapter(context, result.review_count(), result);
 
             review_list_view.setAdapter(reviewAdapter);
@@ -145,7 +145,7 @@ public class DiscoFocusActivity extends AppCompatActivity {
             }
             System.out.println("Total duration: " + (result.tracks()[result.track_count() -1]));
 
-            track_list_view = (ExpandableHeightGridView) findViewById(R.id.track_list);
+            track_list_view = findViewById(R.id.track_list);
 
             trackAdapter = new TrackAdapter(context, result.track_count(), result);
             track_list_view.setAdapter(trackAdapter);
@@ -164,7 +164,7 @@ public class DiscoFocusActivity extends AppCompatActivity {
 
             loading.setVisibility(View.GONE);
 
-            ImageView cover = (ImageView) findViewById(R.id.disco_focus_cover);
+            ImageView cover = findViewById(R.id.disco_focus_cover);
             cover.setImageBitmap(discoItem.cover());
 
         }

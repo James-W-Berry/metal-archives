@@ -1,5 +1,6 @@
 package com.android.metal_archives;
 
+import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 
 /**
@@ -27,4 +28,7 @@ public class ViewPageResult extends AppCompatActivity {
     public void setSearchResultPage(SearchResultPage search_result_page_in){
         search_result_page_ = search_result_page_in;
     }
+
+
+
 }

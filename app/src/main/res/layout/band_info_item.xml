@@ -28,7 +28,7 @@
             android:fontFamily="@font/dosis_light"
             android:gravity="center_vertical"
             android:maxLines="2"
-            android:padding="6dp"
+            android:padding="2dp"
             android:text="example band country"
             android:textColor="@color/white"
             android:textSize="16sp" />
@@ -56,7 +56,7 @@
             android:ellipsize="end"
             android:fontFamily="@font/dosis_light"
             android:maxLines="2"
-            android:padding="6dp"
+            android:padding="2dp"
             android:text="example band location"
             android:textColor="@color/white"
             android:textSize="16sp" />
@@ -85,7 +85,7 @@
             android:ellipsize="end"
             android:fontFamily="@font/dosis_light"
             android:maxLines="2"
-            android:padding="6dp"
+            android:padding="2dp"
             android:text="example band genre"
             android:textColor="@color/white"
             android:textSize="16sp" />
@@ -114,7 +114,7 @@
             android:ellipsize="marquee"
             android:fontFamily="@font/dosis_light"
             android:maxLines="2"
-            android:padding="6dp"
+            android:padding="2dp"
             android:text="example band status"
             android:textColor="@color/white"
             android:textSize="16sp" />
@@ -142,7 +142,7 @@
             android:ellipsize="marquee"
             android:fontFamily="@font/dosis_light"
             android:maxLines="2"
-            android:padding="6dp"
+            android:padding="2dp"
             android:text="example band lyrics"
             android:textColor="@color/white"
             android:textSize="16sp" />
@@ -170,7 +170,7 @@
             android:ellipsize="marquee"
             android:fontFamily="@font/dosis_light"
             android:maxLines="2"
-            android:padding="6dp"
+            android:padding="2dp"
             android:text="example band formed in"
             android:textColor="@color/white"
             android:textSize="16sp" />
@@ -198,7 +198,7 @@
             android:ellipsize="marquee"
             android:fontFamily="@font/dosis_light"
             android:maxLines="2"
-            android:padding="6dp"
+            android:padding="2dp"
             android:text="example band label"
             android:textColor="@color/white"
             android:textSize="16sp" />

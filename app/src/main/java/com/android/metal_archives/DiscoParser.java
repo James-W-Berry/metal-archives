@@ -26,7 +26,6 @@ public class DiscoParser extends AppCompatActivity {
         year_ = new String[100];
         score_ = new String[100];
         review_src_ = new String[100];
-
     }
 
     // parameters

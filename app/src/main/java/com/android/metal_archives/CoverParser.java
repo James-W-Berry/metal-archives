@@ -23,7 +23,7 @@ public class CoverParser {
     // constructor
     public CoverParser(Document doc){
         this.document = doc;
-        this.cover_ = null; //TODO set album icon as default
+        this.cover_ = null;
         parseCover();
     }
 
