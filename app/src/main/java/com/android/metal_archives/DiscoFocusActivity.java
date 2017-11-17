@@ -3,6 +3,7 @@ package com.android.metal_archives;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
@@ -12,8 +13,10 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
@@ -40,6 +43,7 @@ public class DiscoFocusActivity extends AppCompatActivity {
     private TextView lyrics;
     private TextView loading;
     private TrackAdapter trackAdapter;
+    private LinearLayout disco_view;
 
 
     @Override
@@ -54,9 +58,22 @@ public class DiscoFocusActivity extends AppCompatActivity {
         loading.setVisibility(View.VISIBLE);
 
         discoItem = new DiscoItem();
+        String item_url = intent.getStringExtra("ITEM_URL");
+        String item_review_url = intent.getStringExtra("ITEM_REVIEW_SRC");
 
-        new AlbumParserTask().execute(intent.getStringExtra("ITEM_URL"));
-        new ReviewParserTask().execute(intent.getStringExtra("ITEM_REVIEW_SRC"));
+        System.out.println("disco item src: " + item_url);
+        System.out.println("disco review src: " + item_review_url);
+
+        if(item_url != null){
+            if(!item_url.equals("")){
+                new AlbumParserTask().execute(intent.getStringExtra("ITEM_URL"));
+            }
+        }
+        if(intent.getStringExtra("ITEM_REVIEW_SRC") != null){
+            if(!item_review_url.equals("")){
+                new ReviewParserTask().execute(intent.getStringExtra("ITEM_REVIEW_SRC"));
+            }
+        }
     }
 
     private class ReviewParserTask extends AsyncTask<String, Integer, DiscoItem> { //URL input, Integer progress, DiscoItem result
@@ -207,32 +224,37 @@ public class DiscoFocusActivity extends AppCompatActivity {
         @Override
         public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 
-            //We need to get the instance of the LayoutInflater, use the context of this activity
             LayoutInflater inflater = (LayoutInflater) DiscoFocusActivity.this
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            //Inflate the view from a predefined XML layout
+
             View layout = inflater.inflate(R.layout.review_view,
                     (ViewGroup) findViewById(R.id.review_popup_element));
+
             // create a PopupWindow
+            disco_view = findViewById(R.id.disco_focus_main);
+
             DisplayMetrics displayMetrics = new DisplayMetrics();
             getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-            int height = displayMetrics.heightPixels;
-            int width = displayMetrics.widthPixels;
+            double dHeight  = (displayMetrics.heightPixels - displayMetrics.heightPixels*0.3);
+            int height = (int) dHeight;
+
+            double dWidth = (displayMetrics.widthPixels - displayMetrics.widthPixels*0.1);
+            int width = (int) dWidth;
+
             review_popup = new PopupWindow(layout, width, height, true);
-
-            // display the popup in the center
             review_popup.showAtLocation(v, Gravity.CENTER, 0, 0);
+            dimBehind(review_popup);
 
-            TextView review_title = (TextView) layout.findViewById(R.id.review_popup_title);
+            TextView review_title = layout.findViewById(R.id.review_popup_title);
             review_title.setText(discoItem.review_titles()[position]);
 
-            TextView review_details = (TextView) layout.findViewById(R.id.review_popup_details);
+            TextView review_details = layout.findViewById(R.id.review_popup_details);
             review_details.setText(discoItem.review_details()[position]);
 
-            TextView review_content = (TextView) layout.findViewById(R.id.review_popup_content);
+            TextView review_content = layout.findViewById(R.id.review_popup_content);
             review_content.setText(discoItem.review_contents()[position]);
 
-            ImageView close_review_view = (ImageView) layout.findViewById(R.id.close_review_view);
+            ImageView close_review_view = layout.findViewById(R.id.close_review_view);
             close_review_view.setOnClickListener(closeReviewListener);
         }
     };
@@ -287,4 +309,27 @@ public class DiscoFocusActivity extends AppCompatActivity {
             review_popup.dismiss();
         }
     };
+
+    private static void dimBehind(PopupWindow popupWindow) {
+        View container;
+        if (popupWindow.getBackground() == null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                container = (View) popupWindow.getContentView().getParent();
+            } else {
+                container = popupWindow.getContentView();
+            }
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                container = (View) popupWindow.getContentView().getParent().getParent();
+            } else {
+                container = (View) popupWindow.getContentView().getParent();
+            }
+        }
+        Context context = popupWindow.getContentView().getContext();
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        WindowManager.LayoutParams p = (WindowManager.LayoutParams) container.getLayoutParams();
+        p.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        p.dimAmount = 0.7f;
+        wm.updateViewLayout(container, p);
+    }
 }

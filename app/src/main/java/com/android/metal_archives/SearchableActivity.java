@@ -155,20 +155,6 @@ public class SearchableActivity extends AppCompatActivity {
                     discoParser = new DiscoParser(doc);
                     album_count = discoParser.fetchComplete();
 
-                    // for each disco item, fetch cover and set in post execute
-                    for(int i = 0; i < discoParser.name_srcs().length; i ++){
-                        if(discoParser.name_srcs()[i] != null){
-                            try {
-                                System.out.println(discoParser.name_srcs()[i]);
-                                doc = Jsoup.connect(discoParser.name_srcs()[i]).get();
-                                coverParser = new CoverParser(doc);
-                                bandPage.setDiscoItemCover(coverParser.cover(), i);
-                            } catch (IOException e){
-                                System.out.println(e.toString());
-                            }
-                        }
-                    }
-
                     /* populate bandPage */
                     bandPage.setName(infoParser.name());
                     bandPage.setComment(infoParser.comment());
@@ -231,7 +217,6 @@ public class SearchableActivity extends AppCompatActivity {
 
                 ImageView band_pic = findViewById(R.id.band_pic);
                 band_pic.setImageBitmap(bandPage.bandPic());
-
                 band_pic.setOnClickListener(spotifyListener);
 
                 TextView name = findViewById(R.id.band_name);
@@ -297,7 +282,7 @@ public class SearchableActivity extends AppCompatActivity {
                 }
 
 
-                TabHost host = (TabHost)findViewById(R.id.disco_selector);
+                TabHost host = findViewById(R.id.disco_selector);
                 host.setup();
 
                 //Tab 1
@@ -420,7 +405,8 @@ public class SearchableActivity extends AppCompatActivity {
                     disco_misc_view.setExpanded(true);
                 }
 
-
+                /* setup threads to populate discography item covers */
+                populateCovers();
 
 
             } else {
@@ -432,7 +418,59 @@ public class SearchableActivity extends AppCompatActivity {
 
     }
 
-    public static void dimBehind(PopupWindow popupWindow) {
+    private class CoverParserParams {
+        String url;
+        Integer index;
+        Bitmap cover;
+
+        CoverParserParams(String url_in, Integer index_in){
+            this.url = url_in;
+            this.index = index_in;
+            this.cover = null;
+        }
+    }
+
+    private void populateCovers(){
+        for(int i = 0; i < discoParser.name_srcs().length; i ++){
+            if(discoParser.name_srcs()[i] != null){
+                System.out.println("parsing cover for " + discoParser.name_srcs()[i]);
+                CoverParserParams coverParserParams = new CoverParserParams(discoParser.name_srcs()[i], i);
+                new DiscoCoversParser().execute(coverParserParams);
+            }
+        }
+    }
+
+    private class DiscoCoversParser extends AsyncTask<CoverParserParams, Integer, CoverParserParams> {
+        protected CoverParserParams doInBackground(CoverParserParams... params) {
+            if (Looper.myLooper() == null) { Looper.prepare(); }
+
+            try {
+                System.out.println(params[0].url);
+                doc = Jsoup.connect(params[0].url).get();
+                coverParser = new CoverParser(doc);
+                //bandPage.setDiscoItemCover(coverParser.cover(), params[0].index);
+                params[0].cover = coverParser.cover();
+            } catch (IOException e){
+                System.out.println(e.toString());
+            }
+
+            return params[0];
+        }
+
+        protected void onProgressUpdate(Integer... values) {
+
+        }
+
+        protected void onPostExecute(CoverParserParams coverParserParams_finished) {
+            //System.out.println("fetched cover for " + coverParserParams_finished.url);
+            ImageView complete_covers = disco_complete_view.getChildAt(coverParserParams_finished.index).findViewById(R.id.album_cover);
+            complete_covers.setImageBitmap(coverParserParams_finished.cover);
+
+        }
+    }
+
+
+    private static void dimBehind(PopupWindow popupWindow) {
         View container;
         if (popupWindow.getBackground() == null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
