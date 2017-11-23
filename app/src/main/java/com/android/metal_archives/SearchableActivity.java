@@ -245,7 +245,7 @@ public class SearchableActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             try {
-                                new CommentParser().execute(band_id);
+                               // new CommentParser().execute(band_id);
 
                                 LayoutInflater inflater = (LayoutInflater) SearchableActivity.this
                                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -271,6 +271,7 @@ public class SearchableActivity extends AppCompatActivity {
                                 TextView band_name = layout.findViewById(R.id.band_name);
                                 band_name.setText(bandPage.name());
                                 comment_content = layout.findViewById(R.id.comment_content);
+                                comment_content.setText(bandPage.more_comment());
                                 ImageView close_comment_view = layout.findViewById(R.id.close_comment_view);
                                 close_comment_view.setOnClickListener(closeCommentListener);
 
@@ -284,6 +285,9 @@ public class SearchableActivity extends AppCompatActivity {
 
                 TabHost host = findViewById(R.id.disco_selector);
                 host.setup();
+
+                //TODO: keep tab headings, replace tab contents with one horizontal scrollview
+                // with the tab headings hiding/showing relevant discography items
 
                 //Tab 1
                 TabHost.TabSpec spec = host.newTabSpec("Complete");
@@ -404,6 +408,8 @@ public class SearchableActivity extends AppCompatActivity {
                     disco_demos_view.setExpanded(true);
                     disco_misc_view.setExpanded(true);
                 }
+
+                new CommentParser().execute(band_id);
 
                 /* setup threads to populate discography item covers */
                 populateCovers();
@@ -688,7 +694,7 @@ public class SearchableActivity extends AppCompatActivity {
         }
 
         protected void onPostExecute(String result) {
-            comment_content.setText(bandPage.more_comment());
+           // comment_content.setText(bandPage.more_comment());
         }
     }
 
