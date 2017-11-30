@@ -559,8 +559,7 @@ public class SearchableActivity extends AppCompatActivity {
 
         }
     }
-
-
+    
     private static void dimBehind(PopupWindow popupWindow) {
         View container;
         if (popupWindow.getBackground() == null) {
