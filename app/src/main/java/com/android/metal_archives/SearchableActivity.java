@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Layout;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -25,9 +26,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -82,7 +86,8 @@ public class SearchableActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private ExpandableHeightGridView disco_complete_view;
+    private LinearLayout discography_list_layout;
+    private HorizontalScrollView disco_complete_view;
     private ExpandableHeightGridView disco_main_view;
     private ExpandableHeightGridView disco_lives_view;
     private ExpandableHeightGridView disco_demos_view;
@@ -283,11 +288,8 @@ public class SearchableActivity extends AppCompatActivity {
                 }
 
 
-                TabHost host = findViewById(R.id.disco_selector);
+                final TabHost host = findViewById(R.id.disco_selector);
                 host.setup();
-
-                //TODO: keep tab headings, replace tab contents with one horizontal scrollview
-                // with the tab headings hiding/showing relevant discography items
 
                 //Tab 1
                 TabHost.TabSpec spec = host.newTabSpec("Complete");
@@ -298,56 +300,56 @@ public class SearchableActivity extends AppCompatActivity {
 
                 //Tab 2
                 spec = host.newTabSpec("Main");
-                spec.setContent(R.id.tab2);
+                spec.setContent(R.id.tab1);
                 View main = getLayoutInflater().inflate(R.layout.disco_main, null);
                 spec.setIndicator(main);
                 host.addTab(spec);
 
                 //Tab 3
                 spec = host.newTabSpec("Lives");
-                spec.setContent(R.id.tab3);
+                spec.setContent(R.id.tab1);
                 View lives = getLayoutInflater().inflate(R.layout.disco_lives, null);
                 spec.setIndicator(lives);
                 host.addTab(spec);
 
                 //Tab 4
                 spec = host.newTabSpec("Demos");
-                spec.setContent(R.id.tab4);
+                spec.setContent(R.id.tab1);
                 View demos = getLayoutInflater().inflate(R.layout.disco_demos, null);
                 spec.setIndicator(demos);
                 host.addTab(spec);
 
                 //Tab 5
                 spec = host.newTabSpec("Misc.");
-                spec.setContent(R.id.tab5);
+                spec.setContent(R.id.tab1);
                 View misc = getLayoutInflater().inflate(R.layout.disco_misc, null);
                 spec.setIndicator(misc);
                 host.addTab(spec);
 
-                ViewGroup.LayoutParams params = host.getTabWidget().getChildAt(0).getLayoutParams();
-                DisplayMetrics metrics = getResources().getDisplayMetrics();
-                params.width = metrics.densityDpi *10;
-
-                host.getTabWidget().getChildAt(0).setLayoutParams(params);
-                host.getTabWidget().getChildAt(1).setLayoutParams(params);
-                host.getTabWidget().getChildAt(2).setLayoutParams(params);
-                host.getTabWidget().getChildAt(3).setLayoutParams(params);
-                host.getTabWidget().getChildAt(4).setLayoutParams(params);
+//                ViewGroup.LayoutParams params = host.getTabWidget().getChildAt(0).getLayoutParams();
+//                DisplayMetrics metrics = getResources().getDisplayMetrics();
+//                params.width = metrics.densityDpi *10;
+//
+//                host.getTabWidget().getChildAt(0).setLayoutParams(params);
+//                host.getTabWidget().getChildAt(1).setLayoutParams(params);
+//                host.getTabWidget().getChildAt(2).setLayoutParams(params);
+//                host.getTabWidget().getChildAt(3).setLayoutParams(params);
+//                host.getTabWidget().getChildAt(4).setLayoutParams(params);
 
 
                 Integer[] complete_index = new Integer[album_count];
                 Arrays.fill(complete_index, 0);
                 Integer main_count = 0;
-                Integer[] mains_index = new Integer[album_count];
+                final Integer[] mains_index = new Integer[album_count];
                 Arrays.fill(mains_index, 0);
                 Integer lives_count = 0;
-                Integer[] lives_index = new Integer[album_count];
+                final Integer[] lives_index = new Integer[album_count];
                 Arrays.fill(lives_index, 0);
                 Integer demos_count = 0;
-                Integer[] demos_index = new Integer[album_count];
+                final Integer[] demos_index = new Integer[album_count];
                 Arrays.fill(demos_index, 0);
                 Integer misc_count = 0;
-                Integer[] misc_index = new Integer[album_count];
+                final Integer[] misc_index = new Integer[album_count];
                 Arrays.fill(misc_index, 0);
 
 
@@ -385,29 +387,112 @@ public class SearchableActivity extends AppCompatActivity {
 //                        " demos, " +Integer.toString(misc_count) +" misc items");
 
 
-                DiscographyAdapter discoCompleteAdapter = new DiscographyAdapter(context, bandPage, album_count, album_count, complete_index, "Complete");
-                disco_complete_view.setAdapter(discoCompleteAdapter);
+                //DiscographyAdapter discoCompleteAdapter = new DiscographyAdapter(context, bandPage, album_count, album_count, complete_index, "Complete");
+                //disco_complete_view.setAdapter(discoCompleteAdapter);
+                //RelativeLayout discography_item_layout = findViewById(R.id.disco_item);
 
-                DiscographyAdapter discoMainAdapter = new DiscographyAdapter(context, bandPage, album_count, main_count, mains_index, "Mains");
-                disco_main_view.setAdapter(discoMainAdapter);
 
-                DiscographyAdapter discoLivesAdapter = new DiscographyAdapter(context, bandPage, album_count, lives_count,lives_index, "Lives");
-                disco_lives_view.setAdapter(discoLivesAdapter);
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                discography_list_layout = findViewById(R.id.discography_list_layout);
 
-                DiscographyAdapter discoDemosAdapter = new DiscographyAdapter(context, bandPage, album_count, demos_count,demos_index, "Demos");
-                disco_demos_view.setAdapter(discoDemosAdapter);
+                for(int i = 0; i < album_count; i++){
+                    //RelativeLayout discography_item_layout = new (RelativeLayout)findViewById(R.id.disco_item);
+                    View discography_item_layout = inflater.inflate(R.layout.band_disco_item, null, false);
 
-                DiscographyAdapter discoMiscAdapter = new DiscographyAdapter(context, bandPage, album_count, misc_count, misc_index, "Misc.");
-                disco_misc_view.setAdapter(discoMiscAdapter);
+                    ImageView cover_copy = discography_item_layout.findViewById(R.id.album_cover);
+                    TextView title_copy = discography_item_layout.findViewById(R.id.disco_item_title);
+                    TextView year_copy = discography_item_layout.findViewById(R.id.disco_item_year);
+                    TextView type_copy = discography_item_layout.findViewById(R.id.disco_item_type);
+                    TextView score_copy = discography_item_layout.findViewById(R.id.disco_item_score);
+                    TextView reviews_copy = discography_item_layout.findViewById(R.id.disco_item_reviews);
+                    TextView source_copy = discography_item_layout.findViewById(R.id.disco_item_src);
 
-                // add item copy to complete tab
-                if (disco_complete_view != null){
-                    disco_complete_view.setExpanded(true);
-                    disco_main_view.setExpanded(true);
-                    disco_lives_view.setExpanded(true);
-                    disco_demos_view.setExpanded(true);
-                    disco_misc_view.setExpanded(true);
+                    cover_copy.setImageBitmap(bandPage.discoItemCover()[i]);
+                    title_copy.setText(bandPage.discoItemName()[i]);
+                    year_copy.setText(bandPage.discoItemYear()[i]);
+                    type_copy.setText(bandPage.discoItemType()[i]);
+                    score_copy.setText(bandPage.discoItemScore()[i]);
+                    source_copy.setText(bandPage.discoItemNameSrc()[i]);
+                    reviews_copy.setText(bandPage.discoItemScoreSrc()[i]);
+
+                    discography_item_layout.setOnClickListener(discographyListener);
+                    discography_list_layout.addView(discography_item_layout);
                 }
+
+                host.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+                    @Override
+                    public void onTabChanged(String s) {
+
+                        switch (host.getCurrentTab()) {
+                            case 0:
+                                for(int i = 0; i < album_count; i++){
+                                    discography_list_layout.getChildAt(i).setVisibility(View.VISIBLE);
+                                }
+                                break;
+                            case 1:
+                                for(int i = 0; i < album_count; i++){
+                                    if(mains_index[i] == 1){
+                                        discography_list_layout.getChildAt(i).setVisibility(View.VISIBLE);
+                                    } else{
+                                        discography_list_layout.getChildAt(i).setVisibility(View.GONE);
+                                    }
+                                }
+                                break;
+                            case 2:
+                                for(int i = 0; i < album_count; i++){
+                                    if(lives_index[i] == 1){
+                                        discography_list_layout.getChildAt(i).setVisibility(View.VISIBLE);
+                                    } else{
+                                        discography_list_layout.getChildAt(i).setVisibility(View.GONE);
+                                    }
+                                }
+                                break;
+                            case 3:
+                                for(int i = 0; i < album_count; i++){
+                                    if(demos_index[i] == 1){
+                                        discography_list_layout.getChildAt(i).setVisibility(View.VISIBLE);
+                                    } else{
+                                        discography_list_layout.getChildAt(i).setVisibility(View.GONE);
+                                    }
+                                }
+                                break;
+                            case 4:
+                                for(int i = 0; i < album_count; i++){
+                                    if(misc_index[i] == 1){
+                                        discography_list_layout.getChildAt(i).setVisibility(View.VISIBLE);
+                                    } else{
+                                        discography_list_layout.getChildAt(i).setVisibility(View.GONE);
+                                    }
+                                }
+                                break;
+
+                            default:
+                                break;
+                        }
+
+                    }
+                });
+
+//                DiscographyAdapter discoMainAdapter = new DiscographyAdapter(context, bandPage, album_count, main_count, mains_index, "Mains");
+//                disco_main_view.setAdapter(discoMainAdapter);
+//
+//                DiscographyAdapter discoLivesAdapter = new DiscographyAdapter(context, bandPage, album_count, lives_count,lives_index, "Lives");
+//                disco_lives_view.setAdapter(discoLivesAdapter);
+//
+//                DiscographyAdapter discoDemosAdapter = new DiscographyAdapter(context, bandPage, album_count, demos_count,demos_index, "Demos");
+//                disco_demos_view.setAdapter(discoDemosAdapter);
+//
+//                DiscographyAdapter discoMiscAdapter = new DiscographyAdapter(context, bandPage, album_count, misc_count, misc_index, "Misc.");
+//                disco_misc_view.setAdapter(discoMiscAdapter);
+
+//                // add item copy to complete tab
+//                if (disco_complete_view != null){
+//                    //disco_complete_view.setExpanded(true);
+//                    disco_main_view.setExpanded(true);
+//                    disco_lives_view.setExpanded(true);
+//                    disco_demos_view.setExpanded(true);
+//                    disco_misc_view.setExpanded(true);
+//                }
 
                 new CommentParser().execute(band_id);
 
@@ -469,7 +554,7 @@ public class SearchableActivity extends AppCompatActivity {
 
         protected void onPostExecute(CoverParserParams coverParserParams_finished) {
             //System.out.println("fetched cover for " + coverParserParams_finished.url);
-            ImageView complete_covers = disco_complete_view.getChildAt(coverParserParams_finished.index).findViewById(R.id.album_cover);
+            ImageView complete_covers = discography_list_layout.getChildAt(coverParserParams_finished.index).findViewById(R.id.album_cover);
             complete_covers.setImageBitmap(coverParserParams_finished.cover);
 
         }
@@ -507,17 +592,17 @@ public class SearchableActivity extends AppCompatActivity {
         //toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
-        disco_complete_view = findViewById(R.id.disco_complete_view);
-        disco_main_view = findViewById(R.id.disco_main_view);
-        disco_lives_view = findViewById(R.id.disco_lives_view);
-        disco_demos_view = findViewById(R.id.disco_demos_view);
-        disco_misc_view = findViewById(R.id.disco_misc_view);
+        //disco_complete_view = findViewById(R.id.disco_complete_view);
+        //disco_main_view = findViewById(R.id.disco_main_view);
+        //disco_lives_view = findViewById(R.id.disco_lives_view);
+        //disco_demos_view = findViewById(R.id.disco_demos_view);
+        //disco_misc_view = findViewById(R.id.disco_misc_view);
 
-        disco_complete_view.setOnItemClickListener(discoListener);
-        disco_main_view.setOnItemClickListener(discoListener);
-        disco_lives_view.setOnItemClickListener(discoListener);
-        disco_demos_view.setOnItemClickListener(discoListener);
-        disco_misc_view.setOnItemClickListener(discoListener);
+        //disco_complete_view.setOnItemClickListener(discoListener);
+        //disco_main_view.setOnItemClickListener(discoListener);
+        //disco_lives_view.setOnItemClickListener(discoListener);
+        //disco_demos_view.setOnItemClickListener(discoListener);
+        //disco_misc_view.setOnItemClickListener(discoListener);
 
         // add back arrow to toolbar
         if (getSupportActionBar() != null){
@@ -553,22 +638,22 @@ public class SearchableActivity extends AppCompatActivity {
         }
     }
 
-    private AdapterView.OnItemClickListener discoListener = new AdapterView.OnItemClickListener(){
-        @Override
-        public void onItemClick(AdapterView<?> parent, View v,
-                                int position, long id) {
-            Intent disco_intent = new Intent(context, DiscoFocusActivity.class);
-            TextView title = v.findViewById(R.id.disco_item_title);
-            disco_intent.putExtra("ITEM_NAME", title.getText()); //this is complete array
-
-            TextView disco_item_src = v.findViewById(R.id.disco_item_src);
-            disco_intent.putExtra("ITEM_URL", disco_item_src.getText());
-            TextView disco_review_src = v.findViewById(R.id.disco_item_reviews);
-            disco_intent.putExtra("ITEM_REVIEW_SRC", disco_review_src.getText());
-
-            startActivityForResult(disco_intent, OPEN_NEW_ACTIVITY);
-        }
-    };
+//    private AdapterView.OnItemClickListener discoListener = new AdapterView.OnItemClickListener(){
+//        @Override
+//        public void onItemClick(AdapterView<?> parent, View v,
+//                                int position, long id) {
+//            Intent disco_intent = new Intent(context, DiscoFocusActivity.class);
+//            TextView title = v.findViewById(R.id.disco_item_title);
+//            disco_intent.putExtra("ITEM_NAME", title.getText()); //this is complete array
+//
+//            TextView disco_item_src = v.findViewById(R.id.disco_item_src);
+//            disco_intent.putExtra("ITEM_URL", disco_item_src.getText());
+//            TextView disco_review_src = v.findViewById(R.id.disco_item_reviews);
+//            disco_intent.putExtra("ITEM_REVIEW_SRC", disco_review_src.getText());
+//
+//            startActivityForResult(disco_intent, OPEN_NEW_ACTIVITY);
+//        }
+//    };
 
 
     private void initializeSearchView() {
@@ -659,6 +744,21 @@ public class SearchableActivity extends AppCompatActivity {
 //            Intent spotify_intent = new Intent(context, SpotifyActivity.class);
 //            startActivity(spotify_intent);
         }
+    };
+
+    private View.OnClickListener discographyListener = new View.OnClickListener(){
+      public void onClick(View v){
+          Intent disco_intent = new Intent(context, DiscoFocusActivity.class);
+          TextView title = v.findViewById(R.id.disco_item_title);
+          disco_intent.putExtra("ITEM_NAME", title.getText()); //this is complete array
+
+          TextView disco_item_src = v.findViewById(R.id.disco_item_src);
+          disco_intent.putExtra("ITEM_URL", disco_item_src.getText());
+          TextView disco_review_src = v.findViewById(R.id.disco_item_reviews);
+          disco_intent.putExtra("ITEM_REVIEW_SRC", disco_review_src.getText());
+
+          startActivityForResult(disco_intent, OPEN_NEW_ACTIVITY);
+      }
     };
 
 
