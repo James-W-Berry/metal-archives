@@ -425,11 +425,22 @@ public class SearchableActivity extends AppCompatActivity {
 
                         switch (host.getCurrentTab()) {
                             case 0:
+                                host.getCurrentTabView().setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                                host.getTabWidget().getChildAt(1).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
+                                host.getTabWidget().getChildAt(2).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
+                                host.getTabWidget().getChildAt(3).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
+                                host.getTabWidget().getChildAt(4).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
+
                                 for(int i = 0; i < album_count; i++){
                                     discography_list_layout.getChildAt(i).setVisibility(View.VISIBLE);
                                 }
                                 break;
                             case 1:
+                                host.getCurrentTabView().setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                                host.getTabWidget().getChildAt(0).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
+                                host.getTabWidget().getChildAt(2).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
+                                host.getTabWidget().getChildAt(3).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
+                                host.getTabWidget().getChildAt(4).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
                                 for(int i = 0; i < album_count; i++){
                                     if(mains_index[i] == 1){
                                         discography_list_layout.getChildAt(i).setVisibility(View.VISIBLE);
@@ -439,6 +450,11 @@ public class SearchableActivity extends AppCompatActivity {
                                 }
                                 break;
                             case 2:
+                                host.getCurrentTabView().setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                                host.getTabWidget().getChildAt(0).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
+                                host.getTabWidget().getChildAt(1).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
+                                host.getTabWidget().getChildAt(3).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
+                                host.getTabWidget().getChildAt(4).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
                                 for(int i = 0; i < album_count; i++){
                                     if(lives_index[i] == 1){
                                         discography_list_layout.getChildAt(i).setVisibility(View.VISIBLE);
@@ -448,6 +464,11 @@ public class SearchableActivity extends AppCompatActivity {
                                 }
                                 break;
                             case 3:
+                                host.getCurrentTabView().setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                                host.getTabWidget().getChildAt(0).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
+                                host.getTabWidget().getChildAt(1).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
+                                host.getTabWidget().getChildAt(2).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
+                                host.getTabWidget().getChildAt(4).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
                                 for(int i = 0; i < album_count; i++){
                                     if(demos_index[i] == 1){
                                         discography_list_layout.getChildAt(i).setVisibility(View.VISIBLE);
@@ -457,6 +478,11 @@ public class SearchableActivity extends AppCompatActivity {
                                 }
                                 break;
                             case 4:
+                                host.getCurrentTabView().setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                                host.getTabWidget().getChildAt(0).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
+                                host.getTabWidget().getChildAt(1).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
+                                host.getTabWidget().getChildAt(2).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
+                                host.getTabWidget().getChildAt(3).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
                                 for(int i = 0; i < album_count; i++){
                                     if(misc_index[i] == 1){
                                         discography_list_layout.getChildAt(i).setVisibility(View.VISIBLE);
@@ -559,7 +585,7 @@ public class SearchableActivity extends AppCompatActivity {
 
         }
     }
-    
+
     private static void dimBehind(PopupWindow popupWindow) {
         View container;
         if (popupWindow.getBackground() == null) {

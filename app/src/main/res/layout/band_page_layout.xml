@@ -4,8 +4,7 @@
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:background="@color/colorPrimaryDark">
+    android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -57,25 +56,20 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/colorPrimary"
             android:orientation="vertical">
 
             <android.support.v7.widget.CardView
                 android:id="@+id/band_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
-                app:cardBackgroundColor="@color/colorPrimaryDark"
-                android:elevation="100dp"
-                app:cardCornerRadius="@dimen/cardview_default_radius">
+                app:cardBackgroundColor="@color/colorPrimaryDark">
 
                 <ImageView
                     android:id="@+id/band_pic"
@@ -134,9 +128,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="5dp"
-                android:background="@color/cardview_dark_background"
-                android:elevation="100dp"
-                app:cardCornerRadius="@dimen/cardview_default_radius">
+                android:background="@color/cardview_dark_background">
 
                 <TabHost
                     android:id="@+id/disco_selector"
@@ -154,21 +146,21 @@
                             android:id="@android:id/tabs"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@color/colorPrimary">
+                            android:background="@color/cardview_dark_background">
                         </TabWidget>
 
                         <FrameLayout
                             android:id="@android:id/tabcontent"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@color/colorPrimary"
-                            android:padding="2dp">
+                            android:background="@color/colorPrimary">
 
                             <RelativeLayout
                                 android:id="@+id/tab1"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:background="@color/colorPrimaryDark">
+                                android:background="@color/colorPrimaryDark"
+                                android:layout_margin="0dp">
                             </RelativeLayout>
 
                             <RelativeLayout
@@ -207,24 +199,23 @@
 
             </android.support.v7.widget.CardView>
 
-            <include
-                layout="@layout/disco_scrollview">
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            </include>
+                <include
+                    layout="@layout/disco_scrollview">
+                </include>
+            </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
                 android:id="@+id/logo_card"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
-                app:cardBackgroundColor="@color/colorPrimaryDark"
-                android:elevation="100dp"
-                app:cardCornerRadius="@dimen/cardview_default_radius">
+                app:cardBackgroundColor="@color/colorPrimaryDark">
 
                 <ImageView
+                    android:contentDescription="band logo"
                     android:id="@+id/logo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
