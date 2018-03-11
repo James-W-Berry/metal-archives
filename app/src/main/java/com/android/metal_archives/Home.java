@@ -9,6 +9,7 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 
 public class Home extends AppCompatActivity {
     ImageView search_action;
+    Button random_band_action;
     EditText search_band_text;
     Context context;
     ImageView search_clear;
@@ -33,6 +35,7 @@ public class Home extends AppCompatActivity {
         search_band_text = findViewById(R.id.search_band_edittext) ;
         search_action = findViewById(R.id.search_action);
         search_clear = findViewById(R.id.search_clear);
+        random_band_action = findViewById(R.id.random_band_search);
 
         search_band_text.addTextChangedListener(new TextWatcher() {
             @Override
@@ -84,12 +87,23 @@ public class Home extends AppCompatActivity {
                 search_band_text.setText("");
             }
         });
+
+        random_band_action.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent random_search_intent;
+                random_search_intent = new Intent(context, SearchableActivity.class);
+                random_search_intent.putExtra("RANDOM", true);
+                startActivity(random_search_intent);
+            }
+        });
     }
 
     protected void performSearch(){
         Intent search_intent;
         search_intent = new Intent(context, SearchableActivity.class);
         search_intent.putExtra("BAND", search_band_text.getText().toString() );
+        search_intent.putExtra("RANDOM", false);
         startActivity(search_intent);
     }
 }

@@ -3,6 +3,7 @@ package com.android.metal_archives;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -64,6 +65,9 @@ public class SearchableActivity extends AppCompatActivity {
     private TextView band_comment;
     private Context context;
     private TextView flatbar_status;
+    //private ImageView loading_status;
+    private ProgressBar loading_status;
+    private Float alpha;
 
     private TableLayout album_table;
     private Integer album_count = 0;
@@ -82,6 +86,7 @@ public class SearchableActivity extends AppCompatActivity {
     private SearchResultPage searchResultPage;
     private ViewPageResult viewPageResult;
     private String band_of_interest;
+    private Boolean randomCheck;
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -99,15 +104,16 @@ public class SearchableActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
+        setContentView(R.layout.activity_band_search);
         context = this;
         band_of_interest = getIntent().getStringExtra("BAND");
+        randomCheck = getIntent().getBooleanExtra("RANDOM", false);
         getBand( band_of_interest );
     }
 
     public void getBand(String band) {
         Log.i("SearchableActivity", "searching for " + band);
-        setContentView(R.layout.activity_search);
+        setContentView(R.layout.activity_band_search);
         new BandParser().execute(band);
     }
 
@@ -120,11 +126,15 @@ public class SearchableActivity extends AppCompatActivity {
             searchResultPage = new SearchResultPage();
             viewPageResult = new ViewPageResult();
 
+            loading_status = findViewById(R.id.progressBar);
             flatbar_status = findViewById(R.id.search_progress_status);
-            publishProgress(0);
 
             try {
-                doc = Jsoup.connect("https://www.metal-archives.com/bands/" + params[0]).get();
+                if(randomCheck){
+                    doc = Jsoup.connect("https://www.metal-archives.com/band/random/").get();
+                } else {
+                    doc = Jsoup.connect("https://www.metal-archives.com/bands/" + params[0]).get();
+                }
                 String page_url = doc.select("h1.band_name").select("a").attr("href");
                 band_id = page_url.substring(page_url.lastIndexOf("/") + 1);
                 Elements search_results = doc.select("div#content_wrapper").select("ul");
@@ -195,15 +205,23 @@ public class SearchableActivity extends AppCompatActivity {
             switch (progress[progress.length-1]){
                 case 0:
                     flatbar_status.setText("looking for " + band_of_interest + "...");
+                    alpha = ((float) 0.4);
+                    //loading_status.setAlpha(alpha);
                     break;
                 case 25:
                     flatbar_status.setText("gathering band information...");
+                    alpha = ((float) 0.7);
+                    //loading_status.setAlpha(alpha);
                     break;
                 case 50:
                     flatbar_status.setText("fetching band picture...");
+                    alpha = ((float) 0.9);
+                    //loading_status.setAlpha(alpha);
                     break;
                 case 75:
                     flatbar_status.setText("loading discography and wrapping up...");
+                    alpha = ((float) 1.0);
+                    //loading_status.setAlpha(alpha);
                     break;
                 default:
                     break;
@@ -326,6 +344,8 @@ public class SearchableActivity extends AppCompatActivity {
                 spec.setIndicator(misc);
                 host.addTab(spec);
 
+                host.setCurrentTab(0);
+
 //                ViewGroup.LayoutParams params = host.getTabWidget().getChildAt(0).getLayoutParams();
 //                DisplayMetrics metrics = getResources().getDisplayMetrics();
 //                params.width = metrics.densityDpi *10;
@@ -419,28 +439,42 @@ public class SearchableActivity extends AppCompatActivity {
                     discography_list_layout.addView(discography_item_layout);
                 }
 
+                View tabViewComplete = host.getTabWidget().getChildAt(0);
+                View tabViewMain = host.getTabWidget().getChildAt(1);
+                View tabViewLives = host.getTabWidget().getChildAt(2);
+                View tabViewDemos = host.getTabWidget().getChildAt(3);
+                View tabViewMisc = host.getTabWidget().getChildAt(4);
+
+                final TextView tabCompleteText = tabViewComplete.findViewById(R.id.disco_complete);
+                final TextView tabViewMainText = tabViewMain.findViewById(R.id.disco_main);
+                final TextView tabViewLivesText = tabViewLives.findViewById(R.id.disco_lives);
+                final TextView tabViewDemosText = tabViewDemos.findViewById(R.id.disco_demos);
+                final TextView tabViewMiscText = tabViewMisc.findViewById(R.id.disco_misc);
+
+                tabCompleteText.setTextColor(getResources().getColor(R.color.colorPrimary));
+
                 host.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
                     @Override
                     public void onTabChanged(String s) {
 
                         switch (host.getCurrentTab()) {
                             case 0:
-                                host.getCurrentTabView().setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                                host.getTabWidget().getChildAt(1).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
-                                host.getTabWidget().getChildAt(2).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
-                                host.getTabWidget().getChildAt(3).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
-                                host.getTabWidget().getChildAt(4).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
+                                tabCompleteText.setTextColor(getResources().getColor(R.color.colorPrimary));
+                                tabViewMainText.setTextColor(getResources().getColor(R.color.colorAccent));
+                                tabViewLivesText.setTextColor(getResources().getColor(R.color.colorAccent));
+                                tabViewDemosText.setTextColor(getResources().getColor(R.color.colorAccent));
+                                tabViewMiscText.setTextColor(getResources().getColor(R.color.colorAccent));
 
                                 for(int i = 0; i < album_count; i++){
                                     discography_list_layout.getChildAt(i).setVisibility(View.VISIBLE);
                                 }
                                 break;
                             case 1:
-                                host.getCurrentTabView().setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                                host.getTabWidget().getChildAt(0).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
-                                host.getTabWidget().getChildAt(2).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
-                                host.getTabWidget().getChildAt(3).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
-                                host.getTabWidget().getChildAt(4).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
+                                tabCompleteText.setTextColor(getResources().getColor(R.color.colorAccent));
+                                tabViewMainText.setTextColor(getResources().getColor(R.color.colorPrimary));
+                                tabViewLivesText.setTextColor(getResources().getColor(R.color.colorAccent));
+                                tabViewDemosText.setTextColor(getResources().getColor(R.color.colorAccent));
+                                tabViewMiscText.setTextColor(getResources().getColor(R.color.colorAccent));
                                 for(int i = 0; i < album_count; i++){
                                     if(mains_index[i] == 1){
                                         discography_list_layout.getChildAt(i).setVisibility(View.VISIBLE);
@@ -450,11 +484,11 @@ public class SearchableActivity extends AppCompatActivity {
                                 }
                                 break;
                             case 2:
-                                host.getCurrentTabView().setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                                host.getTabWidget().getChildAt(0).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
-                                host.getTabWidget().getChildAt(1).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
-                                host.getTabWidget().getChildAt(3).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
-                                host.getTabWidget().getChildAt(4).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
+                                tabCompleteText.setTextColor(getResources().getColor(R.color.colorAccent));
+                                tabViewMainText.setTextColor(getResources().getColor(R.color.colorAccent));
+                                tabViewLivesText.setTextColor(getResources().getColor(R.color.colorPrimary));
+                                tabViewDemosText.setTextColor(getResources().getColor(R.color.colorAccent));
+                                tabViewMiscText.setTextColor(getResources().getColor(R.color.colorAccent));
                                 for(int i = 0; i < album_count; i++){
                                     if(lives_index[i] == 1){
                                         discography_list_layout.getChildAt(i).setVisibility(View.VISIBLE);
@@ -464,11 +498,11 @@ public class SearchableActivity extends AppCompatActivity {
                                 }
                                 break;
                             case 3:
-                                host.getCurrentTabView().setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                                host.getTabWidget().getChildAt(0).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
-                                host.getTabWidget().getChildAt(1).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
-                                host.getTabWidget().getChildAt(2).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
-                                host.getTabWidget().getChildAt(4).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
+                                tabCompleteText.setTextColor(getResources().getColor(R.color.colorAccent));
+                                tabViewMainText.setTextColor(getResources().getColor(R.color.colorAccent));
+                                tabViewLivesText.setTextColor(getResources().getColor(R.color.colorAccent));
+                                tabViewDemosText.setTextColor(getResources().getColor(R.color.colorPrimary));
+                                tabViewMiscText.setTextColor(getResources().getColor(R.color.colorAccent));
                                 for(int i = 0; i < album_count; i++){
                                     if(demos_index[i] == 1){
                                         discography_list_layout.getChildAt(i).setVisibility(View.VISIBLE);
@@ -478,11 +512,11 @@ public class SearchableActivity extends AppCompatActivity {
                                 }
                                 break;
                             case 4:
-                                host.getCurrentTabView().setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                                host.getTabWidget().getChildAt(0).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
-                                host.getTabWidget().getChildAt(1).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
-                                host.getTabWidget().getChildAt(2).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
-                                host.getTabWidget().getChildAt(3).setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
+                                tabCompleteText.setTextColor(getResources().getColor(R.color.colorAccent));
+                                tabViewMainText.setTextColor(getResources().getColor(R.color.colorAccent));
+                                tabViewLivesText.setTextColor(getResources().getColor(R.color.colorAccent));
+                                tabViewDemosText.setTextColor(getResources().getColor(R.color.colorAccent));
+                                tabViewMiscText.setTextColor(getResources().getColor(R.color.colorPrimary));
                                 for(int i = 0; i < album_count; i++){
                                     if(misc_index[i] == 1){
                                         discography_list_layout.getChildAt(i).setVisibility(View.VISIBLE);
@@ -682,7 +716,7 @@ public class SearchableActivity extends AppCompatActivity {
 
 
     private void initializeSearchView() {
-        setContentView(R.layout.activity_search);
+        setContentView(R.layout.activity_band_search);
         context = this;
     }
 

@@ -9,4 +9,6 @@
     <color name="white">#FFFFFF</color>
     <color name="ripple">#40c3c3c3</color>
     <color name="suggest">#f5f5f5</color>
+
+    <color name="transparent">#00000000</color>
 </resources>
