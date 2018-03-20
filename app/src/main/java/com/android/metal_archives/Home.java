@@ -102,6 +102,7 @@ public class Home extends AppCompatActivity {
     protected void performSearch(){
         Intent search_intent;
         search_intent = new Intent(context, SearchableActivity.class);
+        search_intent.setAction(Intent.ACTION_SEARCH);
         search_intent.putExtra("BAND", search_band_text.getText().toString() );
         search_intent.putExtra("RANDOM", false);
         startActivity(search_intent);

@@ -1,15 +1,19 @@
 package com.android.metal_archives;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SearchRecentSuggestionsProvider;
 import android.graphics.Bitmap;
 import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
+import android.provider.SearchRecentSuggestions;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -50,6 +54,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static android.content.SearchRecentSuggestionsProvider.DATABASE_MODE_QUERIES;
+
 /**
  * Author: James Berry
  * Description: Fetches user provided band page, parses the
@@ -63,6 +69,7 @@ public class SearchableActivity extends AppCompatActivity {
     private ImageView search_clear;
     private TextView search_prep;
     private TextView band_comment;
+    private CardView band_comment_card;
     private Context context;
     private TextView flatbar_status;
     //private ImageView loading_status;
@@ -106,8 +113,20 @@ public class SearchableActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_band_search);
         context = this;
-        band_of_interest = getIntent().getStringExtra("BAND");
-        randomCheck = getIntent().getBooleanExtra("RANDOM", false);
+
+        Intent intent = getIntent();
+
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
+                    BandSuggestionProvider.AUTHORITY, BandSuggestionProvider.MODE);
+            suggestions.saveRecentQuery(query, null);
+            System.out.println("saving search query: " + query);
+        }
+
+
+        band_of_interest = intent.getStringExtra("BAND");
+        randomCheck = intent.getBooleanExtra("RANDOM", false);
         getBand( band_of_interest );
     }
 
@@ -116,6 +135,8 @@ public class SearchableActivity extends AppCompatActivity {
         setContentView(R.layout.activity_band_search);
         new BandParser().execute(band);
     }
+
+
 
     private class BandParser extends AsyncTask<String, Integer, ViewPageResult> { //URL input, Integer progress, BandPage result
 
@@ -260,8 +281,16 @@ public class SearchableActivity extends AppCompatActivity {
                 formed_view.setText(bandPage.yearFormed());
                 TextView label_view = findViewById(R.id.band_label);
                 label_view.setText(bandPage.label());
-                band_comment = findViewById(R.id.band_comment);
-                band_comment.setText(bandPage.comment());
+
+                band_comment_card = findViewById(R.id.comment_card);
+                System.out.println("comment: " + bandPage.comment());
+                if(bandPage.comment().equals("")) {
+                    band_comment_card.setVisibility(View.GONE);
+                } else {
+                    band_comment_card.setVisibility(View.VISIBLE);
+                    band_comment = findViewById(R.id.band_comment);
+                    band_comment.setText(bandPage.comment());
+                }
 
                 if(read_more_check.equals("Read more")) {
                     band_comment.setOnClickListener(new View.OnClickListener() {
@@ -556,6 +585,8 @@ public class SearchableActivity extends AppCompatActivity {
 
                 new CommentParser().execute(band_id);
 
+
+
                 /* setup threads to populate discography item covers */
                 populateCovers();
 
@@ -683,6 +714,7 @@ public class SearchableActivity extends AppCompatActivity {
                     imm.hideSoftInputFromWindow(search.getWindowToken(), 0);
                     album_count = 0;
                     band_of_interest = search.getText().toString();
+                    randomCheck = false;
                     getBand(search.getText().toString());
                     return true;
                 }
@@ -800,8 +832,8 @@ public class SearchableActivity extends AppCompatActivity {
 
     private View.OnClickListener spotifyListener = new View.OnClickListener(){
         public void onClick(View v) {
-//            Intent spotify_intent = new Intent(context, SpotifyActivity.class);
-//            startActivity(spotify_intent);
+            Intent spotify_intent = new Intent(context, SpotifyActivity.class);
+            startActivity(spotify_intent);
         }
     };
 

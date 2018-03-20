@@ -23,21 +23,15 @@
         </activity>
 
 
-        <!--<activity-->
-            <!--android:name=".SpotifyActivity"-->
-            <!--android:label="@string/app_name" >-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
+        <activity
+            android:name=".SpotifyActivity"
+            android:label="@string/title_activity_demo">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
 
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
-            <!--</intent-filter>-->
-
-        <!--</activity>-->
-
-        <!--&lt;!&ndash; Needed for LoginActivity to work &ndash;&gt;-->
-        <!--<activity-->
-            <!--android:name="com.spotify.sdk.android.authentication.LoginActivity"-->
-            <!--android:theme="@android:style/Theme.Translucent.NoTitleBar"/>-->
+        </activity>
 
         <activity
             android:name=".Home"
@@ -58,6 +52,9 @@
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
+
+        <provider android:name=".BandSuggestionProvider"
+            android:authorities="com.example.MySuggestionProvider" />
 
         <activity android:name=".DiscoFocusActivity"
             android:parentActivityName=".SearchableActivity"

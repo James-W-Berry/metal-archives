@@ -19,8 +19,7 @@
         <!--android:layout_height="100dp"-->
         <!--android:layout_centerHorizontal="true"-->
         <!--android:layout_centerVertical="true"-->
-        <!--android:src="@mipmap/ic_launcher"-->
-        <!--android:alpha="0.1"/>-->
+        <!--android:src="@mipmap/ic_launcher"/>-->
 
     <TextView
         android:id="@+id/search_progress_status"
