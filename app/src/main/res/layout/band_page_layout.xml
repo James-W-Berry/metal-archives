@@ -15,8 +15,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|enterAlways"
-            android:background="@color/colorPrimary">
+            android:background="@color/colorPrimaryDark"
+            app:layout_scrollFlags="scroll|enterAlways">
 
             <FrameLayout
                 android:id="@+id/search_layout"
@@ -25,28 +25,28 @@
 
                 <EditText
                     android:id="@+id/search_edit"
-                    android:fontFamily="@font/dosis_light"
-                    android:hint="Search for..."
-                    android:textColorHint="@color/colorAccent"
-                    android:imeOptions="actionSearch"
-                    android:inputType="textCapWords"
-                    android:textColor="@color/white"
-                    android:textSize="16sp"
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"
                     android:layout_marginRight="20dp"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp" />
+                    android:fontFamily="@font/dosis_light"
+                    android:hint="Search for..."
+                    android:imeOptions="actionSearch"
+                    android:inputType="textCapWords"
+                    android:padding="10dp"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/colorAccent"
+                    android:textSize="16sp" />
 
                 <ImageView
-                    android:contentDescription="clear search"
                     android:id="@+id/clear_search"
-                    android:src="@mipmap/ic_clear_black_48dp"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_marginRight="25dp"
+                    android:layout_gravity="end|center_vertical"
                     android:layout_marginEnd="25dp"
-                    android:layout_gravity="end|center_vertical"/>
+                    android:layout_marginRight="25dp"
+                    android:contentDescription="clear search"
+                    android:src="@mipmap/ic_clear_black_48dp" />
             </FrameLayout>
 
         </android.support.v7.widget.Toolbar>
@@ -56,13 +56,13 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorPrimaryDark"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
+            android:background="@android:color/black"
             android:orientation="vertical">
 
             <android.support.v7.widget.CardView
@@ -148,50 +148,44 @@
                             android:id="@android:id/tabs"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@color/colorPrimaryDark">
-                        </TabWidget>
+                            android:background="@color/colorPrimaryDark"></TabWidget>
 
                         <FrameLayout
                             android:id="@android:id/tabcontent"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@color/colorPrimary">
+                            android:background="@color/colorPrimaryDark">
 
                             <RelativeLayout
                                 android:id="@+id/tab1"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:background="@color/colorPrimaryDark"
-                                android:layout_margin="0dp">
-                            </RelativeLayout>
+                                android:layout_margin="0dp"
+                                android:background="@color/colorPrimaryDark"></RelativeLayout>
 
                             <RelativeLayout
                                 android:id="@+id/tab2"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:background="@color/colorPrimaryDark">
-                            </RelativeLayout>
+                                android:background="@color/colorPrimaryDark"></RelativeLayout>
 
                             <RelativeLayout
                                 android:id="@+id/tab3"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:background="@color/colorPrimaryDark">
-                            </RelativeLayout>
+                                android:background="@color/colorPrimaryDark"></RelativeLayout>
 
                             <RelativeLayout
                                 android:id="@+id/tab4"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:background="@color/colorPrimaryDark">
-                            </RelativeLayout>
+                                android:background="@color/colorPrimaryDark"></RelativeLayout>
 
                             <RelativeLayout
                                 android:id="@+id/tab5"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:background="@color/colorPrimaryDark">
-                            </RelativeLayout>
+                                android:background="@color/colorPrimaryDark"></RelativeLayout>
 
                         </FrameLayout>
 
@@ -205,9 +199,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <include
-                    layout="@layout/disco_scrollview">
-                </include>
+                <include layout="@layout/disco_scrollview"></include>
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
@@ -217,11 +209,11 @@
                 app:cardBackgroundColor="@color/colorPrimaryDark">
 
                 <ImageView
-                    android:contentDescription="band logo"
                     android:id="@+id/logo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="10dp"/>
+                    android:contentDescription="band logo"
+                    android:padding="10dp" />
 
             </android.support.v7.widget.CardView>
 

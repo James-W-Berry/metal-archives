@@ -4,7 +4,7 @@
     <color name="colorPrimary_half">#c8692524</color>
     <color name="colorPrimary_light">#7d692524</color>
 
-    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorPrimaryDark">#191919</color>
     <color name="colorAccent">#c3c3c3</color>
     <color name="white">#FFFFFF</color>
     <color name="ripple">#40c3c3c3</color>
